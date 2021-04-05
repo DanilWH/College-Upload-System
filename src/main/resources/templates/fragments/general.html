@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head th:fragment="header(title)">
+        <meta charset="UTF-8" />
+        <title th:replace="${title}">College Upload System</title>
+    </head>
+    <body>
+
+        <!-- Navbar. -->
+        <div th:fragment="navbar">
+            <a th:href="@{/main}">Главная</a> -
+
+            <div sec:authorize="!isAuthenticated()">
+                <!-- Log in. -->
+                <div th:if="${param.error}">
+                    Неверное имя пользователя или пароль.
+                </div>
+                <form th:action="@{/login}" method="post">
+                    <div><label>Логин: <input type="text" name="username"/> </label></div>
+                    <div><label>Пароль: <input type="password" name="password"/> </label></div>
+                    <div><input type="submit" value="Войти"/></div>
+                </form>
+            </div>
+
+            <!-- Logout. -->
+            <div sec:authorize="isAuthenticated()">
+                Привет, <span sec:authentication="name"></span>
+                <form th:action="@{/logout}" method="post">
+                    <input type="submit" value="Выйти"/>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

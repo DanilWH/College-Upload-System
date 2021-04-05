@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <title th:text="'Hello, ' + ${name} + '!'" />
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    <head th:replace="/fragments/general :: header(~{::title})">
+        <title>Работы студентов | College Upload System</title>
     </head>
     <body>
-        <h1 th:text="'Hello, ' + ${name} + '!'" />
-        <p th:text="'Hello, ' + ${name} + '! How are you?'" />
+        <div th:replace="/fragments/general :: navbar"></div>
+
+        <table>
+
+        </table>
+
     </body>
 </html>
