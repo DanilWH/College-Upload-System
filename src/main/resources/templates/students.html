@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="/fragments/general :: header(~{::title})">
+        <title>Студенты группы [[${group.name}]] | College Upload System</title>
+    </head>
+    <body>
+        <h3>Студенты группы [[${group.name}]]:</h3>
+
+        <table>
+            <tr th:each="student: ${students}">
+                <td th:text="${student.lastName}"></td>
+                <td th:text="${student.firstName}"></td>
+
+                <td th:each="result: ${student.results}">
+                    <a th:href="${result.filename}" th:text="${result.task.name}"></a>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>

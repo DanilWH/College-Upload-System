@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -17,13 +18,20 @@ public class User implements UserDetails {
     private String firstName;
     private String lastName;
     private String login;
-
     private String password;
 
     @ElementCollection(targetClass = UserRoles.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<UserRoles> userRoles;
+
+    @ManyToOne
+    @JoinColumn(name = "group_id", referencedColumnName = "id")
+    private Group group;
+
+    @OneToMany(mappedBy = "user")
+    @OrderBy(value = "task_id")
+    private List<StudentResult> results;
 
     public Long getId() {
         return id;
@@ -71,6 +79,22 @@ public class User implements UserDetails {
 
     public void setUserRoles(Set<UserRoles> userRoles) {
         this.userRoles = userRoles;
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
+    }
+
+    public List<StudentResult> getResults() {
+        return results;
+    }
+
+    public void setResults(List<StudentResult> results) {
+        this.results = results;
     }
 
     @Override

@@ -27,7 +27,7 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    public List<User> findAll() {
-        return this.userRepo.findAll();
+    public List<User> getByGroupIdOrderByLastName(Long groupId) {
+        return this.userRepo.findByGroupIdOrderByLastName(groupId);
     }
 }
