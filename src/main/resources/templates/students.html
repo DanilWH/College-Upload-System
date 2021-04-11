@@ -4,7 +4,23 @@
         <title>Студенты группы [[${group.name}]] | College Upload System</title>
     </head>
     <body>
-        <h3>Студенты группы [[${group.name}]]:</h3>
+        <!-- Navbar. -->
+        <div th:replace="fragments/general :: navbar"></div>
+
+        <h2>Студенты группы [[${group.name}]]:</h2>
+
+        <!-- Upload form. -->
+        <form th:action="@{/upload(groupId=${group.id})}" method="post" enctype="multipart/form-data">
+            <!-- The form for the file uploading. -->
+            <input type="file" name="file" />
+
+            <!-- The 'select' form for choosing the task to which the file will be attached. -->
+            <select name="taskId">
+                <option th:each="task: ${tasks}" th:value="${task.id}" th:text="${task.name}"></option>
+            </select>
+
+            <button type="submit">Отправить</button>
+        </form>
 
         <table>
             <tr th:each="student: ${students}">

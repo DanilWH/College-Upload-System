@@ -11,6 +11,7 @@ public class StudentResult {
     private Long id;
 
     private String filename;
+    private String filepath;
     private LocalDateTime dateTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -35,6 +36,14 @@ public class StudentResult {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public String getFilepath() {
+        return this.filepath;
+    }
+
+    public void setFilepath(String filepath) {
+        this.filepath = filepath;
     }
 
     public LocalDateTime getDateTime() {
