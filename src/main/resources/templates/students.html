@@ -13,6 +13,9 @@
         <form th:action="@{/upload(groupId=${group.id})}" method="post" enctype="multipart/form-data">
             <!-- The form for the file uploading. -->
             <input type="file" name="file" />
+            <div th:if="${uploadError}">
+                <small th:text="${uploadError}"></small>
+            </div>
 
             <!-- The 'select' form for choosing the task to which the file will be attached. -->
             <select name="taskId">

@@ -77,15 +77,30 @@ public class MainController {
             @RequestParam Long taskId,
             Model model
     ) throws IOException {
-        Group group = this.groupService.getById(groupId);
-        Task task = this.taskService.getById(taskId);
+        StudentResult studentResult = this.studentResultRepo.findByTaskIdAndUserId(taskId, currentUser.getId());
 
-        StudentResult newSR = new StudentResult();
+        if (file != null && !file.isEmpty()) {
+            // load the group and the task only if the student has a file to upload.
+            Group group = this.groupService.getById(groupId);
+            Task task = this.taskService.getById(taskId);
 
-        if (file != null) {
-            newSR.setDateTime(LocalDateTime.now());
-            newSR.setTask(task);
-            newSR.setUser(currentUser);
+            // check if the student has already uploaded files that belongs to the same task.
+            if (studentResult != null) {
+                // if so, delete the old file.
+                File fileObj = new File(this.uploadPath + studentResult.getFilepath() + studentResult.getFilename());
+                fileObj.delete();
+
+                // we don't delete the entity in the database because we'll just update the old one.
+            }
+            else {
+                // create a new student result if the students hasn't uploaded a file yet.
+                studentResult = new StudentResult();
+            }
+
+            // fill the fields of the new student result entity.
+            studentResult.setDateTime(LocalDateTime.now());
+            studentResult.setTask(task);
+            studentResult.setUser(currentUser);
 
             // uploadPath is the root directory where all the upload are stored.
             // filepath is the directory specified by the group name and the task name.
@@ -109,12 +124,14 @@ public class MainController {
             // save the file in the directory.
             file.transferTo(new File(this.uploadPath + filepath + filename));
 
-            newSR.setFilename(filename);
-            newSR.setFilepath(filepath);
+            studentResult.setFilename(filename);
+            studentResult.setFilepath(filepath);
 
-            this.studentResultRepo.save(newSR);
+            this.studentResultRepo.save(studentResult);
+        } else {
+            model.addAttribute("uploadError", "Пожалуйста выберите файл.");
         }
 
-        return "redirect:/group/" + group.getId() + "/students";
+        return students(groupId, model);
     }
 }

@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface StudentResultRepo extends JpaRepository<StudentResult, Long> {
+
+    StudentResult findByTaskIdAndUserId(Long taskId, Long userId);
+
 }
