@@ -53,7 +53,7 @@ public class StudentResultService {
             // uploadPath is the root directory where all the upload are stored.
             // filepath is the directory specified by the group name and the task name.
             // filename is the unique file name.
-            String filepath = String.format("/%s/%s/", group.getName(), task.getName());
+            String filepath = String.format("%s/%s/", group.getName(), task.getName());
 
             // create a new directory if doesn't exist.
             File fileObj = new File(this.uploadPath + filepath);

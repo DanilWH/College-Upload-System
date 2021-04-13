@@ -31,7 +31,7 @@
                 <td th:text="${student.firstName}"></td>
 
                 <td th:each="result: ${student.results}">
-                    <a th:href="${result.filename}" th:text="${result.task.name}"></a>
+                    <a th:href="@{/file/{filepath}{filename}(filepath=${result.filepath},filename=${result.filename})}" th:text="${result.task.name}"></a>
                 </td>
             </tr>
         </table>
