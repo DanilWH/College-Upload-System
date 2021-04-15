@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
     <head th:fragment="header(title)">
         <meta charset="UTF-8" />
         <title th:replace="${title}">College Upload System</title>
@@ -28,6 +28,7 @@
             </div>
 
             <div sec:authorize="isAuthenticated()">
+
                 Привет, <span sec:authentication="name"></span>
                 <!-- Logout. -->
                 <form th:action="@{/logout}" method="post">
