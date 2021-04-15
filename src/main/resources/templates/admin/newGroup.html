@@ -1,11 +1,33 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
-<head th:replace="../fragments/general :: header(~{::title})">
+<head >
     <title>Создание новой группы | College Upload System</title>
 </head>
 <body>
-    <form action="/admin/new_group" method="post" modelAttribute="newGroupForm">
+    <form action="#" th:action="@{/admin/new_group}" th:object="${groupForm}" method="post">
+        <fieldset>
+            <label for="name_id">Название группы: </label>
+            <input id="name_id" type="text" name="name" />
 
+            <table>
+                <thead>
+                    <tr>
+                        <th>Имя</th>
+                        <th>Фамилия</th>
+                        <th>Логин</th>
+                        <th>Пароль</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="student, itemStat : *{students}">
+                        <td><input th:field="*{students[__${itemStat.index}__].firstName}" /></td>
+                        <td><input th:field="*{students[__${itemStat.index}__].lastName}" /></td>
+                        <td><input th:field="*{students[__${itemStat.index}__].login}" /></td>
+                        <td><input th:field="*{students[__${itemStat.index}__].password}" /></td>
+                    </tr>
+                </tbody>
+            </table>
+        </fieldset>
     </form>
 </body>
 </html>
