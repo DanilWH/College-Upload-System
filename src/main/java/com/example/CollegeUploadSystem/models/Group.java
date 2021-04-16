@@ -1,6 +1,7 @@
 package com.example.CollegeUploadSystem.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @Entity
@@ -9,6 +10,8 @@ public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @NotBlank(message = "Заполните поле")
     private String name;
 
     @OneToMany(mappedBy = "group")
