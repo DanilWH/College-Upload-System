@@ -3,6 +3,8 @@ package com.example.CollegeUploadSystem.controllers;
 import com.example.CollegeUploadSystem.dto.StudentsCreationDto;
 import com.example.CollegeUploadSystem.models.Group;
 import com.example.CollegeUploadSystem.models.User;
+import com.example.CollegeUploadSystem.services.GroupService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -19,8 +21,12 @@ import java.util.List;
 @PreAuthorize("hasAuthority('ADMIN')")
 @RequestMapping("/admin")
 public class AdminController {
+
     @Value("${number.of.students}")
     private int numberOfStudents;
+
+    @Autowired
+    private GroupService groupService;
 
     @GetMapping("/new_group")
     public String newGroupForm(Model model) {
@@ -38,7 +44,9 @@ public class AdminController {
     }
 
     @PostMapping("/new_group")
-    public String newGroupSaving(@ModelAttribute("newGroupForm") Group group) {
+    public String newGroupSaving(@ModelAttribute("groupForm") Group groupForm) {
+        this.groupService.saveGroup(groupForm);
+
         return "redirect:/";
     }
 }

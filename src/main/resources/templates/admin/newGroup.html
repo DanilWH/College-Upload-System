@@ -4,6 +4,8 @@
     <title>Создание новой группы | College Upload System</title>
 </head>
 <body>
+    <div th:replace="fragments/general :: navbar"></div>
+
     <form action="#" th:action="@{/admin/new_group}" th:object="${groupForm}" method="post">
         <fieldset>
             <label for="name_id">Название группы: </label>
@@ -27,6 +29,8 @@
                     </tr>
                 </tbody>
             </table>
+
+            <button type="submit">Создать группу.</button>
         </fieldset>
     </form>
 </body>
