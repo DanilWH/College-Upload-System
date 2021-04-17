@@ -2,18 +2,17 @@ package com.example.CollegeUploadSystem.controllers;
 
 import com.example.CollegeUploadSystem.dto.StudentsCreationDto;
 import com.example.CollegeUploadSystem.models.Group;
+import com.example.CollegeUploadSystem.models.Task;
 import com.example.CollegeUploadSystem.models.User;
 import com.example.CollegeUploadSystem.services.GroupService;
+import com.example.CollegeUploadSystem.services.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -29,6 +28,8 @@ public class AdminController {
 
     @Autowired
     private GroupService groupService;
+    @Autowired
+    private TaskService taskService;
 
     @GetMapping("/new_group")
     public String newGroupForm(Model model) {
@@ -57,5 +58,15 @@ public class AdminController {
         this.groupService.saveGroup(groupForm);
 
         return "redirect:/";
+    }
+
+    @PostMapping("/group/{group}/add_task")
+    public String addTask(
+            @PathVariable Group group,
+            @ModelAttribute("taskForm") Task taskForm
+    ) {
+        this.taskService.addTask(taskForm, group);
+
+        return "redirect:/group/" + group.getId() + "/students";
     }
 }

@@ -1,9 +1,6 @@
 package com.example.CollegeUploadSystem.controllers;
 
-import com.example.CollegeUploadSystem.models.Group;
-import com.example.CollegeUploadSystem.models.StudentResult;
-import com.example.CollegeUploadSystem.models.Task;
-import com.example.CollegeUploadSystem.models.User;
+import com.example.CollegeUploadSystem.models.*;
 import com.example.CollegeUploadSystem.repos.StudentResultRepo;
 import com.example.CollegeUploadSystem.services.GroupService;
 import com.example.CollegeUploadSystem.services.StudentResultService;
@@ -56,6 +53,7 @@ public class MainController {
 
     @GetMapping("/group/{groupId}/students")
     public String students(
+            @AuthenticationPrincipal User currentUser,
             @PathVariable() Long groupId,
             Model model
     ) {
@@ -66,6 +64,11 @@ public class MainController {
         model.addAttribute("group", group);
         model.addAttribute("students", students);
         model.addAttribute("tasks", tasks);
+
+        // put a new task form into the model in case the current user is admin.
+        if (currentUser != null && currentUser.getUserRoles().contains(UserRoles.ADMIN)) {
+            model.addAttribute("taskForm", new Task());
+        }
 
         return "students";
     }
@@ -91,6 +94,6 @@ public class MainController {
             model.addAttribute("uploadError", "Пожалуйста выберите файл.");
         }
 
-        return students(groupId, model);
+        return students(currentUser, groupId, model);
     }
 }

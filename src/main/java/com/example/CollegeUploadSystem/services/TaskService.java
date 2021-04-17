@@ -1,5 +1,6 @@
 package com.example.CollegeUploadSystem.services;
 
+import com.example.CollegeUploadSystem.models.Group;
 import com.example.CollegeUploadSystem.models.Task;
 import com.example.CollegeUploadSystem.repos.TaskRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Service
 public class TaskService {
+
     @Autowired
     private TaskRepo taskRepo;
 
@@ -19,5 +21,11 @@ public class TaskService {
 
     public Task getById(Long taskId) {
         return this.taskRepo.findById(taskId).orElseThrow(NoResultException::new);
+    }
+
+    public void addTask(Task task, Group group) {
+        task.setGroup(group);
+
+        this.taskRepo.save(task);
     }
 }
