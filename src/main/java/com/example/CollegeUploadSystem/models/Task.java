@@ -1,6 +1,7 @@
 package com.example.CollegeUploadSystem.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "tasks")
@@ -9,6 +10,7 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotBlank(message = "Поле не должно быть пустым")
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)

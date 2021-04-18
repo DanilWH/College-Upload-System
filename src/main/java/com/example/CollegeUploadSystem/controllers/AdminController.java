@@ -1,14 +1,16 @@
 package com.example.CollegeUploadSystem.controllers;
 
-import com.example.CollegeUploadSystem.dto.StudentsCreationDto;
 import com.example.CollegeUploadSystem.models.Group;
 import com.example.CollegeUploadSystem.models.Task;
 import com.example.CollegeUploadSystem.models.User;
+import com.example.CollegeUploadSystem.models.UserRoles;
 import com.example.CollegeUploadSystem.services.GroupService;
 import com.example.CollegeUploadSystem.services.TaskService;
+import com.example.CollegeUploadSystem.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,6 +32,8 @@ public class AdminController {
     private GroupService groupService;
     @Autowired
     private TaskService taskService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/new_group")
     public String newGroupForm(Model model) {
@@ -63,10 +67,22 @@ public class AdminController {
     @PostMapping("/group/{group}/add_task")
     public String addTask(
             @PathVariable Group group,
-            @ModelAttribute("taskForm") Task taskForm
+            @Valid @ModelAttribute("taskForm") Task taskForm,
+            BindingResult bindingResult,
+            Model model
     ) {
-        this.taskService.addTask(taskForm, group);
+        // return to the same page if any error appeared to exist there.
+        if (!bindingResult.hasErrors()) {
+            this.taskService.addTask(taskForm, group);
+        }
 
-        return "redirect:/group/" + group.getId() + "/students";
+        List<User> students = this.userService.getByGroupIdOrderByLastName(group.getId());
+        List<Task> tasks = this.taskService.getByGroupId(group.getId());
+
+        model.addAttribute("group", group);
+        model.addAttribute("students", students);
+        model.addAttribute("tasks", tasks);
+
+        return "students";
     }
 }

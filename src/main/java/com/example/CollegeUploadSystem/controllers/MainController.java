@@ -54,7 +54,7 @@ public class MainController {
     @GetMapping("/group/{groupId}/students")
     public String students(
             @AuthenticationPrincipal User currentUser,
-            @PathVariable() Long groupId,
+            @PathVariable Long groupId,
             Model model
     ) {
         Group group = this.groupService.getById(groupId);

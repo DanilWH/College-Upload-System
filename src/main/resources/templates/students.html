@@ -13,7 +13,7 @@
         <div sec:authorize="hasAuthority('ADMIN')">
             <form th:action="@{/admin/group/{groupId}/add_task(groupId=${group.id})}" th:object="${taskForm}" method="post">
                 <label for="name">Название задачи: </label>
-                <input id="name" th:field="*{name}" />
+                <input id="name" name="name" />
                 <small th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></small>
 
                 <button type="submit">Добавить задачу.</button>
@@ -40,6 +40,12 @@
             <tr th:each="student: ${students}">
                 <td th:text="${student.lastName}"></td>
                 <td th:text="${student.firstName}"></td>
+
+                <!-- TODO implementation of the proper order of tasks. As in: -->
+                <!--
+                    <td th:each="task: ${tasks}">
+                    </td>
+                -->
 
                 <td th:each="result: ${student.results}">
                     <a th:href="@{/file/{filepath}{filename}(filepath=${result.filepath},filename=${result.filename})}" th:text="${result.task.name}"></a>
