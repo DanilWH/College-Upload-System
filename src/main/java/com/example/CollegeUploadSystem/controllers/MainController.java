@@ -7,18 +7,19 @@ import com.example.CollegeUploadSystem.services.StudentResultService;
 import com.example.CollegeUploadSystem.services.TaskService;
 import com.example.CollegeUploadSystem.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Controller
 public class MainController {
@@ -86,6 +87,11 @@ public class MainController {
         if (file != null && !file.isEmpty()) {
             // load the group and the task only if the student has a file to upload.
             Group group = this.groupService.getById(groupId);
+            // check if the current user belongs to the appropriate group.
+            if (currentUser.getGroup().getId() != groupId) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+
             Task task = this.taskService.getById(taskId);
 
             // upload the file

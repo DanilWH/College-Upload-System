@@ -20,21 +20,25 @@
             </form>
         </div>
 
+        <!-- TODO implement spring security. -->
+
         <!-- Upload form. -->
-        <form th:action="@{/upload(groupId=${group.id})}" method="post" enctype="multipart/form-data">
-            <!-- The form for the file uploading. -->
-            <input type="file" name="file" />
-            <div th:if="${uploadError}">
-                <small th:text="${uploadError}"></small>
-            </div>
+        <div sec:authorize="hasAuthority('STUDENT')">
+            <form th:action="@{/upload(groupId=${group.id})}" method="post" enctype="multipart/form-data">
+                <!-- The form for the file uploading. -->
+                <input type="file" name="file" />
+                <div th:if="${uploadError}">
+                    <small th:text="${uploadError}"></small>
+                </div>
 
-            <!-- The 'select' form for choosing the task to which the file will be attached. -->
-            <select name="taskId">
-                <option th:each="task: ${tasks}" th:value="${task.id}" th:text="${task.name}"></option>
-            </select>
+                <!-- The 'select' form for choosing the task to which the file will be attached. -->
+                <select name="taskId">
+                    <option th:each="task: ${tasks}" th:value="${task.id}" th:text="${task.name}"></option>
+                </select>
 
-            <button type="submit">Отправить</button>
-        </form>
+                <button type="submit">Отправить</button>
+            </form>
+        </div>
 
         <table>
             <tr th:each="student: ${students}">
