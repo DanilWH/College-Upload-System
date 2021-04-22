@@ -26,7 +26,6 @@ public class MainController {
 
     @Autowired
     private StudentResultRepo studentResultRepo;
-
     @Autowired
     private GroupService groupService;
     @Autowired
@@ -82,16 +81,18 @@ public class MainController {
             @RequestParam MultipartFile file,
             Model model
     ) throws IOException {
+        // check if the current user belongs to the appropriate group.
+        if (currentUser.getGroup().getId() != groupId) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
+        // TODO ask Shashin how to handle the case when taskId isn't present.
+
         StudentResult studentResult = this.studentResultRepo.findByTaskIdAndUserId(taskId, currentUser.getId());
 
         if (file != null && !file.isEmpty()) {
             // load the group and the task only if the student has a file to upload.
             Group group = this.groupService.getById(groupId);
-            // check if the current user belongs to the appropriate group.
-            if (currentUser.getGroup().getId() != groupId) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
-
             Task task = this.taskService.getById(taskId);
 
             // upload the file

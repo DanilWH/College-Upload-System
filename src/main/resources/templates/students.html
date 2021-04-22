@@ -41,18 +41,21 @@
         </div>
 
         <table>
+            <tr>
+                <th>Имя студента</th>
+                <th>Фамилия студента</th>
+                <th th:each="task: ${tasks}" th:text="${task.name}"></th>
+            </tr>
             <tr th:each="student: ${students}">
                 <td th:text="${student.lastName}"></td>
                 <td th:text="${student.firstName}"></td>
 
-                <!-- TODO implementation of the proper order of tasks. As in: -->
-                <!--
-                    <td th:each="task: ${tasks}">
-                    </td>
-                -->
-
-                <td th:each="result: ${student.results}">
-                    <a th:href="@{/file/{filepath}{filename}(filepath=${result.filepath},filename=${result.filename})}" th:text="${result.task.name}"></a>
+                <td th:each="task: ${tasks}">
+                    <span th:each="result: ${student.results}">
+                        <a th:if="${task.id == result.task.id}"
+                            th:href="@{/file/{filepath}{filename}(filepath=${result.filepath},filename=${result.filename})}"
+                            th:text="${result.task.name}"></a>
+                    </span>
                 </td>
             </tr>
         </table>
