@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+    <head th:replace="/fragments/general :: header(~{::title})">
+        <title>Изменение профиля пользователя [[${user.login}]] | College Upload System</title>
+    </head>
+    <body>
+        <div th:replace="/fragments/general :: navbar"></div>
+
+        <form action="#" th:action="@{/update_user_profile}" th:object="${user}" method="post">
+            <!-- User full name. -->
+            <div>
+                <label for="firstName_id">Имя пользователя: </label>
+                <input id="firstName_id" type="text" name="firstName" th:value="*{firstName}" readonly />
+            </div>
+            <div>
+                <label for="lastName_id">Фамилия пользователя: </label>
+                <input id="lastName_id" type="text" name="lastName" th:value="*{lastName}" readonly />
+            </div>
+
+            <!-- Login. -->
+            <div>
+                <label for="login_id">Логин: </label>
+                <input id="login_id" type="text" name="login" th:value="*{login}" />
+            </div>
+
+            <!-- Password. -->
+            <div>
+                <label for="password_id">Новый пароль: </label>
+                <input id="password_id" type="password" name="password" />
+            </div>
+            <div>
+                <label for="confirmPassword_id">Повторите пароль: </label>
+                <input id="confirmPassword_id" type="password" name="confirmPassword" />
+            </div>
+
+            <div>
+                <button type="submit">Изменить</button>
+            </div>
+        </form>
+    </body>
+</html>

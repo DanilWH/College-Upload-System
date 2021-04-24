@@ -4,6 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -17,7 +18,9 @@ public class User implements UserDetails {
 
     private String firstName;
     private String lastName;
+    @NotBlank(message = "Поле не должно быть пустым")
     private String login;
+    @NotBlank(message = "Поле не должно быть пустым")
     private String password;
 
     @ElementCollection(targetClass = UserRoles.class, fetch = FetchType.EAGER)

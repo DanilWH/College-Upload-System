@@ -8,7 +8,6 @@ import com.example.CollegeUploadSystem.repos.StudentResultRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -24,6 +23,10 @@ public class StudentResultService {
 
     @Autowired
     private StudentResultRepo studentResultRepo;
+
+    public StudentResult getByTaskIdAndUserId(Long taskId, Long userId) {
+        return this.studentResultRepo.findByTaskIdAndUserId(taskId, userId);
+    }
 
     public void uploadStudentResult(
             User currentUser,

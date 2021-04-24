@@ -21,6 +21,7 @@
         <!-- Navbar. -->
         <div th:fragment="navbar">
             <a th:href="@{/}">Главная -</a>
+            <a th:href="@{/edit_user_profile}">Профиль -</a>
 
             <div sec:authorize="!isAuthenticated()">
                 <!-- Log in. -->

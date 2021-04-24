@@ -6,13 +6,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.NoResultException;
 import java.util.List;
 
 @Service
 public class UserService implements UserDetailsService {
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Autowired
     private UserRepo userRepo;
 
@@ -29,5 +33,16 @@ public class UserService implements UserDetailsService {
 
     public List<User> getByGroupIdOrderByLastName(Long groupId) {
         return this.userRepo.findByGroupIdOrderByLastName(groupId);
+    }
+
+    public User getById(Long userId) {
+        return this.userRepo.findById(userId).orElseThrow(NoResultException::new);
+    }
+
+    public void updateUserProfile(User currentUser, User userModel) {
+        currentUser.setLogin(userModel.getLogin());
+        currentUser.setPassword(passwordEncoder.encode(userModel.getPassword()));
+
+        this.userRepo.save(currentUser);
     }
 }
