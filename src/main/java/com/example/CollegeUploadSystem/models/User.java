@@ -33,6 +33,16 @@ public class User implements UserDetails {
     @OrderBy(value = "task_id")
     private List<StudentResult> results;
 
+    public StudentResult getResultByTask(Task task) {
+        for (StudentResult result : this.results) {
+            if (task.getId() == result.getTask().getId()) {
+                return result;
+            }
+        }
+
+        return null;
+    }
+
     public Long getId() {
         return id;
     }

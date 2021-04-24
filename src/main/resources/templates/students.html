@@ -20,8 +20,6 @@
             </form>
         </div>
 
-        <!-- TODO implement spring security. -->
-
         <!-- Upload form. -->
         <div sec:authorize="hasAuthority('STUDENT')">
             <form th:action="@{/upload(groupId=${group.id})}" method="post" enctype="multipart/form-data">
@@ -51,11 +49,11 @@
                 <td th:text="${student.firstName}"></td>
 
                 <td th:each="task: ${tasks}">
-                    <span th:each="result: ${student.results}">
-                        <a th:if="${task.id == result.task.id}"
-                            th:href="@{/file/{filepath}{filename}(filepath=${result.filepath},filename=${result.filename})}"
-                            th:text="${result.task.name}"></a>
-                    </span>
+                    <div th:with="result=${student.getResultByTask(task)}">
+                        <a th:if="${result}"
+                           th:href="@{/file/{filepath}{filename}(filepath=${result.filepath},filename=${result.filename})}"
+                           th:text="${task.name}"></a>
+                    </div>
                 </td>
             </tr>
         </table>

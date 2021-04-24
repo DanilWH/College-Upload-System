@@ -86,8 +86,6 @@ public class MainController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
-        // TODO ask Shashin how to handle the case when taskId isn't present.
-
         StudentResult studentResult = this.studentResultRepo.findByTaskIdAndUserId(taskId, currentUser.getId());
 
         if (file != null && !file.isEmpty()) {
