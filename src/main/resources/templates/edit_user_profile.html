@@ -21,12 +21,14 @@
             <div>
                 <label for="login_id">Логин: </label>
                 <input id="login_id" type="text" name="login" th:value="*{login}" />
+                <div><small th:if="${#fields.hasErrors('login')}" th:errors="*{login}"></small></div>
             </div>
 
             <!-- Password. -->
             <div>
                 <label for="password_id">Новый пароль: </label>
                 <input id="password_id" type="password" name="password" />
+                <div><small th:if="${#fields.hasErrors('password')}" th:uerrors="*{password}"></small></div>
             </div>
             <div>
                 <label for="confirmPassword_id">Повторите пароль: </label>

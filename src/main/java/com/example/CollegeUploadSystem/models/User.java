@@ -1,5 +1,6 @@
 package com.example.CollegeUploadSystem.models;
 
+import com.example.CollegeUploadSystem.validation.constrains.ValidPassword;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -21,6 +22,7 @@ public class User implements UserDetails {
     @NotBlank(message = "Поле не должно быть пустым")
     private String login;
     @NotBlank(message = "Поле не должно быть пустым")
+    @ValidPassword(message = "Пароль не соответствует требованиям")
     private String password;
 
     @ElementCollection(targetClass = UserRoles.class, fetch = FetchType.EAGER)

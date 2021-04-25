@@ -97,8 +97,8 @@ public class StudentController {
     public String updateUserProfile(
             @AuthenticationPrincipal User currentUser,
             @Valid @ModelAttribute("user") User userModel,
-            @RequestParam("confirmPassword") String confirmPassword,
-            BindingResult bindingResult
+            BindingResult bindingResult,
+            @RequestParam("confirmPassword") String confirmPassword
     ) {
         // check if the password match.
         if (confirmPassword != null && !userModel.getPassword().equals(confirmPassword)) {
@@ -108,6 +108,7 @@ public class StudentController {
 
         // check if there are errors in the user form.
         if (!userModel.getPassword().equals(confirmPassword) || bindingResult.hasErrors()) {
+            System.out.println("Errors");
             return "edit_user_profile";
         }
 
