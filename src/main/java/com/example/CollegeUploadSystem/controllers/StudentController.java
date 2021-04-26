@@ -11,7 +11,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -97,18 +96,10 @@ public class StudentController {
     public String updateUserProfile(
             @AuthenticationPrincipal User currentUser,
             @Valid @ModelAttribute("user") User userModel,
-            BindingResult bindingResult,
-            @RequestParam("confirmPassword") String confirmPassword
+            BindingResult bindingResult
     ) {
-        // check if the password match.
-        if (confirmPassword != null && !userModel.getPassword().equals(confirmPassword)) {
-            ObjectError objectError = new ObjectError("confirmPassword", "Пароли не совподают.");
-            bindingResult.addError(objectError);
-        }
-
         // check if there are errors in the user form.
-        if (!userModel.getPassword().equals(confirmPassword) || bindingResult.hasErrors()) {
-            System.out.println("Errors");
+        if (bindingResult.hasErrors()) {
             return "edit_user_profile";
         }
 
