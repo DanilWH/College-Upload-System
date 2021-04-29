@@ -22,6 +22,13 @@
                 <label for="login_id">Логин: </label>
                 <input id="login_id" type="text" name="login" th:value="*{login}" />
                 <div><small th:if="${#fields.hasErrors('login')}" th:errors="*{login}"></small></div>
+                <small>
+                    <ul>
+                        <li>Логин может состоять из латинских и/или русских симолов верхнего и/или нижнего регистра</li>
+                        <li>Логин может содержать цифры</li>
+                        <li>Логин может содержать символы @/-/+/_/./\</li>
+                    </ul>
+                </small>
             </div>
 
             <!-- Password. -->
@@ -29,6 +36,14 @@
                 <label for="password_id">Новый пароль: </label>
                 <input id="password_id" type="password" name="password" />
                 <div><small th:if="${#fields.hasErrors('password')}" th:uerrors="*{password}"></small></div>
+                <small>
+                    <ul>
+                        <li>длина пароля должна быть от 8 до 20 символов</li>
+                        <li>пароль должен содержать хотя бы один символ латинского алфавита</li>
+                        <li>пароль должен содержать хотя бы одну цифру</li>
+                        <li>пароль не должен содержать пробелов</li>
+                    </ul>
+                </small>
             </div>
             <div>
                 <label for="confirmPassword_id">Повторите пароль: </label>

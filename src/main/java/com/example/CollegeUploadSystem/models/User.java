@@ -1,6 +1,7 @@
 package com.example.CollegeUploadSystem.models;
 
 import com.example.CollegeUploadSystem.validation.constrains.PasswordsMatch;
+import com.example.CollegeUploadSystem.validation.constrains.ValidLogin;
 import com.example.CollegeUploadSystem.validation.constrains.ValidPassword;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,9 +23,10 @@ public class User implements UserDetails {
     private String firstName;
     private String lastName;
     @NotBlank(message = "Поле не должно быть пустым")
+    @ValidLogin
     private String login;
     @NotBlank(message = "Поле не должно быть пустым")
-    @ValidPassword(message = "Пароль не соответствует требованиям")
+    @ValidPassword
     private String password;
     @Transient
     private String confirmPassword;

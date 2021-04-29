@@ -39,6 +39,10 @@ public class UserService implements UserDetailsService {
         return this.userRepo.findById(userId).orElseThrow(NoResultException::new);
     }
 
+    public User getByLogin(String login) {
+        return this.userRepo.findByLogin(login);
+    }
+
     public void updateUserProfile(User currentUser, User userModel) {
         currentUser.setLogin(userModel.getLogin());
         currentUser.setPassword(passwordEncoder.encode(userModel.getPassword()));
