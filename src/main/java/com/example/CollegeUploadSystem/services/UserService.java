@@ -1,6 +1,8 @@
 package com.example.CollegeUploadSystem.services;
 
+import com.example.CollegeUploadSystem.models.Group;
 import com.example.CollegeUploadSystem.models.User;
+import com.example.CollegeUploadSystem.models.UserRoles;
 import com.example.CollegeUploadSystem.repos.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.NoResultException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -48,5 +53,42 @@ public class UserService implements UserDetailsService {
         currentUser.setPassword(passwordEncoder.encode(userModel.getPassword()));
 
         this.userRepo.save(currentUser);
+    }
+
+    public void addAllStudents(List<User> students, Group group, User admin) {
+        List<User> processedStudents = new ArrayList<>();
+
+        // prepare the students of the new group for storing in the database.
+        students.forEach((student) -> {
+            if (student != null && !(student.getFirstName() + student.getLastName() + student.getFatherName()).isEmpty()) {
+                // set the student login.
+                student.setLogin(String.format("%s_%s%s%s",
+                        student.getLastName(),
+                        student.getFirstName().charAt(0),
+                        student.getFatherName().charAt(0),
+                        students.indexOf(student))
+                );
+                // encrypt the password and set it to the current student.
+                // every student's login is the password by default.
+                student.setPassword(passwordEncoder.encode(student.getLogin()));
+                // set the creation time.
+                student.setCreationTime(LocalDateTime.now());
+                // set admin as the creator of the current student.
+                student.setUserCreator(admin);
+                // set the time of the student creation as the time which the password was changed at.
+                student.setPasswordChangeTime(student.getCreationTime());
+                // set the student creator as the student password changer.
+                student.setPasswordChanger(student.getUserCreator());
+                // set the role to the student.
+                student.setUserRoles(Collections.singleton(UserRoles.STUDENT));
+                // make the student belong to the group.
+                student.setGroup(group);
+                // add the student to the processedStudents list.
+                processedStudents.add(student);
+            }
+        });
+
+        // save the new students of the new group.
+        this.userRepo.saveAll(processedStudents);
     }
 }

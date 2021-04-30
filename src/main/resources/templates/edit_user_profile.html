@@ -20,7 +20,7 @@
             <!-- Login. -->
             <div>
                 <label for="login_id">Логин: </label>
-                <input id="login_id" type="text" name="login" th:value="*{login}" />
+                <input id="login_id" type="text" name="login" th:value="*{login}" required autofocus />
                 <div><small th:if="${#fields.hasErrors('login')}" th:errors="*{login}"></small></div>
                 <small>
                     <ul>
@@ -34,7 +34,7 @@
             <!-- Password. -->
             <div>
                 <label for="password_id">Новый пароль: </label>
-                <input id="password_id" type="password" name="password" />
+                <input id="password_id" type="password" name="password" required />
                 <div><small th:if="${#fields.hasErrors('password')}" th:uerrors="*{password}"></small></div>
                 <small>
                     <ul>
@@ -47,7 +47,7 @@
             </div>
             <div>
                 <label for="confirmPassword_id">Повторите пароль: </label>
-                <input id="confirmPassword_id" type="password" name="confirmPassword" />
+                <input id="confirmPassword_id" type="password" name="confirmPassword" required />
                 <div><small th:errors="${user}"></small></div>
             </div>
 

@@ -12,8 +12,8 @@
                 Неверное имя пользователя или пароль.
             </div>
             <form th:action="@{/login}" method="post">
-                <div><label>Логин: <input type="text" name="username"/> </label></div>
-                <div><label>Пароль: <input type="password" name="password"/> </label></div>
+                <div><label>Логин: <input type="text" name="username" required autofocus /> </label></div>
+                <div><label>Пароль: <input type="password" name="password" required /> </label></div>
                 <div><input type="submit" value="Войти"/></div>
             </form>
         </div>

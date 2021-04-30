@@ -3,7 +3,6 @@ package com.example.CollegeUploadSystem.controllers;
 import com.example.CollegeUploadSystem.models.Group;
 import com.example.CollegeUploadSystem.models.Task;
 import com.example.CollegeUploadSystem.models.User;
-import com.example.CollegeUploadSystem.models.UserRoles;
 import com.example.CollegeUploadSystem.services.GroupService;
 import com.example.CollegeUploadSystem.services.TaskService;
 import com.example.CollegeUploadSystem.services.UserService;
@@ -52,6 +51,7 @@ public class AdminController {
 
     @PostMapping("/new_group")
     public String newGroupSaving(
+            @AuthenticationPrincipal User admin,
             @Valid @ModelAttribute("groupForm") Group groupForm,
             BindingResult bindingResult
     ) {
@@ -59,7 +59,7 @@ public class AdminController {
             return "admin/newGroup";
         }
 
-        this.groupService.saveGroup(groupForm);
+        this.groupService.saveGroup(groupForm, admin);
 
         return "redirect:/";
     }

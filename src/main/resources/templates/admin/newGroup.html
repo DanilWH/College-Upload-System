@@ -18,16 +18,14 @@
                     <tr>
                         <th>Имя</th>
                         <th>Фамилия</th>
-                        <th>Логин</th>
-                        <th>Пароль</th>
+                        <th>Отчество</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="student, itemStat : *{students}">
                         <td><input th:field="*{students[__${itemStat.index}__].firstName}" /></td>
                         <td><input th:field="*{students[__${itemStat.index}__].lastName}" /></td>
-                        <td><input th:field="*{students[__${itemStat.index}__].login}" /></td>
-                        <td><input th:field="*{students[__${itemStat.index}__].password}" /></td>
+                        <td><input th:field="*{students[__${itemStat.index}__].fatherName}" /></td>
                     </tr>
                 </tbody>
             </table>
