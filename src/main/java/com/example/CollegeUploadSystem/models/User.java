@@ -34,15 +34,15 @@ public class User implements UserDetails {
     @Transient
     private String confirmPassword;
 
-    private LocalDateTime creationTime;
-    private LocalDateTime passwordChangeTime;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_creator_id")
     private User userCreator;
+    private LocalDateTime creationTime;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "password_changer_id")
     private User passwordChanger;
+    private LocalDateTime passwordChangeTime;
 
     @ElementCollection(targetClass = UserRoles.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
@@ -123,6 +123,13 @@ public class User implements UserDetails {
         this.confirmPassword = confirmPassword;
     }
 
+    public User getUserCreator() {
+        return userCreator;
+    }
+
+    public void setUserCreator(User userCreator) {
+        this.userCreator = userCreator;
+    }
     public LocalDateTime getCreationTime() {
         return creationTime;
     }
@@ -131,28 +138,20 @@ public class User implements UserDetails {
         this.creationTime = creationTime;
     }
 
-    public LocalDateTime getPasswordChangeTime() {
-        return passwordChangeTime;
-    }
-
-    public void setPasswordChangeTime(LocalDateTime passwordChangeTime) {
-        this.passwordChangeTime = passwordChangeTime;
-    }
-
-    public User getUserCreator() {
-        return userCreator;
-    }
-
-    public void setUserCreator(User userCreator) {
-        this.userCreator = userCreator;
-    }
-
     public User getPasswordChanger() {
         return passwordChanger;
     }
 
     public void setPasswordChanger(User passwordChanger) {
         this.passwordChanger = passwordChanger;
+    }
+
+    public LocalDateTime getPasswordChangeTime() {
+        return passwordChangeTime;
+    }
+
+    public void setPasswordChangeTime(LocalDateTime passwordChangeTime) {
+        this.passwordChangeTime = passwordChangeTime;
     }
 
     public Set<UserRoles> getUserRoles() {

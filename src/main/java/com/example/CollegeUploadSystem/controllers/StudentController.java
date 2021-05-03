@@ -11,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -98,6 +99,19 @@ public class StudentController {
             @Valid @ModelAttribute("user") User userModel,
             BindingResult bindingResult
     ) {
+        // the "The login ... already exists" rule is checked in the controller because of the inability to
+        // put the current user session in the constraint validator and compare if the user has changed its
+        // login or not so we know if we should check the user's new login existence in the database.
+        if (!currentUser.getLogin().equals(userModel.getLogin())) {
+            if (this.userService.getByLogin(userModel.getLogin()) != null) {
+                FieldError error = new FieldError(bindingResult.getObjectName(),
+                        "login",
+                        "Логин " + userModel.getLogin() + " занят другим пользователем"
+                );
+                bindingResult.addError(error);
+            }
+        }
+
         // check if there are errors in the user form.
         if (bindingResult.hasErrors()) {
             return "edit_user_profile";

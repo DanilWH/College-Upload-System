@@ -49,8 +49,11 @@ public class UserService implements UserDetailsService {
     }
 
     public void updateUserProfile(User currentUser, User userModel) {
+        // TODO change the structure of the parameters (userToUpdate, currentUser(aka admin), userMode).
         currentUser.setLogin(userModel.getLogin());
         currentUser.setPassword(passwordEncoder.encode(userModel.getPassword()));
+        currentUser.setPasswordChanger(currentUser);
+        currentUser.setPasswordChangeTime(LocalDateTime.now());
 
         this.userRepo.save(currentUser);
     }

@@ -10,18 +10,25 @@
             <!-- User full name. -->
             <div>
                 <label for="firstName_id">Имя пользователя: </label>
-                <input id="firstName_id" type="text" name="firstName" th:value="*{firstName}" readonly />
+                <input id="firstName_id" type="text" name="firstName" th:value="*{firstName}" disabled />
             </div>
             <div>
                 <label for="lastName_id">Фамилия пользователя: </label>
-                <input id="lastName_id" type="text" name="lastName" th:value="*{lastName}" readonly />
+                <input id="lastName_id" type="text" name="lastName" th:value="*{lastName}" disabled />
+            </div>
+            <div>
+                <label for="fatherName_id">Отчество пользователя: </label>
+                <input id="fatherName_id" type="text" name="fatherName" th:value="*{fatherName}" disabled />
             </div>
 
             <!-- Login. -->
             <div>
                 <label for="login_id">Логин: </label>
                 <input id="login_id" type="text" name="login" th:value="*{login}" required autofocus />
-                <div><small th:if="${#fields.hasErrors('login')}" th:errors="*{login}"></small></div>
+                <!-- errors. -->
+                <div class="errors">
+                    <small th:if="${#fields.hasErrors('login')}" th:errors="*{login}"></small>
+                </div>
                 <small>
                     <ul>
                         <li>Логин может состоять из латинских и/или русских симолов верхнего и/или нижнего регистра</li>
@@ -35,7 +42,10 @@
             <div>
                 <label for="password_id">Новый пароль: </label>
                 <input id="password_id" type="password" name="password" required />
-                <div><small th:if="${#fields.hasErrors('password')}" th:uerrors="*{password}"></small></div>
+                <!-- errors. -->
+                <div class="errors">
+                    <small th:if="${#fields.hasErrors('password')}" th:uerrors="*{password}"></small>
+                </div>
                 <small>
                     <ul>
                         <li>длина пароля должна быть от 8 до 20 символов</li>
@@ -48,7 +58,10 @@
             <div>
                 <label for="confirmPassword_id">Повторите пароль: </label>
                 <input id="confirmPassword_id" type="password" name="confirmPassword" required />
-                <div><small th:errors="${user}"></small></div>
+                <!-- errors. -->
+                <div class="errors">
+                    <small th:errors="${user}"></small>
+                </div>
             </div>
 
             <div>

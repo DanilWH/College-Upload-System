@@ -23,6 +23,7 @@ import java.util.List;
 @PreAuthorize("hasAuthority('ADMIN')")
 @RequestMapping("/admin")
 public class AdminController {
+    // TODO For the admin, add the ability to view all the users and change their profile.
 
     @Value("${number.of.students}")
     private int numberOfStudents;
