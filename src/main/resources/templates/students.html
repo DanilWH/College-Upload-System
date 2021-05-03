@@ -21,6 +21,7 @@
         </div>
 
         <!-- Upload form. -->
+        <!-- TODO Hide the form if the current student doesn't belong to the group the student is watching. -->
         <div sec:authorize="hasAuthority('STUDENT')">
             <form th:action="@{/upload(groupId=${group.id})}" method="post" enctype="multipart/form-data">
                 <!-- The form for the file uploading. -->
