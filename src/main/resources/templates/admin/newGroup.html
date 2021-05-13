@@ -4,35 +4,19 @@
     <title>Создание новой группы | College Upload System</title>
 </head>
 <body>
-    <!-- TODO Implement the ability to add new student from a csv file. -->
     <div th:replace="fragments/general :: navbar"></div>
 
-    <form action="#" th:action="@{/admin/new_group}" th:object="${groupForm}" method="post">
+    <form action="#" th:action="@{/admin/new_group}" th:object="${groupForm}" method="post" enctype="multipart/form-data">
         <fieldset>
             <!-- The name of the new group. -->
             <label for="name_id">Название группы: </label>
             <input id="name_id" type="text" name="name" /><br />
             <small th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></small>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Имя</th>
-                        <th>Фамилия</th>
-                        <th>Отчество</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="student, itemStat : *{students}">
-                        <td><input th:field="*{students[__${itemStat.index}__].firstName}" /></td>
-                        <td><input th:field="*{students[__${itemStat.index}__].lastName}" /></td>
-                        <td><input th:field="*{students[__${itemStat.index}__].fatherName}" /></td>
-                    </tr>
-                </tbody>
-            </table>
+            <input type="file" name="file" />
+            <small th:if="${fileError}" th:text="${fileError}"></small>
 
-            <button type="submit">Создать группу.</button>
-        </fieldset>
+            <button type="submit">Создать</button>
     </form>
 </body>
 </html>

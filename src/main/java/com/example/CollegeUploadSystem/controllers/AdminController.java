@@ -6,6 +6,7 @@ import com.example.CollegeUploadSystem.models.User;
 import com.example.CollegeUploadSystem.services.GroupService;
 import com.example.CollegeUploadSystem.services.TaskService;
 import com.example.CollegeUploadSystem.services.UserService;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,9 +15,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -37,15 +39,7 @@ public class AdminController {
 
     @GetMapping("/new_group")
     public String newGroupForm(Model model) {
-        Group groupForm = new Group();
-        List<User> students = new ArrayList<>();
-
-        for (int i = 0; i < this.numberOfStudents; i++) {
-            students.add(new User());
-        }
-        groupForm.setStudents(students);
-
-        model.addAttribute("groupForm", groupForm);
+        model.addAttribute("groupForm", new Group());
 
         return "admin/newGroup";
     }
@@ -53,14 +47,22 @@ public class AdminController {
     @PostMapping("/new_group")
     public String newGroupSaving(
             @AuthenticationPrincipal User admin,
+            @RequestParam MultipartFile file,
             @Valid @ModelAttribute("groupForm") Group groupForm,
-            BindingResult bindingResult
-    ) {
-        if (bindingResult.hasErrors()) {
+            BindingResult bindingResult,
+            Model model
+    ) throws IOException {
+        // check the correctness of the file extension.
+        String fileExt = FilenameUtils.getExtension(file.getOriginalFilename());
+        if (!fileExt.equals("csv")) {
+            model.addAttribute("fileError", "Не csv файл");
+        }
+
+        if (!fileExt.equals("csv") || bindingResult.hasErrors()) {
             return "admin/newGroup";
         }
 
-        this.groupService.saveGroup(groupForm, admin);
+        this.groupService.saveGroup(file, groupForm, admin);
 
         return "redirect:/";
     }
