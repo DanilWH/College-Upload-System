@@ -63,7 +63,7 @@ public class StudentController {
             Model model
     ) throws IOException {
         // check if the current user belongs to the appropriate group.
-        if (currentUser.getGroup().getId() != groupId) {
+        if (!currentUser.getGroup().getId().equals(groupId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
