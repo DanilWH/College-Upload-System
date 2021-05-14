@@ -48,14 +48,21 @@ public class UserService implements UserDetailsService {
         return this.userRepo.findByLogin(login);
     }
 
-    public void updateUserProfile(User currentUser, User userModel) {
-        // TODO change the structure of the parameters (userToUpdate, currentUser(aka admin), userMode).
-        currentUser.setLogin(userModel.getLogin());
-        currentUser.setPassword(passwordEncoder.encode(userModel.getPassword()));
-        currentUser.setPasswordChanger(currentUser);
-        currentUser.setPasswordChangeTime(LocalDateTime.now());
+    public void updateUserProfile(User userToUpdate, User currentUser, User userModel) {
+        // the admin has the right to change a student's first name, last name, and father's name.
+        // but the student doesn't itself.
+        if (userToUpdate.getUserRoles().contains(UserRoles.ADMIN)) {
+            userToUpdate.setFirstName(userModel.getFirstName());
+            userToUpdate.setLastName(userModel.getLastName());
+            userToUpdate.setFatherName(userToUpdate.getFatherName());
+        }
 
-        this.userRepo.save(currentUser);
+        userToUpdate.setLogin(userModel.getLogin());
+        userToUpdate.setPassword(passwordEncoder.encode(userModel.getPassword()));
+        userToUpdate.setPasswordChanger(currentUser);
+        userToUpdate.setPasswordChangeTime(LocalDateTime.now());
+
+        this.userRepo.save(userToUpdate);
     }
 
     public void addAllStudents(List<User> students, Group group, User admin) {

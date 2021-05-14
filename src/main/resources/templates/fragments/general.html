@@ -22,7 +22,6 @@
         <!-- Navbar. -->
         <div th:fragment="navbar">
             <a th:href="@{/}">Главная -</a>
-            <a th:href="@{/edit_user_profile}">Профиль -</a>
 
             <div sec:authorize="!isAuthenticated()">
                 <!-- Log in. -->
@@ -30,6 +29,7 @@
             </div>
 
             <div sec:authorize="isAuthenticated()">
+                <a th:href="@{/user/{user}/edit_profile(user=${#request.userPrincipal.principal.id})}">Профиль -</a>
 
                 Привет, <span sec:authentication="name"></span>
                 <!-- Logout. -->

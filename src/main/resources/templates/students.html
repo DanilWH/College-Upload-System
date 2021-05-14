@@ -39,14 +39,23 @@
         </div>
 
         <table>
+            <!-- Header of the table. -->
             <tr>
-                <th>Имя студента</th>
-                <th>Фамилия студента</th>
+                <th>Имя Фамилия студента</th>
                 <th th:each="task: ${tasks}" th:text="${task.name}"></th>
             </tr>
+
+            <!-- Body of the table. -->
             <tr th:each="student: ${students}">
-                <td th:text="${student.lastName}"></td>
-                <td th:text="${student.firstName}"></td>
+                <td>
+                    <!-- Show the student full name as a link only for the admin. -->
+                    <div sec:authorize="hasAuthority('ADMIN')">
+                        <a href="#" th:href="@{/user/{user}/edit_profile(user=${student.id})}">[[${student.lastName}]] [[${student.firstName}]]</a>
+                    </div>
+                    <div sec:authorize="!hasAuthority('ADMIN')">
+                        [[${student.lastName}]] [[${student.firstName}]]
+                    </div>
+                </td>
 
                 <td th:each="task: ${tasks}">
                     <div th:with="result=${student.getResultByTask(task)}">

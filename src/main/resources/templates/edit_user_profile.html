@@ -1,24 +1,24 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
     <head th:replace="/fragments/general :: header(~{::title})">
         <title>Изменение профиля пользователя [[${user.login}]] | College Upload System</title>
     </head>
     <body>
         <div th:replace="/fragments/general :: navbar"></div>
 
-        <form action="#" th:action="@{/update_user_profile}" th:object="${user}" method="post">
+        <form action="#" th:action="@{/user/{user}/update_profile(user=${user.id})}" th:object="${user}" method="post">
             <!-- User full name. -->
             <div>
                 <label for="firstName_id">Имя пользователя: </label>
-                <input id="firstName_id" type="text" name="firstName" th:value="*{firstName}" disabled />
+                <input id="firstName_id" type="text" name="firstName" th:value="*{firstName}" th:disabled="${!#authorization.expression('hasAuthority(''ADMIN'')')}" />
             </div>
             <div>
                 <label for="lastName_id">Фамилия пользователя: </label>
-                <input id="lastName_id" type="text" name="lastName" th:value="*{lastName}" disabled />
+                <input id="lastName_id" type="text" name="lastName" th:value="*{lastName}" th:disabled="${!#authorization.expression('hasAuthority(''ADMIN'')')}" />
             </div>
             <div>
                 <label for="fatherName_id">Отчество пользователя: </label>
-                <input id="fatherName_id" type="text" name="fatherName" th:value="*{fatherName}" disabled />
+                <input id="fatherName_id" type="text" name="fatherName" th:value="*{fatherName}" th:disabled="${!#authorization.expression('hasAuthority(''ADMIN'')')}" />
             </div>
 
             <!-- Login. -->

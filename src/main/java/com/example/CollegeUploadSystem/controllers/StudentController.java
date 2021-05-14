@@ -83,26 +83,34 @@ public class StudentController {
         return students(currentUser, groupId, model);
     }
 
-    @GetMapping("/edit_user_profile")
+    @GetMapping("/user/{user}/edit_profile")
     public String editUserProfile(
-            @AuthenticationPrincipal User user,
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable("user") User initialUser,
             Model model
     ) {
-        model.addAttribute("user", user);
+        // throw the 403 error if a student tries to open someone else's profile.
+        protectAccessToUserProfile(currentUser, initialUser);
+
+        model.addAttribute("user", initialUser);
 
         return "edit_user_profile";
     }
 
-    @PostMapping("/update_user_profile")
+    @PostMapping("/user/{userId}/update_profile")
     public String updateUserProfile(
             @AuthenticationPrincipal User currentUser,
+            @PathVariable("userId") User initialUser, // TODO make the user.id a hidden filed and call this with @RequestParam
             @Valid @ModelAttribute("user") User userModel,
             BindingResult bindingResult
     ) {
+        // throw the 403 error if a student tries to edit someone else's profile.
+        protectAccessToUserProfile(currentUser, initialUser);
+
         // the "The login ... already exists" rule is checked in the controller because of the inability to
         // put the current user session in the constraint validator and compare if the user has changed its
         // login or not so we know if we should check the user's new login existence in the database.
-        if (!currentUser.getLogin().equals(userModel.getLogin())) {
+        if (!initialUser.getLogin().equals(userModel.getLogin())) {
             if (this.userService.getByLogin(userModel.getLogin()) != null) {
                 FieldError error = new FieldError(bindingResult.getObjectName(),
                         "login",
@@ -117,8 +125,19 @@ public class StudentController {
             return "edit_user_profile";
         }
 
-        this.userService.updateUserProfile(currentUser, userModel);
+        // if the user is editing its own profile.
+        if (currentUser.getId().equals(initialUser.getId())) {
+            this.userService.updateUserProfile(currentUser, currentUser, userModel);
+        } else { // if the admin is editing someone's profile.
+            this.userService.updateUserProfile(initialUser, currentUser, userModel);
+        }
 
         return "redirect:/";
+    }
+
+    private void protectAccessToUserProfile(User currentUser, User initialUser) {
+        if (currentUser.getUserRoles().contains(UserRoles.STUDENT) && !currentUser.getId().equals(initialUser.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
     }
 }
