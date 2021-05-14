@@ -21,7 +21,7 @@
         </div>
 
         <!-- Upload form. -->
-        <div th:if="${#request.userPrincipal?.principal?.group?.id == group?.id}">
+        <div th:if="${#request.userPrincipal?.principal?.group?.id == group?.id && tasks.size() > 0}">
             <form th:action="@{/upload(groupId=${group.id})}" method="post" enctype="multipart/form-data">
                 <!-- The form for the file uploading. -->
                 <input type="file" name="file" />
