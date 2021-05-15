@@ -21,8 +21,11 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotBlank(message = "Поле не должно быть пустым")
     private String firstName;
+    @NotBlank(message = "Поле не должно быть пустым")
     private String lastName;
+    @NotBlank(message = "Поле не должно быть пустым")
     private String fatherName;
 
     @NotBlank(message = "Поле не должно быть пустым")

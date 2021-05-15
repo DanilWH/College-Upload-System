@@ -11,14 +11,17 @@
             <div>
                 <label for="firstName_id">Имя пользователя: </label>
                 <input id="firstName_id" type="text" name="firstName" th:value="*{firstName}" th:disabled="${!#authorization.expression('hasAuthority(''ADMIN'')')}" />
+                <div class="errors"><small th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></small></div>
             </div>
             <div>
                 <label for="lastName_id">Фамилия пользователя: </label>
                 <input id="lastName_id" type="text" name="lastName" th:value="*{lastName}" th:disabled="${!#authorization.expression('hasAuthority(''ADMIN'')')}" />
+                <div class="errors"><small th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></small></div>
             </div>
             <div>
                 <label for="fatherName_id">Отчество пользователя: </label>
                 <input id="fatherName_id" type="text" name="fatherName" th:value="*{fatherName}" th:disabled="${!#authorization.expression('hasAuthority(''ADMIN'')')}" />
+                <div class="errors"><small th:if="${#fields.hasErrors('fatherName')}" th:errors="*{fatherName}"></small></div>
             </div>
 
             <!-- Login. -->
