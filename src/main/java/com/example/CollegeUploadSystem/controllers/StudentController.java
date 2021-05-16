@@ -122,6 +122,13 @@ public class StudentController {
 
         // check if there are errors in the user form.
         if (bindingResult.hasErrors()) {
+            // because disabled fields don't return their values, we put the user full name in the context
+            // in order to show the in the fields again.
+            userModel.setId(initialUser.getId());
+            userModel.setFirstName(initialUser.getFirstName());
+            userModel.setLastName(initialUser.getLastName());
+            userModel.setFatherName(initialUser.getFatherName());
+
             return "edit_user_profile";
         }
 

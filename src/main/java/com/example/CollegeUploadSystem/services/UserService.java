@@ -58,9 +58,13 @@ public class UserService implements UserDetailsService {
         }
 
         userToUpdate.setLogin(userModel.getLogin());
-        userToUpdate.setPassword(passwordEncoder.encode(userModel.getPassword()));
-        userToUpdate.setPasswordChanger(currentUser);
-        userToUpdate.setPasswordChangeTime(LocalDateTime.now());
+
+        // we don't want to change the user's password if the password is null.
+        if (userModel.getPassword() != null) {
+            userToUpdate.setPassword(passwordEncoder.encode(userModel.getPassword()));
+            userToUpdate.setPasswordChanger(currentUser);
+            userToUpdate.setPasswordChangeTime(LocalDateTime.now());
+        }
 
         this.userRepo.save(userToUpdate);
     }

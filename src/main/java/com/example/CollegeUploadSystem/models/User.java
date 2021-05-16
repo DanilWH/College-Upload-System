@@ -28,10 +28,8 @@ public class User implements UserDetails {
     @NotBlank(message = "Поле не должно быть пустым")
     private String fatherName;
 
-    @NotBlank(message = "Поле не должно быть пустым")
     @ValidLogin
     private String login;
-    @NotBlank(message = "Поле не должно быть пустым")
     @ValidPassword
     private String password;
     @Transient
