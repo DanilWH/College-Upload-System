@@ -8,3 +8,8 @@
     margin-left: 5px;
     margin-bottom: 3px;
 }
+
+#password_change_button {
+    width: 540px;
+    margin-bottom: 10px;
+}
