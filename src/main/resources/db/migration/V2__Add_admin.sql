@@ -1,10 +1,13 @@
-insert into users (id, first_name, last_name, login, password) values (
-    0,
-    'Igor',
-    'Anatolevich',
+INSERT INTO users (id, first_name, last_name, father_name, login, password) VALUES (
+    1,
+    'Игорь',
+    'Шашин',
+    'Анатольевич',
     'admin',
-    '$2y$12$rR7yaX6pbAN/glad6bBypuShvyAq3SS9RMphujBs99Yq8f2hK5AaW'
+    '$2y$12$7tIlQDyGq7vQy/3kbBMX0OOwfgwjuxCniN8bt8DKlpoEO63CzaFXW'
 );
 
-insert into user_roles (user_id, user_roles) values (0, 'ADMIN');
-update hibernate_sequence set next_val = 1;
+INSERT INTO user_roles (user_id, user_roles)
+    VALUES (1, 'ADMIN');
+
+UPDATE hibernate_sequence SET next_val = 2;
