@@ -23,6 +23,8 @@ import java.util.List;
 @Controller
 public class StudentController {
 
+    private final String FIELD_ERROR_MESSAGE = "Поле не должно быть пустым";
+
     @Autowired
     private UserService userService;
     @Autowired
@@ -120,6 +122,14 @@ public class StudentController {
             }
         }
 
+        // because the admin can edit a user's full name
+        // we check for @NotBlank the user's full name fields if the current user is admin.
+        if (currentUser.getUserRoles().contains(UserRoles.ADMIN)) {
+            fieldNotBlank(bindingResult, "firstName", userModel.getFirstName(), FIELD_ERROR_MESSAGE);
+            fieldNotBlank(bindingResult, "lastName", userModel.getLastName(), FIELD_ERROR_MESSAGE);
+            fieldNotBlank(bindingResult, "fatherName", userModel.getFatherName(), FIELD_ERROR_MESSAGE);
+        }
+
         // check if there are errors in the user form.
         if (bindingResult.hasErrors()) {
             // because disabled fields don't return their values, we put the user full name in the context
@@ -142,9 +152,32 @@ public class StudentController {
         return "redirect:/";
     }
 
+    /**
+     * Throws the 403 (Forbidden) error if a student tries to edit someone else's profile.
+     *
+     * @return void
+     */
     private void protectAccessToUserProfile(User currentUser, User initialUser) {
         if (currentUser.getUserRoles().contains(UserRoles.STUDENT) && !currentUser.getId().equals(initialUser.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+    }
+
+    /**
+     * Checks if a field value of the binding object is blank
+     * and adds an error into the binding result if true.
+     *
+     * @return void
+     */
+    private void fieldNotBlank(
+            BindingResult bindingResult,
+            String fieldName,
+            String fieldValue,
+            String defaultMessage
+    ) {
+        if (fieldValue.isBlank()) {
+            FieldError error = new FieldError(bindingResult.getObjectName(), fieldName, defaultMessage);
+            bindingResult.addError(error);
         }
     }
 }
