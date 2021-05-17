@@ -45,6 +45,7 @@
             <div>
                 <label for="password_id">Новый пароль: </label>
                 <input id="password_id" type="password" name="password" required />
+                <img class = "password_eye" src = "/img/view.svg" height="">
                 <!-- errors. -->
                 <div class="errors">
                     <small th:if="${#fields.hasErrors('password')}" th:uerrors="*{password}"></small>
@@ -61,6 +62,7 @@
             <div>
                 <label for="confirmPassword_id">Повторите пароль: </label>
                 <input id="confirmPassword_id" type="password" name="confirmPassword" required />
+                <img class = "password_eye" src = "/img/view.svg">
                 <!-- errors. -->
                 <div class="errors">
                     <small th:errors="${user}"></small>
@@ -71,5 +73,45 @@
                 <button type="submit">Изменить</button>
             </div>
         </form>
+    <script>
+        const eyes = document.querySelectorAll(".password_eye");
+        let isEyePressed = false;
+
+        eyes.forEach( e => {
+            e.addEventListener("mousedown", OnEyePressed);
+            e.addEventListener("mouseup", OnEyePressReleased);
+        });
+
+        function OnEyePressed(e) {
+            const inputField = getPreviousSiblingInputNode(e.target);
+            changePasswordInputFieldType(inputField);
+            changeEyeIcon(e.target);
+        }
+
+        function OnEyePressReleased(e) {
+            const inputField = getPreviousSiblingInputNode(e.target);
+            changePasswordInputFieldType(inputField);
+            changeEyeIcon(e.target);
+        }
+
+        function changeEyeIcon(eye) {
+            eye.src = (isEyePressed ? "/img/view.svg" : "/img/eye.svg");
+
+            isEyePressed = !isEyePressed;
+        }
+
+        const changePasswordInputFieldType = (e) =>
+            e.type = (e.type === "password" ? "text" : "password");
+
+        function getPreviousSiblingInputNode(element) {
+            if(element == null)
+                return false;
+
+            if(element.nodeName	=== "input".toUpperCase())
+                return element;
+
+            return getPreviousSiblingInputNode(element.previousSibling);
+        }
+    </script>
     </body>
 </html>
