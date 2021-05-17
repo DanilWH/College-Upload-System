@@ -45,7 +45,7 @@
             <div>
                 <label for="password_id">Новый пароль: </label>
                 <input id="password_id" type="password" name="password" required />
-                <img class = "password_eye" src = "/img/view.svg" height="">
+                <img class = "password_eye" src = "/img/eye.svg" height="">
                 <!-- errors. -->
                 <div class="errors">
                     <small th:if="${#fields.hasErrors('password')}" th:uerrors="*{password}"></small>
@@ -62,7 +62,7 @@
             <div>
                 <label for="confirmPassword_id">Повторите пароль: </label>
                 <input id="confirmPassword_id" type="password" name="confirmPassword" required />
-                <img class = "password_eye" src = "/img/view.svg">
+                <img class = "password_eye" src = "/img/eye.svg">
                 <!-- errors. -->
                 <div class="errors">
                     <small th:errors="${user}"></small>
