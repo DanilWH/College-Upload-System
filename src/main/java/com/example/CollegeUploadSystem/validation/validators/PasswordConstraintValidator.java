@@ -19,6 +19,12 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
 
     @Override
     public boolean isValid(String password, ConstraintValidatorContext context) {
+        // if the password's value is null, that means the user doesn't want to change the password
+        // when editing its profile, so we just skip the password validation if the password is null.
+        if (password == null) {
+            return true;
+        }
+
         Properties properties = new Properties();
         try {
             properties.load(new FileInputStream("src/main/resources/passay.properties"));
