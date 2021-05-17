@@ -54,7 +54,7 @@ public class UserService implements UserDetailsService {
         if (userToUpdate.getUserRoles().contains(UserRoles.ADMIN)) {
             userToUpdate.setFirstName(userModel.getFirstName());
             userToUpdate.setLastName(userModel.getLastName());
-            userToUpdate.setFatherName(userToUpdate.getFatherName());
+            userToUpdate.setFatherName(userModel.getFatherName());
         }
 
         userToUpdate.setLogin(userModel.getLogin());
