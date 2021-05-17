@@ -42,14 +42,16 @@ public class GroupService {
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         String row;
         while ((row = br.readLine()) != null) {
-            String[] data = row.split(",");
+            if (!row.isBlank()) {
+                String[] data = row.split(",");
 
-            User newStudent = new User();
-            newStudent.setFirstName(data[1]);
-            newStudent.setLastName(data[0]);
-            newStudent.setFatherName(data[2]);
+                User newStudent = new User();
+                newStudent.setFirstName(data[1]);
+                newStudent.setLastName(data[0]);
+                newStudent.setFatherName(data[2]);
 
-            groupForm.getStudents().add(newStudent);
+                groupForm.getStudents().add(newStudent);
+            }
         }
 
         // save the group in the database.
