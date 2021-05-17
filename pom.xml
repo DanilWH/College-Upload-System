@@ -17,6 +17,12 @@
 		<java.version>1.8</java.version>
 	</properties>
 	<dependencies>
+		<!-- RememberMe dependency. -->
+		<dependency>
+			<groupId>org.springframework.session</groupId>
+			<artifactId>spring-session-jdbc</artifactId>
+		</dependency>
+
 		<!-- Allows to get a file extension. -->
 		<dependency>
 			<groupId>commons-io</groupId>
