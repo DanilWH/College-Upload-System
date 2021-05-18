@@ -5,6 +5,10 @@ import com.example.CollegeUploadSystem.models.User;
 import com.example.CollegeUploadSystem.models.UserRoles;
 import com.example.CollegeUploadSystem.repos.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -67,6 +71,12 @@ public class UserService implements UserDetailsService {
         }
 
         this.userRepo.save(userToUpdate);
+
+        // dynamically update a logged user's session.
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        List<GrantedAuthority> authorities = new ArrayList<>(auth.getAuthorities());
+        Authentication newAuth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(), auth.getCredentials(), authorities);
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
     }
 
     public void addAllStudents(List<User> students, Group group, User admin) {
