@@ -110,6 +110,15 @@ public class CommonController {
             this.userService.updateUserProfile(initialUser, currentUser, userModel);
         }
 
-        return "redirect:/";
+        // if the admin is editing a student's profile, redirect
+        // the admin back to the same student group page.
+        if (
+                currentUser.getUserRoles().contains(UserRoles.ADMIN) &&
+                !currentUser.getId().equals(initialUser.getId())
+        ) {
+            return "redirect:/group/" + initialUser.getGroup().getId() + "/students";
+        } else {
+            return "redirect:/";
+        }
     }
 }
