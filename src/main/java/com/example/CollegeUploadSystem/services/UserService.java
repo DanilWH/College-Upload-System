@@ -83,7 +83,7 @@ public class UserService implements UserDetailsService {
                     student.getLastName(),
                     student.getFirstName().charAt(0),
                     student.getFatherName().charAt(0),
-                    students.indexOf(student))
+                    students.indexOf(student) + 1)
             );
             // encrypt the password and set it to the current student.
             // every student's login is the password by default.
