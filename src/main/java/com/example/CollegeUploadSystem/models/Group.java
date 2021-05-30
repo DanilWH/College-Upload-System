@@ -3,6 +3,7 @@ package com.example.CollegeUploadSystem.models;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -14,6 +15,8 @@ public class Group implements Serializable {
 
     @NotBlank(message = "Заполните поле")
     private String name;
+
+    private LocalDate creationDate;
 
     @OneToMany(mappedBy = "group")
     private List<User> students;
@@ -32,6 +35,14 @@ public class Group implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public LocalDate getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDate creationDate) {
+        this.creationDate = creationDate;
     }
 
     public List<User> getStudents() {
