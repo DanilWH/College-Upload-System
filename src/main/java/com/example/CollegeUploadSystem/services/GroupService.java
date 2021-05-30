@@ -9,12 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.NoResultException;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 @Service
 public class GroupService {
@@ -38,10 +36,15 @@ public class GroupService {
         groupForm.setStudents(new ArrayList<>());
         // the csv format is supposed to be in the following format "LastName,FirstName,FatherName".
 
-        InputStream in = file.getInputStream();
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
-        String row;
-        while ((row = br.readLine()) != null) {
+        // get the bytes of the file.
+        String fileContent = new String(file.getBytes());
+        // prepare the file content for reading.
+        Scanner csvContent = new Scanner(fileContent);
+
+        while (csvContent.hasNextLine()) {
+            // read a single line of the csv file.
+            String row = csvContent.nextLine();
+
             if (!row.isBlank()) {
                 String[] data = row.split(",");
 
@@ -59,7 +62,6 @@ public class GroupService {
         // save the students that belongs to the group in the database.
         this.userService.addAllStudents(groupForm.getStudents(), groupForm, admin);
 
-        // close the input stream.
-        in.close();
+        csvContent.close();
     }
 }
