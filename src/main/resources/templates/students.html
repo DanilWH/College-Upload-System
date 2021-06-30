@@ -51,9 +51,7 @@
             <!-- Header of the table. -->
             <tr>
                 <th>Имя Фамилия студента</th>
-                <!--<th th:each="task: ${tasks}" th:text="${task.name}"></th>-->
-                <th>Курсовая работа</th>
-
+                <th th:each="task: ${tasks}" th:text="${task.name}"></th>
             </tr>
             <!-- Body of the table. -->
             <tr th:each="student: ${students}">

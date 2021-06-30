@@ -215,6 +215,10 @@ body {
     border-radius: 5px;
 }
 
+.button--fill-width {
+    width: 90%;
+}
+
 .button--default-style {
     background-color: var(--remains-color);
     transition: all .3s ease;

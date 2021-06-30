@@ -25,35 +25,38 @@
                         <div class = "error--default-style" th:if="${param.error}">
                             <span>Неверное имя пользователя или пароль.</span>
                         </div>
-                        <form th:action="@{/login}" method="post">
-                            <div><label>Логин: <input type="text" name="username" required autofocus /> </label></div>
-                            <div><label>Пароль: <input type="password" name="password" required /> </label></div>
-                            <div style="margin-top: 5px"><input type="submit" value="Войти" style="width: 100%"/></div>
+                        <form style="text-align: center" th:action="@{/login}" method="post">
+                            <div><label>Логин: <input class="input--default-style" type="text" name="username" required autofocus /> </label></div>
+                            <div><label>Пароль: <input class="input--default-style" type="password" name="password" required /> </label></div>
+                            <div><input style = "margin-top: 7px; width: 95%" class="input--default-style button--default-style" type="submit" value="Войти"/></div>
                         </form>
                     </div>
                 </div>
                 <div class="side-navbar__profile" sec:authorize="hasAuthority('ADMIN')">
                     <img class="side-navbar__profile-img" src="img/user-icon.svg" alt = "Иконка профиля">
                     <p class="side-navbar__profile-text">
-                        Здравствуйте, Игорь Анатольевич
+                        Здравствуйте,
+                        <br>
+                        [[${#authentication.getPrincipal().getFirstName()}]]
+                        [[${#authentication.getPrincipal().getFatherName()}]]
                         <br>
                         Рады снова Вас видеть!
                     </p>
 
                     <form th:action="@{/logout}" method="post">
-                        <input type="submit" value="Выйти"/>
+                        <input style = "margin-top: 5px" class="button--fill-width input--default-style button--default-style" type="submit" value="Выйти"/>
                     </form>
 
                 </div>
                 <div class="side-navbar__profile" sec:authorize="hasAuthority('STUDENT')">
                     <img class="side-navbar__profile-img" src="img/user-icon.svg" alt = "Иконка профиля">
-                    <p class="side-navbar__profile-text" th:text = "">
-                        Привет,
+                    <p class="side-navbar__profile-text">
+                        Привет, [[${#authentication.getPrincipal().getFirstName()}]]
                         <br>
                         Рады снова тебя видеть!
                     </p>
                     <form th:action="@{/logout}" method="post">
-                        <input type="submit" value="Выйти"/>
+                        <input style = "margin-top: 5px" class="button--fill-width input--default-style button--default-style" type="submit" value="Выйти"/>
                     </form>
                 </div>
                 <ul class="side-navbar__group-list">
@@ -129,19 +132,25 @@
     }
 
     const addGroupButton = document.querySelector(".side-navbar__add-group-button");
-    addGroupButton.addEventListener('click', e => {
-        const selectedGroup = document.querySelector("a[groupid='"+ currentGroup +"']");
-        if(selectedGroup !== undefined)
-            selectedGroup.previousSibling.previousSibling.src = "img/empty-circle.svg";
+    if(addGroupButton !== null) {
+        addGroupButton.addEventListener('click', e => {
+            const selectedGroup = document.querySelector("a[groupid='"+ currentGroup +"']");
+            if(selectedGroup !== undefined)
+                selectedGroup.previousSibling.previousSibling.src = "img/empty-circle.svg";
 
-        document.querySelector("iframe.content__body").src = "admin/new_group";
+            document.querySelector("iframe.content__body").src = "admin/new_group";
 
-    });
+        });
+    }
 
     // Растягивание боковой навигационной-панели по всей высоте экрана ( за вычетом отступов )
 
     const gapsHeight = getComputedStyle(document.body).marginTop.match(/\d/)[0];
     document.body.style.height = String(window.innerHeight - Number(gapsHeight) * 2) + "px";
+
+    window.onresize = () => {
+        document.body.style.height = String(window.innerHeight - Number(gapsHeight) * 2) + "px";
+    };
 
     // Отображение меню настроек и анимация при нажатии на шестерню
 
