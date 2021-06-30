@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <meta charset="UTF-8">
+    <title>College Upload System</title>
+    <link rel = "stylesheet" href = "css/main.css">
+    <link rel = "stylesheet" href = "css/themes/bisque.css" assignment = "theme">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+    <div class="wrapper-horizontal">
+        <nav class = "side-navbar">
+            <div class="side-navbar__container dashboard--border-radius">
+                <div class="side-navbar__about">
+                    <p class = "side-navbar__about-text">College Upload System</p> <!-- Узнать как тут поступить со стилями -->
+                    <p class = "side-navbar__about-text text-align-right">v 1.0</p>
+                </div>
+                <div class = "login" sec:authorize="!isAuthenticated()" style="border-bottom: black solid 1px">
+                    <div class="login__container" style="padding: 5px">
+                        <div class = "error--default-style" th:if="${param.error}">
+                            <span>Неверное имя пользователя или пароль.</span>
+                        </div>
+                        <form th:action="@{/login}" method="post">
+                            <div><label>Логин: <input type="text" name="username" required autofocus /> </label></div>
+                            <div><label>Пароль: <input type="password" name="password" required /> </label></div>
+                            <div style="margin-top: 5px"><input type="submit" value="Войти" style="width: 100%"/></div>
+                        </form>
+                    </div>
+                </div>
+                <div class="side-navbar__profile" sec:authorize="hasAuthority('ADMIN')">
+                    <img class="side-navbar__profile-img" src="img/user-icon.svg" alt = "Иконка профиля">
+                    <p class="side-navbar__profile-text">
+                        Здравствуйте, Игорь Анатольевич
+                        <br>
+                        Рады снова Вас видеть!
+                    </p>
+
+                    <form th:action="@{/logout}" method="post">
+                        <input type="submit" value="Выйти"/>
+                    </form>
+
+                </div>
+                <div class="side-navbar__profile" sec:authorize="hasAuthority('STUDENT')">
+                    <img class="side-navbar__profile-img" src="img/user-icon.svg" alt = "Иконка профиля">
+                    <p class="side-navbar__profile-text" th:text = "">
+                        Привет,
+                        <br>
+                        Рады снова тебя видеть!
+                    </p>
+                    <form th:action="@{/logout}" method="post">
+                        <input type="submit" value="Выйти"/>
+                    </form>
+                </div>
+                <ul class="side-navbar__group-list">
+                    <li class = "">Список групп: </li>
+                    <li class="side-navbar__group-list-item" th:each="group : ${groups}">
+                        <img src="img/empty-circle.svg" height = "12">
+                        <a class = "side-navbar__item-text" th:groupid = "@{${group.id}}" th:text="${group.name}"></a>
+                        <!--th:href = "@{#groupId={groupId}(groupId=${group.id})}"-->
+                    </li>
+                    <li class = "side-navbar__group-list-button" sec:authorize="hasAuthority('ADMIN')">
+                        <button class="input--default-style button--default-style side-navbar__add-group-button">Добавить новую группу</button>
+                    </li>
+                </ul>
+                <div class = "settings">
+                    <img class = "settings__icon" src="img/settings.svg" height="25">
+                    <div class = "settings__menu">
+                        <label class="settings__theme-selector-label" for="theme-selector">Настройки темы оформления</label>
+                        <select class = "settings__menu-item input--default-style" id = "theme-selector">
+                            <option selected value="bisque">Bisque</option>
+                            <option value="bright_green">Bright Green</option>
+                            <option value="gorgeous_contrast">Gorgeous Contrast</option>
+                        </select>
+                        <label class="settings__theme-selector-label" for="profile-settings">Настройки аккаунта</label>
+                        <button class = "settings__menu-item input--default-style button--default-style" type="button" id = "profile-settings">Изменить профиль</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div class="wrapper-vertical">
+            <nav class = "header-navbar">
+                <div class="header-navbar__container">
+                    <ul class="header-navbar__teacher-list">
+                        <li class="header-navbar__teacher-list-item list-item--active">Шашин И.А.<br/>(МДК 01.01)</li>
+                        <li class="header-navbar__teacher-list-item">Майер Ю.В.<br/>(МДК 02.02)</li>
+                        <li class="header-navbar__teacher-list-item">Селихова В.В.<br/>(МДК 03.03)</li>
+                    </ul>
+                </div>
+            </nav>
+            <section class="content">
+                <iframe class="content__body" src="" frameborder="0"></iframe>
+            </section>
+        </div>
+    </div>
+
+    <!-- WARNING! SHITTY CODE! -->
+
+    <iframe class="profile-settings__modal" src="fragments/edit_user_modal.html" frameborder="0"></iframe>
+
+    <!-- SHITTY CODE ENDED -->
+
+<script>
+
+    let currentGroup = 0;
+    const groups = document.querySelectorAll('.side-navbar__item-text');
+    for (let i = 0; i < groups.length; i++) {
+        let group = groups[i];
+        group.addEventListener('click', function (event) {
+
+            const selectedGroup = document.querySelector("a[groupid='"+ currentGroup +"']");
+            if(selectedGroup !== null)
+                selectedGroup.previousSibling.previousSibling.src = "img/empty-circle.svg";
+
+            currentGroup = event.target.attributes.groupid.value;
+
+            const circle = document.querySelector("[groupid='" + currentGroup + "']");
+
+            if(circle !== null)
+                circle.previousSibling.previousSibling.src = "img/filled-circle.svg";
+
+            if(currentGroup !== undefined)
+                document.querySelector("iframe.content__body").src = "/group/" + currentGroup + "/students";
+        });
+    }
+
+    const addGroupButton = document.querySelector(".side-navbar__add-group-button");
+    addGroupButton.addEventListener('click', e => {
+        const selectedGroup = document.querySelector("a[groupid='"+ currentGroup +"']");
+        if(selectedGroup !== undefined)
+            selectedGroup.previousSibling.previousSibling.src = "img/empty-circle.svg";
+
+        document.querySelector("iframe.content__body").src = "admin/new_group";
+
+    });
+
+    // Растягивание боковой навигационной-панели по всей высоте экрана ( за вычетом отступов )
+
+    const gapsHeight = getComputedStyle(document.body).marginTop.match(/\d/)[0];
+    document.body.style.height = String(window.innerHeight - Number(gapsHeight) * 2) + "px";
+
+    // Отображение меню настроек и анимация при нажатии на шестерню
+
+    const settingsIcon = document.querySelector(".settings__icon");
+    const settingsMenu = document.querySelector(".settings__menu");
+
+
+    let isMenuActive = false;
+
+    settingsIcon.addEventListener("click", () => {
+        settingsMenu.style.display = "block";
+
+        settingsIcon.style.transform = "rotate(75deg)";
+
+        isMenuActive = !isMenuActive;
+    });
+
+    document.addEventListener("click", e => {
+        if(isMenuActive) {
+            const path = e.path || (e.composedPath && e.composedPath());
+            if (!path.includes(settingsMenu) && e.target !== settingsIcon) {
+                settingsMenu.style.display = "none";
+                isMenuActive = !isMenuActive;
+                settingsIcon.style.transform = "rotate(-90deg)";
+            }
+        }
+    });
+
+    // Отображение модального окна с настройками профиля при нажатии на кнопку из меню основных настроек
+
+    let isModalActive = false;
+
+    const profileSettingsButton = document.querySelector("#profile-settings");
+    const modalFrame = document.querySelector(".profile-settings__modal");
+
+    profileSettingsButton.addEventListener("click", () => {
+        modalFrame.style.display = "block";
+        setTimeout(() => modalFrame.style.transform = "scale(1)", 100);
+
+        isModalActive = !isModalActive;
+    });
+
+    // Изменение темы при выборе её из меню настроек
+
+    const themesList = document.querySelector("#theme-selector");
+    let currentTheme = themesList.value;
+    const themesPath = "css/themes/";
+
+    themesList.addEventListener("change", e => {
+
+        if(currentTheme === themesList.value)
+            return true;
+
+        document.querySelector("link[assignment='theme']").remove();
+
+        const elem = document.createElement("link");
+        elem.rel = "stylesheet";
+        elem.href = themesPath + themesList.value + ".css";
+        elem.setAttribute("assignment", "theme");
+
+        document.head.appendChild(elem);
+
+        currentTheme = themesList.value;
+    });
+
+    // Изменение темы модального окна при изменении темы в основных настройках
+    const frame = document.querySelector(".profile-settings__modal");
+    console.log(frame.querySelector("link[assignment='theme']"));
+
+</script>
+</body>
+</html>

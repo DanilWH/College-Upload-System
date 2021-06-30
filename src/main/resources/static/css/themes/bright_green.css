@@ -1,0 +1,15 @@
+:root { /* -- theme "bright-green" */
+    --main-color: #5CDB95;
+    --foreground-color: #5CDB95;
+
+    --secondary-color: #000000;
+    --active-color: #EDF5E1;
+
+    --background-color: #8EE4AF;
+
+    --remains-color: #7EB2DD;
+
+    --error-color: #D84727;
+
+    --images: url("../../images/user-icon.svg")
+}

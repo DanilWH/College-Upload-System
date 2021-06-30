@@ -1,0 +1,138 @@
+.modal {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px;
+    font-weight: bold;
+
+    white-space: nowrap;
+}
+
+.modal {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+
+    margin: auto;
+
+    width: 590px;
+    height: 340px;
+
+    box-sizing: border-box;
+    border: 1px solid black;
+    background-color: #E0E0E0;
+    padding: 50px 20px;
+}
+
+.modal .input--default-style {
+    height: 20px;
+    border: 0;
+    outline: none;
+
+    border-bottom: 2px solid gray;
+    background: transparent;
+}
+
+.modal .input_container {
+    position: relative;
+    display: inline-block;
+    margin: 0 0 30px 0;
+}
+
+.modal .input_container:nth-of-type(1),
+.modal .input_container:nth-of-type(2) {
+    margin-right: 5px;
+}
+
+.modal .input_container input {
+    width: 170px;
+}
+
+.modal .input_container label {
+    position: absolute;
+    left: 2px;
+    color: #2A5465;
+    transition-property: background-color;
+    transition: all 0.2s linear;
+    top: 0;
+    cursor: text;
+    padding: 0 2px;
+}
+
+.modal input:not(:placeholder-shown) + label {
+    top: -17px;
+    cursor: default;
+}
+
+.modal input:focus + label {
+    top: -17px;
+    transition: all 0.2s linear;
+}
+
+.modal input[disabled] + label {
+    color: gray;
+}
+
+.modal input::placeholder {
+    color: transparent;
+}
+
+.modal #password_change_button {
+    width: 360px;
+    padding: 0 8px;
+    margin-right: 2px;
+}
+
+.modal .password-button_wrapper {
+    display: inline-block;
+    position: relative;
+    /*width: 330px;
+    height: 55px;*/
+}
+
+.modal button:active {
+    transform: scale(0.98);
+}
+
+.modal .password_container {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.modal .password_container input {
+    width: 220px;
+}
+
+.modal .password_container .input_container {
+    margin-bottom: 10px;
+}
+
+.modal .password_eye {
+    height: 25px;
+    vertical-align: middle;
+    margin-left: 2px;
+    margin-right: 6px;
+    margin-bottom: 3px;
+}
+
+.modal button[type = "submit"] {
+    width: 110px;
+    height: 30px;
+
+    position: absolute;
+
+    bottom: 10px;
+    right: 10px;
+}
+
+.modal button {
+    background-color: #6D6AB4;
+    color: #E0E0E0;
+
+    border: 0;
+    border-radius: 5px;
+
+    height: 30px;
+    transition: all .2s ease;
+    //margin-right: 5px;
+}

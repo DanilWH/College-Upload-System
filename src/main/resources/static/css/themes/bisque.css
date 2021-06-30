@@ -1,0 +1,14 @@
+:root {  /*-- theme "Bisque" */
+    --main-color: #EBD2B4;
+    --foreground-color: #EBD2B4;
+
+    --secondary-color: black;
+    --active-color: #6D6AB4;
+
+    --remains-color: #AF5D63;
+
+    --error-color: #FE4A49;
+
+    --background-color: #f3e5d4;
+    --images: url("../../images/user-icon.svg")
+}

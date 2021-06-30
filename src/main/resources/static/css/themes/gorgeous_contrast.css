@@ -1,0 +1,11 @@
+:root { /* -- theme "Gorgeous Contrast" */
+    --content-color: #22262999;
+    --foreground-color: #222629;
+
+    --secondary-color: #61892F;
+    --active-color: white;
+
+    --background-color: #474B4F;
+
+    --images: url("../../images/user-icon-lime.svg")
+}

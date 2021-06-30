@@ -1,0 +1,13 @@
+ mvnw                                               |   0
+ .../configs/WebSecurityConfig.java                 |   4 [32m+[m
+ .../controllers/CommonController.java              |   7 [32m+[m[31m-[m
+ .../CollegeUploadSystem/services/UserService.java  |   2 [32m+[m[31m-[m
+ src/main/resources/application.properties          |   4 [32m+[m[31m-[m
+ src/main/resources/static/css/main.css             | 267 [32m++++++++++++++++++++[m[31m-[m
+ src/main/resources/templates/admin/newGroup.html   |   5 [32m+[m[31m-[m
+ .../resources/templates/edit_user_profile.html     |   6 [32m+[m[31m-[m
+ .../resources/templates/fragments/general.html     |  37 [32m+[m[31m--[m
+ src/main/resources/templates/groups.html           |   3 [32m+[m
+ src/main/resources/templates/login.html            |   5 [32m+[m[31m-[m
+ src/main/resources/templates/students.html         |  26 [32m+[m[31m-[m
+ 12 files changed, 293 insertions(+), 73 deletions(-)
