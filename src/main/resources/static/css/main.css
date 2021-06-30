@@ -1,15 +1,262 @@
-.errors {
-    color: red;
+body {
+    background-color: var(--background-color);
+    color: var(--secondary-color);
 }
 
-.password_eye {
-    height: 25px;
-    vertical-align: middle;
-    margin-left: 5px;
-    margin-bottom: 3px;
+* {
+    font-family: 'Open Sans', sans-serif;
+    box-sizing: border-box;
 }
 
-#password_change_button {
-    width: 540px;
-    margin-bottom: 10px;
+.header-navbar {
+    background-color: var(--foreground-color);
+}
+
+.header-navbar__container {
+    width: 100%;
+
+    border-bottom: 1px solid black;
+
+    background-color: inherit;
+}
+
+.header-navbar__teacher-list {
+    white-space: nowrap;
+
+    margin: 0;
+    padding: 0;
+}
+
+.header-navbar__teacher-list-item {
+    display: inline-block;
+    width: 33%;
+    padding: 20px 5%;
+
+    text-align: center;
+
+    border-right: 1px solid black;
+    cursor: pointer;
+}
+
+.header-navbar__teacher-list-item:last-of-type {
+    border-right: 0;
+}
+
+.side-navbar {
+    background-color: var(--foreground-color); /*D0CCD0, EBD2B4*/
+
+    height: 100%;
+}
+
+.side-navbar__container {
+
+    position: relative;
+
+    height: 100%;
+
+    min-width: 225px;
+    width: 20%;
+    max-width: 250px;
+
+    background-color: inherit;
+    border-right: 1px solid black;
+}
+
+
+.side-navbar__about {
+    border-bottom: 1px solid black;
+    padding: 20px;
+}
+
+.side-navbar__about-text {
+    font-weight: 700;
+    margin: 0;
+}
+
+.side-navbar__profile {
+    padding: 10px 0;
+    text-align: center;
+    border-bottom: 1px solid black;
+}
+
+.side-navbar__profile-img {
+    width: 80px;
+}
+
+.side-navbar__profile-text {
+    margin: 0;
+}
+
+.side-navbar__group-list {
+    text-align: center;
+    padding: 10px 0 0 0;
+    margin: 0;
+
+    max-height: 350px;
+    list-style: none;
+    overflow: auto;
+}
+
+.side-navbar__group-list-item {
+    position: relative;
+    display: block;
+    padding: 10px 0 10px 10px;
+
+    cursor: pointer;
+
+    //border-top: 1px solid black;
+}
+
+.side-navbar__item-text {
+    text-decoration: none;
+    color: var(--secondary-color)
+}
+
+.side-navbar__group-list-item:nth-child(2) {
+    border-top: 0;
+    margin-top: 10px;
+}
+
+.side-navbar__group-list-item-image {
+    position: relative;
+    top: 5px;
+    right: 5px;
+}
+
+.side-navbar__group-list-button {
+    position: absolute;
+    bottom: 50px;
+
+    right: 0;
+    left: 0;
+}
+
+
+.content {
+    height: 100%;
+}
+
+.content__body {
+    height: 100%;
+    width: 100%;
+
+
+    overflow: hidden;
+}
+
+.text-align-right {
+    text-align: right;
+}
+
+.list-item--active {
+    color: var(--active-color);
+}
+
+.side-navbar__group-list-item--active::before {
+}
+
+.wrapper-horizontal {
+    display: flex;
+    flex-direction: row;
+
+    width: 100%;
+    height: 100%;
+
+}
+
+.wrapper-vertical {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+}
+
+.settings__icon {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+
+    cursor: pointer;
+
+    transition: all 1s ease;
+}
+
+.settings__menu {
+    display: none;
+
+    position: absolute;
+    bottom: 21px;
+    left: 21px;
+    width: 250px;
+    height: 135px;
+
+    background-color: var(--background-color);
+
+    padding: 5px 10px;
+
+    border: 1px solid var(--active-color);
+    border-radius: 10px 10px 10px 0;
+}
+
+.settings__theme-selector-label {
+    font-size: 12px;
+}
+
+.settings__menu-item {
+    width: 100%;
+    padding: 3px;
+    margin-bottom: 5px;
+}
+
+.input--default-style {
+    color: var(--secondary-color);
+    outline: none;
+    border: 2px solid gray;
+    border-radius: 5px;
+}
+
+.button--default-style {
+    background-color: var(--remains-color);
+    transition: all .3s ease;
+}
+
+.button--default-style:hover {
+    transition: all .3s ease;
+    -webkit-box-shadow: 0px 0px 20px 2px rgba(50, 50, 50, 0.5);
+    -moz-box-shadow:    0px 0px 20px 2px rgba(50, 50, 50, 0.5);
+    box-shadow:         0px 0px 20px 2px rgba(50, 50, 50, 0.5);
+    background-color: var(--remains-color);
+}
+
+.button--default-style:active {
+    transform: scale(0.98);
+}
+
+.profile-settings__modal {
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: all 0.3s ease;
+    transform: scale(0.5);
+}
+
+.login {
+
+}
+
+.login__container {
+
+}
+
+.error--default-style {
+    color: var(--error-color);
+}
+
+.dashboard--border-radius {
+    border-radius: 4px 0 0 4px;
 }

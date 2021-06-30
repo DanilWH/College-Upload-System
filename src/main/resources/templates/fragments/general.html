@@ -1,42 +1,9 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-    <head th:fragment="header(title)">
+    <head th:fragment="header(title,style)">
         <meta charset="UTF-8" />
         <title th:replace="${title}">College Upload System</title>
-        <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" />
+        <style th:replace="${style}"></style>
     </head>
-    <body>
-        <!-- Login fragment. -->
-        <div th:fragment="loginForm">
-            <div th:if="${param.error}">
-                Неверное имя пользователя или пароль.
-            </div>
-            <form th:action="@{/login}" method="post">
-                <div><label>Логин: <input type="text" name="username" required autofocus /> </label></div>
-                <div><label>Пароль: <input type="password" name="password" required /> </label></div>
-                <div><input type="submit" value="Войти"/></div>
-            </form>
-        </div>
-
-        <!-- Navbar. -->
-        <div th:fragment="navbar">
-            <a th:href="@{/}">Главная -</a>
-
-            <div sec:authorize="!isAuthenticated()">
-                <!-- Log in. -->
-                <div th:replace=":: loginForm"></div>
-            </div>
-
-            <div sec:authorize="isAuthenticated()">
-                <a th:href="@{/user/{user}/edit_profile(user=${#request.userPrincipal.principal.id})}">Профиль -</a>
-
-                Привет, <span sec:authentication="name"></span>
-                <!-- Logout. -->
-                <form th:action="@{/logout}" method="post">
-                    <input type="submit" value="Выйти"/>
-                </form>
-            </div>
-        </div>
-    </body>
 </html>

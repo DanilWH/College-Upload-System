@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-    <head th:replace="/fragments/general :: header(~{::title})">
-        <title>Изменение профиля пользователя [[${user.login}]] | College Upload System</title>
+    <head>
+
     </head>
     <body>
-        <div th:replace="/fragments/general :: navbar"></div>
-
         <form action="#" th:action="@{/user/{user}/update_profile(user=${user.id})}" th:object="${user}" method="post">
             <!-- User full name. -->
             <div>

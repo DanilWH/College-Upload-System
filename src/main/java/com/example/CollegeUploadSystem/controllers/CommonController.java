@@ -31,11 +31,6 @@ public class CommonController {
     private UserService userService;
 
     @GetMapping("/")
-    public String main() {
-        return "redirect:/groups";
-    }
-
-    @GetMapping("/groups")
     public String groups(
             Model model
     ) {
@@ -43,7 +38,7 @@ public class CommonController {
 
         model.addAttribute("groups", groups);
 
-        return "groups";
+        return "index";
     }
 
     @GetMapping("/user/{user}/edit_profile")

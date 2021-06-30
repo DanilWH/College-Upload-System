@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-    <head th:replace="/fragments/general :: header(~{::title})">
+    <head th:replace="/fragments/general :: header(~{::title}, ~{::style})">
         <title>Студенты группы [[${group.name}]] | College Upload System</title>
+
+        <style>
+            table {
+                margin-top: 10px;
+                border-collapse: collapse;
+                border: 2px gray solid;
+            }
+
+            td, th {
+                border: 2px gray solid;
+            }
+
+        </style>
     </head>
     <body>
-        <!-- Navbar. -->
-        <div th:replace="fragments/general :: navbar"></div>
-
         <h2>Студенты группы [[${group.name}]]:</h2>
-
         <!-- Show the new-task form for admin only. -->
         <div sec:authorize="hasAuthority('ADMIN')">
             <form th:action="@{/admin/group/{groupId}/add_task(groupId=${group.id})}" th:object="${taskForm}" method="post">
@@ -38,13 +47,14 @@
             </form>
         </div>
 
-        <table>
+        <table style="text-align: center" cellpadding="5">
             <!-- Header of the table. -->
             <tr>
                 <th>Имя Фамилия студента</th>
-                <th th:each="task: ${tasks}" th:text="${task.name}"></th>
-            </tr>
+                <!--<th th:each="task: ${tasks}" th:text="${task.name}"></th>-->
+                <th>Курсовая работа</th>
 
+            </tr>
             <!-- Body of the table. -->
             <tr th:each="student: ${students}">
                 <td>

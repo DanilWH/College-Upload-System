@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org">
-<head >
+<head>
     <title>Создание новой группы | College Upload System</title>
 </head>
 <body>
-    <div th:replace="fragments/general :: navbar"></div>
-
     <form action="#" th:action="@{/admin/new_group}" th:object="${groupForm}" method="post" enctype="multipart/form-data">
         <fieldset>
             <!-- The name of the new group. -->
@@ -17,6 +15,7 @@
             <small th:if="${fileError}" th:text="${fileError}"></small>
 
             <button type="submit">Создать</button>
+        </fieldset>
     </form>
 </body>
 </html>
