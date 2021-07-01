@@ -103,7 +103,7 @@
 
     <!-- WARNING! SHITTY CODE! -->
 
-    <div class="login" sec:authorize="isAuthenticated()" style="border-bottom: black solid 1px">
+    <div class="login" sec:authorize="isAuthenticated()">
         <iframe class="profile-settings__modal" th:src="@{/user/{userId}/edit_profile(userId=${#authentication.getPrincipal().getId()})}" frameborder="0"></iframe>
     </div>
 
@@ -218,9 +218,16 @@
         currentTheme = themesList.value;
     });
 
-    // Изменение темы модального окна при изменении темы в основных настройках
-    const frame = document.querySelector(".profile-settings__modal");
-    console.log(frame.querySelector("link[assignment='theme']"));
+    // Изменение темы модального окна при изменении темы в основных настройках TODO
+    /*const frame = document.querySelector(".profile-settings__modal");
+    console.log(frame.querySelector("link[assignment='theme']")); */
+
+    // Скрытие модального окна при отправке формы.
+    const iframeDoc = modalFrame.contentWindow.document;
+
+    modalFrame.contentWindow.onload = function() {
+        modalFrame.classList.add("");
+    };
 
 </script>
 </body>
