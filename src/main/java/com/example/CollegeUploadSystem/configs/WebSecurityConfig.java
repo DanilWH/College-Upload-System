@@ -39,7 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                             "/css/**",
                             "/img/**",
                             "/file/**",
-                            "/fragments/edit_user_modal.html"
+                            "/edit_user_modal.html"
                     ).permitAll()
                     .anyRequest().authenticated()
                 .and()

@@ -52,7 +52,7 @@ public class CommonController {
 
         model.addAttribute("user", initialUser);
 
-        return "edit_user_profile";
+        return "edit_user_modal";
     }
 
     @PostMapping("/user/{userId}/update_profile")

@@ -103,7 +103,7 @@
 
     <!-- WARNING! SHITTY CODE! -->
 
-    <iframe class="profile-settings__modal" src="fragments/edit_user_modal.html" frameborder="0"></iframe>
+    <iframe class="profile-settings__modal" th:src="@{/user/{userId}/edit_profile(userId=${#authentication.getPrincipal().getId()})}" frameborder="0"></iframe>
 
     <!-- SHITTY CODE ENDED -->
 
@@ -135,7 +135,7 @@
     if(addGroupButton !== null) {
         addGroupButton.addEventListener('click', e => {
             const selectedGroup = document.querySelector("a[groupid='"+ currentGroup +"']");
-            if(selectedGroup !== undefined)
+            if(selectedGroup !== undefined && selectedGroup !== null)
                 selectedGroup.previousSibling.previousSibling.src = "img/empty-circle.svg";
 
             document.querySelector("iframe.content__body").src = "admin/new_group";

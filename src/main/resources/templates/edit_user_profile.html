@@ -1,7 +1,20 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
     <head>
+        <style>
+            .password_eye {
+                height: 25px;
+                vertical-align: middle;
+                margin-left: 5px;
+                margin-bottom: 3px;
+            }
 
+            #password_change_button {
+                width: 540px;
+                margin-bottom: 10px;
+            }
+
+        </style>
     </head>
     <body>
         <form action="#" th:action="@{/user/{user}/update_profile(user=${user.id})}" th:object="${user}" method="post">
