@@ -13,17 +13,17 @@
         <form class = "user-settings" action="#" th:action="@{/user/{userId}/update_profile(userId=${user.getId()})}" id = "edit_user" method="post" th:object="${user}">
 
             <div class = "input_container">
-                <input th:value="*{lastName}" th:disabled="${!#authorization.expression('hasAuthority(''ADMIN'')')}" class = "input--default-style" id = "last_name" type = "text" placeholder="Фамилия" required>
+                <input th:value="*{lastName}" th:disabled="${!#authorization.expression('hasAuthority(''ADMIN'')')}" class = "input--default-style" id = "last_name" name="lastName" type = "text" placeholder="Фамилия" required>
                 <label class = "label--default-style" for="last_name">Фамилия</label>
             </div>
 
             <div class = "input_container">
-                <input th:value="*{firstName}" th:disabled="${!#authorization.expression('hasAuthority(''ADMIN'')')}" class = "input--default-style" id = "first_name" type = "text" placeholder="Имя" required>
+                <input th:value="*{firstName}" th:disabled="${!#authorization.expression('hasAuthority(''ADMIN'')')}" class = "input--default-style" id = "first_name" name="firstName" type = "text" placeholder="Имя" required>
                 <label class = "label--default-style" for="first_name">Имя</label>
             </div>
 
             <div class = "input_container">
-                <input th:value="*{fatherName}" th:disabled="${!#authorization.expression('hasAuthority(''ADMIN'')')}" class = "input--default-style" id = "father_name" type = "text" placeholder="Отчество" required>
+                <input th:value="*{fatherName}" th:disabled="${!#authorization.expression('hasAuthority(''ADMIN'')')}" class = "input--default-style" id = "father_name" name="fatherName" type = "text" placeholder="Отчество" required>
                 <label class = "label--default-style" for="father_name">Отчество</label>
             </div>
 
@@ -32,7 +32,7 @@
             <button class = "password-button_wrapper button--default-style" type="button" id = "password_change_button" onclick="togglePasswordChanging()">Изменить пароль</button>
 
             <div style = "margin-left: 3px;" class = "input_container">
-                <input th:value="*{login}" class = "input--default-style" id = "login" type = "text" placeholder="Логин" required>
+                <input th:value="*{login}" class = "input--default-style" id = "login" name="login" type = "text" placeholder="Логин" required>
                 <label class = "label--default-style" for="login">Логин</label>
             </div>
 

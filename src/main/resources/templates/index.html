@@ -103,7 +103,9 @@
 
     <!-- WARNING! SHITTY CODE! -->
 
-    <iframe class="profile-settings__modal" th:src="@{/user/{userId}/edit_profile(userId=${#authentication.getPrincipal().getId()})}" frameborder="0"></iframe>
+    <div class="login" sec:authorize="isAuthenticated()" style="border-bottom: black solid 1px">
+        <iframe class="profile-settings__modal" th:src="@{/user/{userId}/edit_profile(userId=${#authentication.getPrincipal().getId()})}" frameborder="0"></iframe>
+    </div>
 
     <!-- SHITTY CODE ENDED -->
 

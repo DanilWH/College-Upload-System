@@ -95,7 +95,7 @@ public class CommonController {
             userModel.setLastName(initialUser.getLastName());
             userModel.setFatherName(initialUser.getFatherName());
 
-            return "edit_user_profile";
+            return "edit_user_modal";
         }
 
         // if the user is editing its own profile.
