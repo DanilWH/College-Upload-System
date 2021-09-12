@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-    <head th:fragment="header(title)">
-        <meta charset="UTF-8" />
-        <title th:replace="${title}">College Upload System</title>
-        <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" />
-    </head>
     <body>
+        <!-- Heading. -->
+        <div th:fragment="heading(text)">
+            <h1 class="display-1" th:text="${text}"></h1>
+            <hr />
+        </div>
+
         <!-- Login fragment. -->
         <div th:fragment="loginForm">
             <div th:if="${param.error}">
@@ -21,22 +22,53 @@
 
         <!-- Navbar. -->
         <div th:fragment="navbar">
-            <a th:href="@{/}">Главная -</a>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">
+<!--                        <img src="https://image.flaticon.com/icons/png/512/2742/2742305.png" width="30" height="30" class="d-inline-block align-top" alt="" />-->
+                        <img src="https://cdn-icons-png.flaticon.com/512/3713/3713696.png" width="30" height="30" class="d-inline-block align-top" alt="" />
+                        College Upload System
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <!-- To the left. -->
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item"><a class="nav-link" th:href="@{/}">Главная</a></li>
+                        </ul>
 
-            <div sec:authorize="!isAuthenticated()">
-                <!-- Log in. -->
-                <div th:replace=":: loginForm"></div>
-            </div>
+                        <!-- To the right. If authenticated. -->
+                        <ul class="navbar-nav" sec:authorize="isAuthenticated()">
+                            <!-- Open the user's profile. -->
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/user/{user}/edit_profile(user=${#request.userPrincipal.principal.id})}">
+                                    <span sec:authentication="name"></span>
+                                </a>
+                            </li>
+                            <!-- Logout button. -->
+                            <li class="nav-item">
+                                <form th:action="@{/logout}" method="post">
+                                    <button class="btn btn-outline-light ml-2" type="submit">
+                                        Выйти
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                                            <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                                        </svg>
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
 
-            <div sec:authorize="isAuthenticated()">
-                <a th:href="@{/user/{user}/edit_profile(user=${#request.userPrincipal.principal.id})}">Профиль -</a>
-
-                Привет, <span sec:authentication="name"></span>
-                <!-- Logout. -->
-                <form th:action="@{/logout}" method="post">
-                    <input type="submit" value="Выйти"/>
-                </form>
-            </div>
+                        <!-- To the right. If not authenticated. -->
+                        <form class="d-flex" sec:authorize="!isAuthenticated()" th:action="@{/login}" method="post">
+                            <input class="form-control me-2" type="text" name="username" placeholder="Логин" required autofocus />
+                            <input class="form-control me-2" type="password" name="password" placeholder="Пароль" required />
+                            <button class="btn btn-outline-success" type="submit">Войти</button>
+                        </form>
+                    </div>
+                </div>
+            </nav>
         </div>
     </body>
 </html>

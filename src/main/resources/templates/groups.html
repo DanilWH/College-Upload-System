@@ -1,27 +1,49 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-    <head th:replace="/fragments/general :: header(~{::title})">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      th:replace="fragments/layout :: layout(~{::title}, ~{::section})">
+    <head>
         <title>Группы | College Upload System</title>
     </head>
     <body>
-        <!-- Navbar. -->
-        <div th:replace="/fragments/general :: navbar"></div>
+        <section>
+            <!-- Heading. -->
+            <div th:replace="fragments/general :: heading(text='Группы')"></div>
 
-        <h1>Groups</h1>
+            <!-- Add a new group form. -->
+            <div sec:authorize="hasAuthority('ADMIN')">
+                <a class="btn btn-outline-dark my-3" data-bs-toggle="collapse" href="#collapseNewGroupForm" role="button"
+                   aria-expanded="false" aria-controls="collapseNewGroupForm">Добавить новую группу</a>
 
-        <div sec:authorize="hasAuthority('ADMIN')">
-            <a href="/admin/new_group">Добавить новую группу.</a>
-        </div>
+                <div class="collapse" id="collapseNewGroupForm">
+                    <form action="#" th:action="@{/admin/new_group}" th:object="${groupForm}" method="post" enctype="multipart/form-data">
+                        <!-- Group name. -->
+                        <div class="row mb-3">
+                            <label for="groupName" class="col-sm-1 col-form-label">Имя группы</label>
+                            <div class="col-sm-3">
+                                <input id="groupName" class="form-control is-invalid" type="text" name="name"  minlength="3" maxlength="6" required="required" />
+                                <small class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></small>
+                            </div>
+                        </div>
 
-        <table>
-            <tr>
-                <th>Groups</th>
-            </tr>
-            <tr th:each="group : ${groups}">
-                <td>
-                    <a th:href="@{/group/{groupId}/students(groupId=${group.id})}" th:text="${group.name}"></a>
-                </td>
-            </tr>
-        </table>
+                        <!-- CSV file. -->
+                        <div class="row mb-3">
+                            <label for="fileId" class="col-sm-1 col-form-label">CSV файл</label>
+                            <div class="col-sm-3">
+                                <input id="fileId" class="form-control is-invalid" type="file" name="file" required="required" />
+                                <small class="invalid-feedback" th:if="${fileError}" th:text="${fileError}"></small>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-dark" type="submit">Создать</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Table content. -->
+            <div class="list-group">
+                <a th:each="group : ${groups}" th:href="@{/group/{groupId}/students(groupId=${group.id})}" th:text="${group.name}"
+                   class="list-group-item list-group-item-action"></a>
+            </div>
+        </section>
     </body>
 </html>

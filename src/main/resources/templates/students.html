@@ -1,70 +1,70 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-    <head th:replace="/fragments/general :: header(~{::title})">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      th:replace="fragments/layout :: layout(~{::title}, ~{::section})">
+    <head>
         <title>Студенты группы [[${group.name}]] | College Upload System</title>
     </head>
     <body>
-        <!-- Navbar. -->
-        <div th:replace="fragments/general :: navbar"></div>
+        <section>
+            <h2>Студенты группы [[${group.name}]]:</h2>
 
-        <h2>Студенты группы [[${group.name}]]:</h2>
+            <!-- Show the new-task form for admin only. -->
+            <div sec:authorize="hasAuthority('ADMIN')">
+                <form th:action="@{/admin/group/{groupId}/add_task(groupId=${group.id})}" th:object="${taskForm}" method="post">
+                    <label for="name">Название задачи: </label>
+                    <input id="name" name="name" />
+                    <small th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></small>
 
-        <!-- Show the new-task form for admin only. -->
-        <div sec:authorize="hasAuthority('ADMIN')">
-            <form th:action="@{/admin/group/{groupId}/add_task(groupId=${group.id})}" th:object="${taskForm}" method="post">
-                <label for="name">Название задачи: </label>
-                <input id="name" name="name" />
-                <small th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></small>
+                    <button type="submit">Добавить задачу.</button>
+                </form>
+            </div>
 
-                <button type="submit">Добавить задачу.</button>
-            </form>
-        </div>
-
-        <!-- Upload form. -->
-        <div th:if="${#request.userPrincipal?.principal?.group?.id == group?.id && tasks.size() > 0}">
-            <form th:action="@{/upload(groupId=${group.id})}" method="post" enctype="multipart/form-data">
-                <!-- The form for the file uploading. -->
-                <input type="file" name="file" />
-                <div th:if="${uploadError}">
-                    <small th:text="${uploadError}"></small>
-                </div>
-
-                <!-- The 'select' form for choosing the task to which the file will be attached. -->
-                <select name="taskId">
-                    <option th:each="task: ${tasks}" th:value="${task.id}" th:text="${task.name}"></option>
-                </select>
-
-                <button type="submit">Отправить</button>
-            </form>
-        </div>
-
-        <table>
-            <!-- Header of the table. -->
-            <tr>
-                <th>Имя Фамилия студента</th>
-                <th th:each="task: ${tasks}" th:text="${task.name}"></th>
-            </tr>
-
-            <!-- Body of the table. -->
-            <tr th:each="student: ${students}">
-                <td>
-                    <!-- Show the student full name as a link only for the admin. -->
-                    <div sec:authorize="hasAuthority('ADMIN')">
-                        <a href="#" th:href="@{/user/{user}/edit_profile(user=${student.id})}">[[${student.lastName}]] [[${student.firstName}]]</a>
+            <!-- Upload form. -->
+            <div th:if="${#request.userPrincipal?.principal?.group?.id == group?.id && tasks.size() > 0}">
+                <form th:action="@{/upload(groupId=${group.id})}" method="post" enctype="multipart/form-data">
+                    <!-- The form for the file uploading. -->
+                    <input type="file" name="file" />
+                    <div th:if="${uploadError}">
+                        <small th:text="${uploadError}"></small>
                     </div>
-                    <div sec:authorize="!hasAuthority('ADMIN')">
-                        [[${student.lastName}]] [[${student.firstName}]]
-                    </div>
-                </td>
 
-                <td th:each="task: ${tasks}">
-                    <div th:with="result=${student.getResultByTask(task)}">
-                        <a th:if="${result}"
-                           th:href="@{/file/{filepath}{filename}(filepath=${result.filepath},filename=${result.filename})}"
-                           th:text="${task.name}"></a>
-                    </div>
-                </td>
-            </tr>
-        </table>
+                    <!-- The 'select' form for choosing the task to which the file will be attached. -->
+                    <select name="taskId">
+                        <option th:each="task: ${tasks}" th:value="${task.id}" th:text="${task.name}"></option>
+                    </select>
+
+                    <button type="submit">Отправить</button>
+                </form>
+            </div>
+
+            <table>
+                <!-- Header of the table. -->
+                <tr>
+                    <th>Имя Фамилия студента</th>
+                    <th th:each="task: ${tasks}" th:text="${task.name}"></th>
+                </tr>
+
+                <!-- Body of the table. -->
+                <tr th:each="student: ${students}">
+                    <td>
+                        <!-- Show the student full name as a link only for the admin. -->
+                        <div sec:authorize="hasAuthority('ADMIN')">
+                            <a href="#" th:href="@{/user/{user}/edit_profile(user=${student.id})}">[[${student.lastName}]] [[${student.firstName}]]</a>
+                        </div>
+                        <div sec:authorize="!hasAuthority('ADMIN')">
+                            [[${student.lastName}]] [[${student.firstName}]]
+                        </div>
+                    </td>
+
+                    <td th:each="task: ${tasks}">
+                        <div th:with="result=${student.getResultByTask(task)}">
+                            <a th:if="${result}"
+                               th:href="@{/file/{filepath}{filename}(filepath=${result.filepath},filename=${result.filename})}"
+                               th:text="${task.name}"></a>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </section>
     </body>
 </html>

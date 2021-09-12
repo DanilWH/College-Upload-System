@@ -1,125 +1,127 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-    <head th:replace="/fragments/general :: header(~{::title})">
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      th:replace="fragments/layout :: layout(~{::title}, ~{::section})">
+    <head>
         <title>Изменение профиля пользователя [[${user.login}]] | College Upload System</title>
     </head>
     <body>
-        <div th:replace="/fragments/general :: navbar"></div>
-
-        <form action="#" th:action="@{/user/{user}/update_profile(user=${user.id})}" th:object="${user}" method="post">
-            <!-- User full name. -->
-            <div>
-                <label for="firstName_id">Имя пользователя: </label>
-                <input id="firstName_id" type="text" name="firstName" th:value="*{firstName}" th:disabled="${!#authorization.expression('hasAuthority(''ADMIN'')')}" />
-                <div class="errors"><small th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></small></div>
-            </div>
-            <div>
-                <label for="lastName_id">Фамилия пользователя: </label>
-                <input id="lastName_id" type="text" name="lastName" th:value="*{lastName}" th:disabled="${!#authorization.expression('hasAuthority(''ADMIN'')')}" />
-                <div class="errors"><small th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></small></div>
-            </div>
-            <div>
-                <label for="fatherName_id">Отчество пользователя: </label>
-                <input id="fatherName_id" type="text" name="fatherName" th:value="*{fatherName}" th:disabled="${!#authorization.expression('hasAuthority(''ADMIN'')')}" />
-                <div class="errors"><small th:if="${#fields.hasErrors('fatherName')}" th:errors="*{fatherName}"></small></div>
-            </div>
-
-            <!-- Login. -->
-            <div>
-                <label for="login_id">Логин: </label>
-                <input id="login_id" type="text" name="login" th:value="*{login}" required autofocus />
-                <!-- errors. -->
-                <div class="errors">
-                    <small th:if="${#fields.hasErrors('login')}" th:errors="*{login}"></small>
+        <section>
+            <form action="#" th:action="@{/user/{user}/update_profile(user=${user.id})}" th:object="${user}" method="post">
+                <!-- User full name. -->
+                <div>
+                    <label for="firstName_id">Имя пользователя: </label>
+                    <input id="firstName_id" type="text" name="firstName" th:value="*{firstName}" th:disabled="${!#authorization.expression('hasAuthority(''ADMIN'')')}" />
+                    <div class="errors"><small th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></small></div>
                 </div>
-                <small>
-                    <ul>
-                        <li>Логин может состоять из латинских и/или русских симолов верхнего и/или нижнего регистра</li>
-                        <li>Логин может содержать цифры</li>
-                        <li>Логин может содержать символы @/-/+/_/./\</li>
-                    </ul>
-                </small>
-            </div>
-
-            <!-- Password. -->
-            <button type="button" id = "password_change_button" onclick="togglePasswordChanging()">Изменить пароль</button>
-            <div>
-                <label for="password_id">Новый пароль: </label>
-                <input id="password_id" type="password" name="password" disabled />
-                <img class = "password_eye" src = "/img/eye.svg" height="">
-                <!-- errors. -->
-                <div class="errors">
-                    <small th:if="${#fields.hasErrors('password')}" th:uerrors="*{password}"></small>
+                <div>
+                    <label for="lastName_id">Фамилия пользователя: </label>
+                    <input id="lastName_id" type="text" name="lastName" th:value="*{lastName}" th:disabled="${!#authorization.expression('hasAuthority(''ADMIN'')')}" />
+                    <div class="errors"><small th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></small></div>
                 </div>
-                <small>
-                    <ul>
-                        <li>длина пароля должна быть от 8 до 20 символов</li>
-                        <li>пароль должен содержать хотя бы один символ латинского алфавита</li>
-                        <li>пароль должен содержать хотя бы одну цифру</li>
-                        <li>пароль не должен содержать пробелов</li>
-                    </ul>
-                </small>
-            </div>
-            <div>
-                <label for="confirmPassword_id">Повторите пароль: </label>
-                <input id="confirmPassword_id" type="password" name="confirmPassword" disabled />
-                <img class = "password_eye" src = "/img/eye.svg">
-                <!-- errors. -->
-                <div class="errors">
-                    <small th:errors="${user}"></small>
+                <div>
+                    <label for="fatherName_id">Отчество пользователя: </label>
+                    <input id="fatherName_id" type="text" name="fatherName" th:value="*{fatherName}" th:disabled="${!#authorization.expression('hasAuthority(''ADMIN'')')}" />
+                    <div class="errors"><small th:if="${#fields.hasErrors('fatherName')}" th:errors="*{fatherName}"></small></div>
                 </div>
-            </div>
 
-            <div>
-                <button type="submit">Изменить</button>
-            </div>
-        </form>
-    <script>
-        const eyes = document.querySelectorAll(".password_eye");
-        let isEyePressed = false;
-        let isPasswordToggled = false;
+                <!-- Login. -->
+                <div>
+                    <label for="login_id">Логин: </label>
+                    <input id="login_id" type="text" name="login" th:value="*{login}" required autofocus />
+                    <!-- errors. -->
+                    <div class="errors">
+                        <small th:if="${#fields.hasErrors('login')}" th:errors="*{login}"></small>
+                    </div>
+                    <small>
+                        <ul>
+                            <li>Логин может состоять из латинских и/или русских симолов верхнего и/или нижнего регистра</li>
+                            <li>Логин может содержать цифры</li>
+                            <li>Логин может содержать символы @/-/+/_/./\</li>
+                        </ul>
+                    </small>
+                </div>
 
-        eyes.forEach( e => {
-            e.addEventListener("mousedown", OnEyePressed);
-            e.addEventListener("mouseup", OnEyePressReleased);
-        });
+                <!-- Password. -->
+                <button type="button" id = "password_change_button" onclick="togglePasswordChanging()">Изменить пароль</button>
+                <div>
+                    <label for="password_id">Новый пароль: </label>
+                    <input id="password_id" type="password" name="password" disabled />
+                    <img class = "password_eye" src = "/img/eye.svg" height="">
+                    <!-- errors. -->
+                    <div class="errors">
+                        <small th:if="${#fields.hasErrors('password')}" th:uerrors="*{password}"></small>
+                    </div>
+                    <small>
+                        <ul>
+                            <li>длина пароля должна быть от 8 до 20 символов</li>
+                            <li>пароль должен содержать хотя бы один символ латинского алфавита</li>
+                            <li>пароль должен содержать хотя бы одну цифру</li>
+                            <li>пароль не должен содержать пробелов</li>
+                        </ul>
+                    </small>
+                </div>
+                <div>
+                    <label for="confirmPassword_id">Повторите пароль: </label>
+                    <input id="confirmPassword_id" type="password" name="confirmPassword" disabled />
+                    <img class = "password_eye" src = "/img/eye.svg">
+                    <!-- errors. -->
+                    <div class="errors">
+                        <small th:errors="${user}"></small>
+                    </div>
+                </div>
 
-        function OnEyePressed(e) {
-            const inputField = getPreviousSiblingInputNode(e.target);
-            changePasswordInputFieldType(inputField);
-            changeEyeIcon(e.target);
-        }
+                <div>
+                    <button type="submit">Изменить</button>
+                </div>
+            </form>
 
-        function OnEyePressReleased(e) {
-            const inputField = getPreviousSiblingInputNode(e.target);
-            changePasswordInputFieldType(inputField);
-            changeEyeIcon(e.target);
-        }
+            <script>
+                const eyes = document.querySelectorAll(".password_eye");
+                let isEyePressed = false;
+                let isPasswordToggled = false;
 
-        function changeEyeIcon(eye) {
-            console.log(1);
-            eye.src = (isEyePressed ? "/img/eye.svg" : "/img/PressedEye.svg");
+                eyes.forEach( e => {
+                    e.addEventListener("mousedown", OnEyePressed);
+                    e.addEventListener("mouseup", OnEyePressReleased);
+                });
 
-            isEyePressed = !isEyePressed;
-        }
+                function OnEyePressed(e) {
+                    const inputField = getPreviousSiblingInputNode(e.target);
+                    changePasswordInputFieldType(inputField);
+                    changeEyeIcon(e.target);
+                }
 
-        const changePasswordInputFieldType = (e) =>
-            e.type = (e.type === "password" ? "text" : "password");
+                function OnEyePressReleased(e) {
+                    const inputField = getPreviousSiblingInputNode(e.target);
+                    changePasswordInputFieldType(inputField);
+                    changeEyeIcon(e.target);
+                }
 
-        function getPreviousSiblingInputNode(element) {
-            if(element == null)
-                return false;
+                function changeEyeIcon(eye) {
+                    console.log(1);
+                    eye.src = (isEyePressed ? "/img/eye.svg" : "/img/PressedEye.svg");
 
-            if(element.nodeName	=== "input".toUpperCase())
-                return element;
+                    isEyePressed = !isEyePressed;
+                }
 
-            return getPreviousSiblingInputNode(element.previousSibling);
-        }
+                const changePasswordInputFieldType = (e) =>
+                    e.type = (e.type === "password" ? "text" : "password");
 
-        function togglePasswordChanging() {
-            document.querySelectorAll("input[type='password']").forEach( e => e.attributes.removeNamedItem("disabled") );
-            document.querySelectorAll("input[type='password']").forEach( e => e.attributes.setNamedItem(document.createAttribute("required")) );
-        }
-    </script>
+                function getPreviousSiblingInputNode(element) {
+                    if(element == null)
+                        return false;
+
+                    if(element.nodeName	=== "input".toUpperCase())
+                        return element;
+
+                    return getPreviousSiblingInputNode(element.previousSibling);
+                }
+
+                function togglePasswordChanging() {
+                    document.querySelectorAll("input[type='password']").forEach( e => e.attributes.removeNamedItem("disabled") );
+                    document.querySelectorAll("input[type='password']").forEach( e => e.attributes.setNamedItem(document.createAttribute("required")) );
+                }
+            </script>
+        </section>
     </body>
 </html>

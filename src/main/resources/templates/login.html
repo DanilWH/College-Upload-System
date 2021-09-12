@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org">
-    <head th:replace="/fragments/general :: header(~{::title})">
+<html lang="en" xmlns:th="https://www.thymeleaf.org" th:replace="fragments/layout :: layout(~{::title}, ~{::section})">
+    <head>
         <title>Войдите в свою учётную запись | College Upload System</title>
     </head>
     <body>
-        <!-- Navbar. -->
-        <div th:replace="/fragments/general :: navbar"></div>
-
-        <h1>Войдите в свою учётную запись.</h1>
-        <div th:replace="/fragments/general :: loginForm"></div>
+        <section>
+            <h1>Войдите в свою учётную запись.</h1>
+            <div th:replace="fragments/general :: loginForm"></div>
+        </section>
     </body>
 </html>

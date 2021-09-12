@@ -42,6 +42,7 @@ public class CommonController {
         List<Group> groups = this.groupService.getAll();
 
         model.addAttribute("groups", groups);
+        model.addAttribute("groupForm", new Group());
 
         return "groups";
     }

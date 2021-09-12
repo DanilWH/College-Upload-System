@@ -32,12 +32,14 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
+/*
     @GetMapping("/new_group")
     public String newGroupForm(Model model) {
         model.addAttribute("groupForm", new Group());
 
         return "admin/newGroup";
     }
+*/
 
     @PostMapping("/new_group")
     public String newGroupSaving(
