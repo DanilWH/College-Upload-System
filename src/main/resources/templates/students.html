@@ -6,64 +6,99 @@
     </head>
     <body>
         <section>
-            <h2>Студенты группы [[${group.name}]]:</h2>
+            <div th:replace="fragments/general :: heading(text='Студенты группы ' + ${group.name}, size='2')"></div>
 
             <!-- Show the new-task form for admin only. -->
             <div sec:authorize="hasAuthority('ADMIN')">
-                <form th:action="@{/admin/group/{groupId}/add_task(groupId=${group.id})}" th:object="${taskForm}" method="post">
-                    <label for="name">Название задачи: </label>
-                    <input id="name" name="name" />
-                    <small th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></small>
+                <button class="btn btn-outline-dark mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNewTaskForm" aria-expanded="false" aria-controls="collapseNewTaskForm">
+                    Добавить новое задание
+                </button>
 
-                    <button type="submit">Добавить задачу.</button>
-                </form>
+                <div class="collapse" th:classappend="${addNewTaskError} ? show" id="collapseNewTaskForm">
+                    <div class="card card-body">
+                        <form class="row g-3" th:action="@{/admin/group/{groupId}/add_task(groupId=${group.id})}" th:object="${taskForm}" method="post">
+                            <div class="input-group">
+                                <input id="name" name="name" class="form-control" th:classappend="${addNewTaskError} ? is-invalid" placeholder="Укажите название нового задания" />
+                                <button type="submit" class="btn btn-outline-dark">Добавить задание.</button>
+                                <small th:if="${addNewTaskError}" th:errors="*{name}" class="invalid-feedback"></small>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
 
             <!-- Upload form. -->
-            <div th:if="${#request.userPrincipal?.principal?.group?.id == group?.id && tasks.size() > 0}">
-                <form th:action="@{/upload(groupId=${group.id})}" method="post" enctype="multipart/form-data">
-                    <!-- The form for the file uploading. -->
-                    <input type="file" name="file" />
-                    <div th:if="${uploadError}">
-                        <small th:text="${uploadError}"></small>
+            <div class="mt-4" th:if="${#request.userPrincipal?.principal?.group?.id == group?.id && tasks.size() > 0}">
+                <!-- Collapse button. -->
+                <button class="btn btn-outline-dark mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseUploadForm" aria-expanded="false" aria-controls="collapseUploadForm">
+                    Загрузить файлы к заданию
+                </button>
+
+                <!-- Collapse card. -->
+                <div class="collapse" th:classappend="${uploadError} ? show" id="collapseUploadForm">
+                    <div class="card card-body">
+                        <form th:action="@{/upload(groupId=${group.id})}" method="post" enctype="multipart/form-data">
+                            <div class="input-group">
+                                <!-- The form for the file uploading. -->
+                                <input type="file" name="file" class="form-control" th:classappend="${uploadError} ? is-invalid" />
+                                <div th:if="${uploadError}" class="invalid-feedback">
+                                    <small th:text="${uploadError}"></small>
+                                </div>
+
+                                <!-- The 'select' form for choosing the task to which the file will be attached. -->
+                                <select name="taskId" class="form-select" id="inputGroupSelect03" aria-label="Example select with button addon">
+                                    <option th:each="task: ${tasks}" th:value="${task.id}" th:text="${task.name}" selected></option>
+                                </select>
+
+                                <button class="btn btn-outline-secondary" type="submit">
+                                    Отправить
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-upload-fill" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M8 0a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 4.095 0 5.555 0 7.318 0 9.366 1.708 11 3.781 11H7.5V5.707L5.354 7.854a.5.5 0 1 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 5.707V11h4.188C14.502 11 16 9.57 16 7.773c0-1.636-1.242-2.969-2.834-3.194C12.923 1.999 10.69 0 8 0zm-.5 14.5V11h1v3.5a.5.5 0 0 1-1 0z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </form>
                     </div>
-
-                    <!-- The 'select' form for choosing the task to which the file will be attached. -->
-                    <select name="taskId">
-                        <option th:each="task: ${tasks}" th:value="${task.id}" th:text="${task.name}"></option>
-                    </select>
-
-                    <button type="submit">Отправить</button>
-                </form>
+                </div>
             </div>
 
-            <table>
+            <table class="table table-hover mt-2">
                 <!-- Header of the table. -->
-                <tr>
-                    <th>Имя Фамилия студента</th>
-                    <th th:each="task: ${tasks}" th:text="${task.name}"></th>
-                </tr>
+                <thead>
+                    <tr>
+                        <th scope="col">Имя Фамилия студента</th>
+                        <th scope="col" th:each="task: ${tasks}" th:text="${task.name}"></th>
+                    </tr>
+                </thead>
 
                 <!-- Body of the table. -->
-                <tr th:each="student: ${students}">
-                    <td>
-                        <!-- Show the student full name as a link only for the admin. -->
-                        <div sec:authorize="hasAuthority('ADMIN')">
-                            <a href="#" th:href="@{/user/{user}/edit_profile(user=${student.id})}">[[${student.lastName}]] [[${student.firstName}]]</a>
-                        </div>
-                        <div sec:authorize="!hasAuthority('ADMIN')">
-                            [[${student.lastName}]] [[${student.firstName}]]
-                        </div>
-                    </td>
+                <tbody>
+                    <tr th:each="student: ${students}">
+                        <th scope="row">
+                            <!-- Show the student full name as a link only for the admin. -->
+                            <div sec:authorize="hasAuthority('ADMIN')">
+                                <a href="#" th:href="@{/user/{user}/edit_profile(user=${student.id})}">[[${student.lastName}]] [[${student.firstName}]]</a>
+                            </div>
+                            <div sec:authorize="!hasAuthority('ADMIN')">
+                                [[${student.lastName}]] [[${student.firstName}]]
+                            </div>
+                        </th>
 
-                    <td th:each="task: ${tasks}">
-                        <div th:with="result=${student.getResultByTask(task)}">
-                            <a th:if="${result}"
-                               th:href="@{/file/{filepath}{filename}(filepath=${result.filepath},filename=${result.filename})}"
-                               th:text="${task.name}"></a>
-                        </div>
-                    </td>
-                </tr>
+                        <td th:each="task: ${tasks}">
+                            <div th:with="result=${student.getResultByTask(task)}">
+                                <a class="btn btn-outline-secondary btn-sm"
+                                   th:if="${result}"
+                                   th:href="@{/file/{filepath}{filename}(filepath=${result.filepath},filename=${result.filename})}">
+                                    [[${task.name}]]
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                                        <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
             </table>
         </section>
     </body>

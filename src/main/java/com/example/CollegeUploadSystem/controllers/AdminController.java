@@ -56,7 +56,13 @@ public class AdminController {
         }
 
         if (!fileExt.equals("csv") || bindingResult.hasErrors()) {
-            return "admin/newGroup";
+            List<Group> groups = this.groupService.getAll();
+
+            model.addAttribute("isErrorPresent", true);
+            model.addAttribute("groups", groups);
+            model.addAttribute("groupForm", groupForm);
+
+            return "groups";
         }
 
         this.groupService.saveGroup(file, groupForm, admin);
@@ -74,6 +80,8 @@ public class AdminController {
         // return to the same page if any error appeared to exist there.
         if (!bindingResult.hasErrors()) {
             this.taskService.addTask(taskForm, group);
+        } else {
+            model.addAttribute("addNewTaskError", true);
         }
 
         List<User> students = this.userService.getByGroupIdOrderByLastName(group.getId());
