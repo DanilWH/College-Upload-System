@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,7 +20,7 @@ public class Group implements Serializable {
     private LocalDate creationDate;
 
     @OneToMany(mappedBy = "group")
-    private List<User> students;
+    private List<User> students = new ArrayList<>();
 
     public Long getId() {
         return id;

@@ -11,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.NoResultException;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -35,7 +34,6 @@ public class GroupService {
 
     public void saveGroup(MultipartFile file, Group groupForm, User admin) throws IOException {
         groupForm.setCreationDate(LocalDate.now());
-        groupForm.setStudents(new ArrayList<>());
         // the csv format is supposed to be in the following format "LastName,FirstName,FatherName".
 
         // get the bytes of the file.
@@ -50,12 +48,15 @@ public class GroupService {
             if (!row.isBlank()) {
                 String[] data = row.split(",");
 
-                User newStudent = new User();
-                newStudent.setFirstName(data[1]);
-                newStudent.setLastName(data[0]);
-                newStudent.setFatherName(data[2]);
+                // do add a new student if the row contains the three part of the student's name.
+                if (data.length == 3)  {
+                    User newStudent = new User();
+                    newStudent.setFirstName(data[1]);
+                    newStudent.setLastName(data[0]);
+                    newStudent.setFatherName(data[2]);
 
-                groupForm.getStudents().add(newStudent);
+                    groupForm.getStudents().add(newStudent);
+                }
             }
         }
 
