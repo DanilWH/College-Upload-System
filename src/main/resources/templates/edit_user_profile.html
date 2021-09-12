@@ -6,52 +6,85 @@
     </head>
     <body>
         <section>
+            <!-- Heading-->
+            <div th:replace="fragments/general :: heading(text='Профиль пользователя ' + ${user.login}, size='1')"></div>
+
+            <!-- Content. -->
             <form action="#" th:action="@{/user/{user}/update_profile(user=${user.id})}" th:object="${user}" method="post">
-                <!-- User full name. -->
-                <div>
-                    <label for="firstName_id">Имя пользователя: </label>
-                    <input id="firstName_id" type="text" name="firstName" th:value="*{firstName}" th:disabled="${!#authorization.expression('hasAuthority(''ADMIN'')')}" />
-                    <div class="errors"><small th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></small></div>
+                <!-- First name. -->
+                <div class="mb-3 row">
+                    <label for="firstName_id" class="col-sm-2 col-form-label">Имя пользователя</label>
+                    <div class="col-sm-3">
+                        <input id="firstName_id" class="form-control" th:errorclass="is-invalid"
+                               type="text" name="firstName" th:value="*{firstName}"
+                               th:disabled="${!#authorization.expression('hasAuthority(''ADMIN'')')}" />
+
+                        <!-- errors. -->
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+                    </div>
                 </div>
-                <div>
-                    <label for="lastName_id">Фамилия пользователя: </label>
-                    <input id="lastName_id" type="text" name="lastName" th:value="*{lastName}" th:disabled="${!#authorization.expression('hasAuthority(''ADMIN'')')}" />
-                    <div class="errors"><small th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></small></div>
+
+                <!-- Last name. -->
+                <div class="mb-3 row">
+                    <label for="lastName_id" class="col-sm-2 col-form-label">Фамилия пользователя</label>
+                    <div class="col-sm-3">
+                        <input id="lastName_id" class="form-control" th:errorclass="is-invalid"
+                               type="text" name="lastName" th:value="*{lastName}"
+                               th:disabled="${!#authorization.expression('hasAuthority(''ADMIN'')')}" />
+
+                        <!-- errors. -->
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+                    </div>
                 </div>
-                <div>
-                    <label for="fatherName_id">Отчество пользователя: </label>
-                    <input id="fatherName_id" type="text" name="fatherName" th:value="*{fatherName}" th:disabled="${!#authorization.expression('hasAuthority(''ADMIN'')')}" />
-                    <div class="errors"><small th:if="${#fields.hasErrors('fatherName')}" th:errors="*{fatherName}"></small></div>
+
+                <!-- Father name. -->
+                <div class="mb-3 row">
+                    <label for="fatherName_id" class="col-sm-2 col-form-label">Отчество пользователя</label>
+                    <div class="col-sm-3">
+                        <input id="fatherName_id" class="form-control" th:errorclass="is-invalid"
+                               type="text" name="fatherName" th:value="*{fatherName}"
+                               th:disabled="${!#authorization.expression('hasAuthority(''ADMIN'')')}" />
+
+                        <!-- errors. -->
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('fatherName')}" th:errors="*{fatherName}"></div>
+                    </div>
                 </div>
 
                 <!-- Login. -->
-                <div>
-                    <label for="login_id">Логин: </label>
-                    <input id="login_id" type="text" name="login" th:value="*{login}" required autofocus />
-                    <!-- errors. -->
-                    <div class="errors">
-                        <small th:if="${#fields.hasErrors('login')}" th:errors="*{login}"></small>
+                <div class="mb-3 row">
+                    <label for="login_id" class="col-sm-2 col-form-label">Логин</label>
+                    <div class="col-sm-3">
+                        <input id="login_id" class="form-control" th:errorclass="is-invalid"
+                               type="text" name="login" th:value="*{login}" required autofocus />
+
+                        <!-- errors. -->
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('login')}" th:errors="*{login}"></div>
                     </div>
-                    <small>
+                    <div class="form-text">
                         <ul>
                             <li>Логин может состоять из латинских и/или русских симолов верхнего и/или нижнего регистра</li>
                             <li>Логин может содержать цифры</li>
                             <li>Логин может содержать символы @/-/+/_/./\</li>
                         </ul>
-                    </small>
+                    </div>
                 </div>
 
                 <!-- Password. -->
-                <button type="button" id = "password_change_button" onclick="togglePasswordChanging()">Изменить пароль</button>
-                <div>
-                    <label for="password_id">Новый пароль: </label>
-                    <input id="password_id" type="password" name="password" disabled />
-                    <img class = "password_eye" src = "/img/eye.svg" height="">
-                    <!-- errors. -->
-                    <div class="errors">
-                        <small th:if="${#fields.hasErrors('password')}" th:uerrors="*{password}"></small>
+                <button type="button" id="password_change_button" class="btn btn-outline-secondary" onclick="togglePasswordChanging()">Изменить пароль</button>
+                <div class="mb-3 row">
+                    <label for="password_id" class="col-sm-2 col-form-label">Новый пароль</label>
+                    <div class="col-sm-3">
+                        <div class="input-group">
+                            <input id="password_id" class="form-control"
+                                   th:errorclass="is-invalid"
+                                   type="password" name="password" disabled />
+                            <img class="password_eye" src="/img/eye.svg" height="">
+
+                            <!-- errors. -->
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('password')}" th:uerrors="*{password}"></div>
+                        </div>
                     </div>
-                    <small>
+                    <small class="form-text">
                         <ul>
                             <li>длина пароля должна быть от 8 до 20 символов</li>
                             <li>пароль должен содержать хотя бы один символ латинского алфавита</li>
@@ -60,19 +93,23 @@
                         </ul>
                     </small>
                 </div>
-                <div>
-                    <label for="confirmPassword_id">Повторите пароль: </label>
-                    <input id="confirmPassword_id" type="password" name="confirmPassword" disabled />
-                    <img class = "password_eye" src = "/img/eye.svg">
-                    <!-- errors. -->
-                    <div class="errors">
-                        <small th:errors="${user}"></small>
+
+                <!-- Confirm the password. -->
+                <div class="mb-3 row">
+                    <label for="confirmPassword_id" class="col-sm-2 col-form-label">Повторите пароль</label>
+                    <div class="col-sm-3">
+                        <div class="input-group">
+                            <input id="confirmPassword_id" class="form-control" th:errorclass="is-invalid"
+                                   type="password" name="confirmPassword" disabled />
+                            <img class = "password_eye" src = "/img/eye.svg">
+
+                            <!-- errors. -->
+                            <div class="invalid-feedback" th:errors="${user}"></div>
+                        </div>
                     </div>
                 </div>
 
-                <div>
-                    <button type="submit">Изменить</button>
-                </div>
+                <button class="btn btn-dark" type="submit">Изменить</button>
             </form>
 
             <script>
