@@ -4,19 +4,36 @@
     <body>
         <!-- Heading. -->
         <div th:fragment="heading(text, size)">
-            <h1 class="display-${size}" th:text="${text}"></h1>
-            <hr />
+            <div class="mb-5">
+                <h1 class="display-${size}" th:text="${text}"></h1>
+                <hr />
+            </div>
         </div>
 
         <!-- Login fragment. -->
         <div th:fragment="loginForm">
-            <div th:if="${param.error}">
-                Неверное имя пользователя или пароль.
-            </div>
             <form th:action="@{/login}" method="post">
-                <div><label>Логин: <input type="text" name="username" required autofocus /> </label></div>
-                <div><label>Пароль: <input type="password" name="password" required /> </label></div>
-                <div><input type="submit" value="Войти"/></div>
+                <!-- Login. -->
+                <div class="mb-3 row">
+                    <label for="inputLoginId" class="col-sm-1 col-form-label">Логин</label>
+                    <div class="col-sm-3">
+                        <input id="inputLoginId" class="form-control" th:classappend="${param.error} ? is-invalid" type="text" name="username" required autofocus />
+                    </div>
+                </div>
+
+                <!-- Password. -->
+                <div class="mb-3 row">
+                    <label for="inputPasswordId" class="col-sm-1 col-form-label">Пароль</label>
+                    <div class="col-sm-3">
+                        <input id="inputPasswordId" class="form-control" th:classappend="${param.error} ? is-invalid" type="password" name="password" required />
+                        <div class="invalid-feedback mt-3" th:if="${param.error}">
+                            Неверное имя пользователя или пароль.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit button. -->
+                <button type="submit" class="btn btn-dark">Войти</button>
             </form>
         </div>
 

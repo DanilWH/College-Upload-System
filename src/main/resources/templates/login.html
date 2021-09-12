@@ -5,7 +5,8 @@
     </head>
     <body>
         <section>
-            <h1>Войдите в свою учётную запись.</h1>
+            <div th:replace="fragments/general :: heading(text='Войдите в свою учётную запись', size='1')"></div>
+
             <div th:replace="fragments/general :: loginForm"></div>
         </section>
     </body>
