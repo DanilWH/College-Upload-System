@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.NoResultException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -16,7 +17,7 @@ public class TaskService {
     private TaskRepo taskRepo;
 
     public List<Task> getByGroupId(Long groupId) {
-        return this.taskRepo.findByGroupId(groupId);
+        return this.taskRepo.findByGroupIdOrderByCreationDateTimeDesc(groupId);
     }
 
     public Task getById(Long taskId) {
@@ -25,6 +26,7 @@ public class TaskService {
 
     public void addTask(Task task, Group group) {
         task.setGroup(group);
+        task.setCreationDateTime(LocalDateTime.now());
 
         this.taskRepo.save(task);
     }

@@ -2,6 +2,7 @@ package com.example.CollegeUploadSystem.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tasks")
@@ -16,6 +17,8 @@ public class Task {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id", referencedColumnName = "id")
     private Group group;
+
+    private LocalDateTime creationDateTime;
 
     public Long getId() {
         return id;
@@ -39,5 +42,13 @@ public class Task {
 
     public void setGroup(Group group) {
         this.group = group;
+    }
+
+    public LocalDateTime getCreationDateTime() {
+        return creationDateTime;
+    }
+
+    public void setCreationDateTime(LocalDateTime creationDateTime) {
+        this.creationDateTime = creationDateTime;
     }
 }
