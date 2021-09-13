@@ -2,6 +2,7 @@ package com.example.CollegeUploadSystem.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Entity
@@ -12,6 +13,7 @@ public class Task {
     private Long id;
 
     @NotBlank(message = "Поле не должно быть пустым")
+    @Size(max = 255)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)

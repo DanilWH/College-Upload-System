@@ -18,7 +18,7 @@
                     <div class="card card-body">
                         <form class="row g-3" th:action="@{/admin/group/{groupId}/add_task(groupId=${group.id})}" th:object="${taskForm}" method="post">
                             <div class="input-group">
-                                <input id="name" name="name" class="form-control" th:classappend="${addNewTaskError} ? is-invalid" placeholder="Укажите название нового задания" />
+                                <input id="name" name="name" class="form-control" th:classappend="${addNewTaskError} ? is-invalid" th:value="*{name}" placeholder="Укажите название нового задания" />
                                 <button type="submit" class="btn btn-outline-dark">Добавить задание.</button>
                                 <small th:if="${addNewTaskError}" th:errors="*{name}" class="invalid-feedback"></small>
                             </div>

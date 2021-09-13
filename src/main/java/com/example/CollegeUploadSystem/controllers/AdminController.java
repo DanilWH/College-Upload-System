@@ -80,6 +80,7 @@ public class AdminController {
         // return to the same page if any error appeared to exist there.
         if (!bindingResult.hasErrors()) {
             this.taskService.addTask(taskForm, group);
+            return "redirect:/group/" + group.getId() + "/students";
         } else {
             model.addAttribute("addNewTaskError", true);
         }
