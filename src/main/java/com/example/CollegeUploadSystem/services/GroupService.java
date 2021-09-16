@@ -46,7 +46,7 @@ public class GroupService {
             String row = csvContent.nextLine();
 
             if (!row.isBlank()) {
-                String[] data = row.split(",");
+                String[] data = row.split("([,;])");
 
                 // do add a new student if the row contains the three part of the student's name.
                 if (data.length == 3)  {
