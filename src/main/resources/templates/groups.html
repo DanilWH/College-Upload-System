@@ -46,9 +46,13 @@
                    class="list-group-item list-group-item-action"></a>
             </div>
 
-            <script>
-                const newGroupButton = document.getElementById('newGroupButton');
-                const newGroupForm = document.getElementById('newGroupForm');
+            <script sec:authorize="hasAuthority('ADMIN')">
+                if (typeof newGroupButton === 'undefined') {
+                    const newGroupButton = document.getElementById('newGroupButton');
+                }
+                if (typeof newGroupForm === 'undefined') {
+                    const newGroupForm = document.getElementById('newGroupForm');
+                }
 
                 newGroupButton.addEventListener('click', () => {
                     // show the loader at the end of the uploading form.

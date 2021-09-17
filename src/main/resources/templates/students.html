@@ -102,9 +102,15 @@
             </table>
 
             <script>
-                const uploadButton = document.getElementById('uploadButton');
-                const uploadInputGroup = document.getElementById('uploadInputGroup');
-                const uploadForm = document.getElementById('uploadForm');
+                if (typeof uploadButton === 'undefined') {
+                    const uploadButton = document.getElementById('uploadButton');
+                }
+                if (typeof uploadInputGroup === 'undefined') {
+                    const uploadInputGroup = document.getElementById('uploadInputGroup');
+                }
+                if (typeof uploadForm === 'undefined') {
+                    const uploadForm = document.getElementById('uploadForm');
+                }
 
                 uploadButton.addEventListener('click', () => {
                     // show the loader at the end of the uploading form.
