@@ -60,6 +60,9 @@ public class GroupService {
             }
         }
 
+        // Sort the new student by their last names.
+        groupForm.getStudents().sort((user1, user2) -> user1.getLastName().compareTo(user2.getLastName()));
+
         // save the group in the database.
         this.groupRepo.save(groupForm);
         // save the students that belongs to the group in the database.
