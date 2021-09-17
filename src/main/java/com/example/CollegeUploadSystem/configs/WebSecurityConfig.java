@@ -37,7 +37,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                             "/groups",
                             "/group/*/students",
                             "/css/**",
-                            "/file/**"
+                            "/file/**",
+			    "/src/**"
                     ).permitAll()
                     .anyRequest().authenticated()
                 .and()
