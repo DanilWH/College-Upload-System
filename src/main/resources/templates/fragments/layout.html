@@ -6,12 +6,20 @@
         <title th:replace="${title}"></title>
 
         <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" />
+        <!-- Loader. -->
+        <link rel="stylesheet" type="text/css" th:href="@{/css/loader.css}" />
 
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
 
         <!-- Turbolinks. -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/turbolinks/5.2.0/turbolinks.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/turbolinks/5.2.0/turbolinks.js" integrity="sha512-G3jAqT2eM4MMkLMyQR5YBhvN5/Da3IG6kqgYqU9zlIH4+2a+GuMdLb5Kpxy6ItMdCfgaKlo2XFhI0dHtMJjoRw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <style>
+            .turbolinks-progress-bar {
+                height: 2px;
+                background-color: white;
+            }
+        </style>
     </head>
     <body>
         <!-- Navbar. -->

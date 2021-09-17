@@ -15,7 +15,7 @@
                    aria-expanded="false" aria-controls="collapseNewGroupForm">Добавить новую группу</a>
 
                 <div class="collapse" th:classappend="${isErrorPresent} ? show" id="collapseNewGroupForm">
-                    <form action="#" th:action="@{/admin/new_group}" th:object="${groupForm}" method="post" enctype="multipart/form-data">
+                    <form id="newGroupForm" action="#" th:action="@{/admin/new_group}" th:object="${groupForm}" method="post" enctype="multipart/form-data">
                         <!-- Group name. -->
                         <div class="row mb-3">
                             <label for="groupName" class="col-sm-1 col-form-label">Имя группы</label>
@@ -35,7 +35,7 @@
                             </div>
                         </div>
 
-                        <button class="btn btn-dark" type="submit">Создать</button>
+                        <button id="newGroupButton" class="btn btn-dark" type="submit">Создать</button>
                     </form>
                 </div>
             </div>
@@ -45,6 +45,25 @@
                 <a th:each="group : ${groups}" th:href="@{/group/{groupId}/students(groupId=${group.id})}" th:text="${group.name}"
                    class="list-group-item list-group-item-action"></a>
             </div>
+
+            <script>
+                const newGroupButton = document.getElementById('newGroupButton');
+                const newGroupForm = document.getElementById('newGroupForm');
+
+                newGroupButton.addEventListener('click', () => {
+                    // show the loader at the end of the uploading form.
+                    newGroupForm.insertAdjacentHTML('beforeend',
+                        '<span class="ms-3">Генерирование уч. записей студентов...</span>' +
+                        '<div class="lds-roller ms-3"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>'
+                    );
+
+                    // make the upload button disabled.
+                    newGroupButton.setAttribute('disabled', 'disabled');
+
+                    // submit the form.
+                    newGroupForm.submit();
+                });
+            </script>
         </section>
     </body>
 </html>
