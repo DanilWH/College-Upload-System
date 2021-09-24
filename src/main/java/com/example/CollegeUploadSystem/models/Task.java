@@ -22,6 +22,9 @@ public class Task {
 
     private LocalDateTime creationDateTime;
 
+    @Size(max = 255)
+    private String taskDescriptionFile;
+
     public Long getId() {
         return id;
     }
@@ -52,5 +55,13 @@ public class Task {
 
     public void setCreationDateTime(LocalDateTime creationDateTime) {
         this.creationDateTime = creationDateTime;
+    }
+
+    public String getTaskDescriptionFile() {
+        return taskDescriptionFile;
+    }
+
+    public void setTaskDescriptionFile(String taskDescriptionFile) {
+        this.taskDescriptionFile = taskDescriptionFile;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.CollegeUploadSystem.services;
 
+import com.example.CollegeUploadSystem.ApplicationUtils;
 import com.example.CollegeUploadSystem.models.Group;
 import com.example.CollegeUploadSystem.models.StudentResult;
 import com.example.CollegeUploadSystem.models.Task;
@@ -20,9 +21,13 @@ public class StudentResultService {
 
     @Value("${upload.path}")
     private String uploadPath;
+    @Value("${user.directory}")
+    private String userDirectory;
 
     @Autowired
     private StudentResultRepo studentResultRepo;
+    @Autowired
+    private ApplicationUtils applicationUtils;
 
     public StudentResult getByTaskIdAndUserId(Long taskId, Long userId) {
         return this.studentResultRepo.findByTaskIdAndUserId(taskId, userId);
@@ -38,7 +43,7 @@ public class StudentResultService {
             // check if the student has already uploaded files that belongs to the same task.
             if (studentResult != null) {
                 // if so, delete the old file.
-                File fileObj = new File(this.uploadPath + studentResult.getFilepath() + studentResult.getFilename());
+                File fileObj = new File(this.uploadPath + "/" + studentResult.getFilepath() + studentResult.getFilename());
                 fileObj.delete();
 
                 // we don't delete the entity in the database because we'll just update the old one.
@@ -58,12 +63,6 @@ public class StudentResultService {
             // filename is the unique file name.
             String filepath = String.format("%s_%s/%s/", group.getName(), group.getCreationDate().getYear(), task.getName());
 
-            // create a new directory if doesn't exist.
-            File fileObj = new File(this.uploadPath + filepath);
-            if (!fileObj.exists()) {
-                fileObj.mkdirs();
-            }
-
             // create the file name.
             String filename = String.format("%s%s_%s_%s",
                     currentUser.getLastName(),
@@ -72,8 +71,8 @@ public class StudentResultService {
                     file.getOriginalFilename()
             );
 
-            // save the file in the directory.
-            file.transferTo(new File(this.uploadPath + filepath + filename));
+            // upload the file.
+            this.applicationUtils.uploadMultipartFile(file, this.userDirectory, filepath, filename);
 
             studentResult.setFilename(filename);
             studentResult.setFilepath(filepath);

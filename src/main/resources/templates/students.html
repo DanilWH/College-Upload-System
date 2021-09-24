@@ -16,9 +16,10 @@
 
                 <div class="collapse" th:classappend="${addNewTaskError} ? show" id="collapseNewTaskForm">
                     <div class="card card-body">
-                        <form class="row g-3" th:action="@{/admin/group/{groupId}/add_task(groupId=${group.id})}" th:object="${taskForm}" method="post">
+                        <form class="row g-3" th:action="@{/admin/group/{groupId}/add_task(groupId=${group.id})}" th:object="${taskForm}" method="post" enctype="multipart/form-data">
                             <div class="input-group">
-                                <input id="name" name="name" class="form-control" th:classappend="${addNewTaskError} ? is-invalid" th:value="*{name}" placeholder="Укажите название нового задания" />
+                                <input name="file" type="file" class="form-control" />
+                                <input id="name" type="text" name="name" class="form-control" th:classappend="${addNewTaskError} ? is-invalid" th:value="*{name}" placeholder="Укажите название нового задания" />
                                 <button type="submit" class="btn btn-outline-dark">Добавить задание.</button>
                                 <small th:if="${addNewTaskError}" th:errors="*{name}" class="invalid-feedback"></small>
                             </div>
@@ -67,7 +68,12 @@
                 <thead>
                     <tr>
                         <th scope="col">Имя Фамилия студента</th>
-                        <th scope="col" th:each="task: ${tasks}" th:text="${task.name}"></th>
+                        <th scope="col" th:each="task: ${tasks}">
+                            <a th:if="${task.getTaskDescriptionFile()}" th:href="@{/file/{directory}/{fileLocation}(directory=${@environment.getProperty('admin.directory')},fileLocation=${task.getTaskDescriptionFile()})}"
+                               th:text="${task.name}"
+                               title="Открыть описание к заданию"></a>
+                            <th:block th:if="!${task.getTaskDescriptionFile()}" th:text="${task.name}"></th:block>
+                        </th>
                     </tr>
                 </thead>
 
@@ -88,7 +94,7 @@
                             <div th:with="result=${student.getResultByTask(task)}">
                                 <a class="btn btn-outline-secondary btn-sm"
                                    th:if="${result}"
-                                   th:href="@{/file/{filepath}{filename}(filepath=${result.filepath},filename=${result.filename})}">
+                                   th:href="@{/file/{userDirectory}/{filepath}{filename}(filepath=${result.filepath},filename=${result.filename},userDirectory=${@environment.getProperty('user.directory')})}">
                                     [[${task.name}]]
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
                                         <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
@@ -102,6 +108,8 @@
             </table>
 
             <script>
+                // TODO remove th shitty code.
+
                 if (typeof uploadButton === 'undefined') {
                     const uploadButton = document.getElementById('uploadButton');
                 }

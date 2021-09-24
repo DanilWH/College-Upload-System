@@ -32,15 +32,6 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
-/*
-    @GetMapping("/new_group")
-    public String newGroupForm(Model model) {
-        model.addAttribute("groupForm", new Group());
-
-        return "admin/newGroup";
-    }
-*/
-
     @PostMapping("/new_group")
     public String newGroupSaving(
             @AuthenticationPrincipal User admin,
@@ -72,14 +63,15 @@ public class AdminController {
 
     @PostMapping("/group/{group}/add_task")
     public String addTask(
+            @RequestParam MultipartFile file,
             @PathVariable Group group,
             @Valid @ModelAttribute("taskForm") Task taskForm,
             BindingResult bindingResult,
             Model model
-    ) {
+    ) throws IOException {
         // return to the same page if any error appeared to exist there.
         if (!bindingResult.hasErrors()) {
-            this.taskService.addTask(taskForm, group);
+            this.taskService.addTask(taskForm, group, file);
             return "redirect:/group/" + group.getId() + "/students";
         } else {
             model.addAttribute("addNewTaskError", true);

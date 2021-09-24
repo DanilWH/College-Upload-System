@@ -25,6 +25,8 @@ public class UserService implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserRepo userRepo;
+    @Autowired
+    private ApplicationUtils applicationUtils;
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
@@ -70,7 +72,7 @@ public class UserService implements UserDetailsService {
         this.userRepo.save(userToUpdate);
 
         // dynamically update a logged user's session.
-        ApplicationUtils.refreshCurrentUserSession();
+        this.applicationUtils.refreshCurrentUserSession();
     }
 
     public void addAllStudents(List<User> students, Group group, User admin) {

@@ -29,6 +29,8 @@ public class CommonController {
     private GroupService groupService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private ApplicationUtils applicationUtils;
 
     @GetMapping("/")
     public String main() {
@@ -54,7 +56,7 @@ public class CommonController {
             Model model
     ) {
         // throw the 403 error if a student tries to open someone else's profile.
-        ApplicationUtils.protectAccessToUserProfile(currentUser, initialUser);
+        this.applicationUtils.protectAccessToUserProfile(currentUser, initialUser);
 
         model.addAttribute("user", initialUser);
 
@@ -69,7 +71,7 @@ public class CommonController {
             BindingResult bindingResult
     ) {
         // throw the 403 error if a student tries to edit someone else's profile.
-        ApplicationUtils.protectAccessToUserProfile(currentUser, initialUser);
+        this.applicationUtils.protectAccessToUserProfile(currentUser, initialUser);
 
         // the "The login ... already exists" rule is checked in the controller because of the inability to
         // put the current user session in the constraint validator and compare if the user has changed its
@@ -87,9 +89,9 @@ public class CommonController {
         // because the admin can edit a user's full name
         // we check for @NotBlank the user's full name fields if the current user is admin.
         if (currentUser.getUserRoles().contains(UserRoles.ADMIN)) {
-            ApplicationUtils.fieldNotBlank(bindingResult, "firstName", userModel.getFirstName(), FIELD_ERROR_MESSAGE);
-            ApplicationUtils.fieldNotBlank(bindingResult, "lastName", userModel.getLastName(), FIELD_ERROR_MESSAGE);
-            ApplicationUtils.fieldNotBlank(bindingResult, "fatherName", userModel.getFatherName(), FIELD_ERROR_MESSAGE);
+            this.applicationUtils.fieldNotBlank(bindingResult, "firstName", userModel.getFirstName(), FIELD_ERROR_MESSAGE);
+            this.applicationUtils.fieldNotBlank(bindingResult, "lastName", userModel.getLastName(), FIELD_ERROR_MESSAGE);
+            this.applicationUtils.fieldNotBlank(bindingResult, "fatherName", userModel.getFatherName(), FIELD_ERROR_MESSAGE);
         }
 
         // check if there are errors in the user form.
