@@ -14,13 +14,21 @@
                     Добавить новое задание
                 </button>
 
-                <div class="collapse" th:classappend="${addNewTaskError} ? show" id="collapseNewTaskForm">
+                <div class="collapse" th:classappend="${ addNewTaskError != null || (taskForm != null && taskForm.name != null) } ? show" id="collapseNewTaskForm">
                     <div class="card card-body">
-                        <form class="row g-3" th:action="@{/admin/group/{groupId}/add_task(groupId=${group.id})}" th:object="${taskForm}" method="post" enctype="multipart/form-data">
+                        <form class="row g-3" th:action="@{ /admin/group/{groupId}/add_or_update_task(groupId=${group.id}) }" th:object="${taskForm}" method="post" enctype="multipart/form-data">
                             <div class="input-group">
+                                <input name="id" type="hidden" th:value="*{id}" />
                                 <input name="file" type="file" class="form-control" />
-                                <input id="name" type="text" name="name" class="form-control" th:classappend="${addNewTaskError} ? is-invalid" th:value="*{name}" placeholder="Укажите название нового задания" />
-                                <button type="submit" class="btn btn-outline-dark">Добавить задание.</button>
+                                <div class="input-group-text" th:if="*{taskDescriptionFile}">
+                                    <input id="fileDeletionId" name="fileDeletion" type="checkbox" class="form-check-input mt-0 me-2" value="true" />
+                                    <label for="fileDeletionId">Удалить существующий файл</label>
+                                </div>
+                                <input id="name" type="text" name="name" class="form-control" th:classappend="${ addNewTaskError } ? is-invalid" th:value="*{name}" placeholder="Укажите название задания" />
+                                <button type="submit" class="btn btn-outline-dark">
+                                    <th:block th:if="*{id}">Сохранить изменения</th:block>
+                                    <th:block th:unless="*{id}">Добавить задание</th:block>
+                                </button>
                                 <small th:if="${addNewTaskError}" th:errors="*{name}" class="invalid-feedback"></small>
                             </div>
                         </form>
@@ -73,6 +81,11 @@
                                th:text="${task.name}"
                                title="Открыть описание к заданию"></a>
                             <th:block th:if="!${task.getTaskDescriptionFile()}" th:text="${task.name}"></th:block>
+                            <a sec:authorize="hasAuthority('ADMIN')" class="btn" th:href="@{/group/{groupId}/students?taskId={taskId}(groupId=${task.group.id},taskId=${task.id})}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen-fill" viewBox="0 0 16 16">
+                                    <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001z"/>
+                                </svg>
+                            </a>
                         </th>
                     </tr>
                 </thead>
@@ -108,7 +121,7 @@
             </table>
 
             <script>
-                // TODO remove th shitty code.
+                // TODO remove this shitty code.
 
                 if (typeof uploadButton === 'undefined') {
                     const uploadButton = document.getElementById('uploadButton');

@@ -61,29 +61,35 @@ public class AdminController {
         return "redirect:/";
     }
 
-    @PostMapping("/group/{group}/add_task")
-    public String addTask(
+    @PostMapping("/group/{group}/add_or_update_task")
+    public String addOrUpdateTask(
             @RequestParam MultipartFile file,
+            @RequestParam(name = "fileDeletion", required = false) boolean fileDeletion,
             @PathVariable Group group,
             @Valid @ModelAttribute("taskForm") Task taskForm,
             BindingResult bindingResult,
             Model model
-    ) throws IOException {
+    ) throws Exception {
         // return to the same page if any error appeared to exist there.
         if (!bindingResult.hasErrors()) {
-            this.taskService.addTask(taskForm, group, file);
+            if (taskForm.getId() == null) {
+                this.taskService.addTask(taskForm, group, file);
+            } else {
+                this.taskService.updateTask(taskForm, group, file, fileDeletion);
+            }
             return "redirect:/group/" + group.getId() + "/students";
         } else {
             model.addAttribute("addNewTaskError", true);
+
+            List<User> students = this.userService.getByGroupIdOrderByLastName(group.getId());
+            List<Task> tasks = this.taskService.getByGroupId(group.getId());
+
+            model.addAttribute("group", group);
+            model.addAttribute("students", students);
+            model.addAttribute("tasks", tasks);
+
+            return "students";
         }
 
-        List<User> students = this.userService.getByGroupIdOrderByLastName(group.getId());
-        List<Task> tasks = this.taskService.getByGroupId(group.getId());
-
-        model.addAttribute("group", group);
-        model.addAttribute("students", students);
-        model.addAttribute("tasks", tasks);
-
-        return "students";
     }
 }

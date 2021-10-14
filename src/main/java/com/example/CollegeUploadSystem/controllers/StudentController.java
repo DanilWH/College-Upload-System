@@ -36,6 +36,7 @@ public class StudentController {
     public String students(
             @AuthenticationPrincipal User currentUser,
             @PathVariable Long groupId,
+            @RequestParam(name = "taskId", required = false) Long taskId,
             Model model
     ) {
         Group group = this.groupService.getById(groupId);
@@ -48,7 +49,7 @@ public class StudentController {
 
         // put a new task form into the model in case the current user is admin.
         if (currentUser != null && currentUser.getUserRoles().contains(UserRoles.ADMIN)) {
-            model.addAttribute("taskForm", new Task());
+            model.addAttribute("taskForm", (taskId == null)? new Task() : this.taskService.getById(taskId));
         }
 
         return "students";
@@ -80,6 +81,6 @@ public class StudentController {
             model.addAttribute("uploadError", "Пожалуйста выберите файл.");
         }
 
-        return students(currentUser, groupId, model);
+        return students(currentUser, groupId, null, model);
     }
 }

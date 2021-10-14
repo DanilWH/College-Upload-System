@@ -25,12 +25,16 @@ public class CommonController {
 
     private final String FIELD_ERROR_MESSAGE = "Поле не должно быть пустым";
 
+    private final GroupService groupService;
+    private final UserService userService;
+    private final ApplicationUtils applicationUtils;
+
     @Autowired
-    private GroupService groupService;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private ApplicationUtils applicationUtils;
+    public CommonController(GroupService groupService, UserService userService, ApplicationUtils applicationUtils) {
+        this.groupService = groupService;
+        this.userService = userService;
+        this.applicationUtils = applicationUtils;
+    }
 
     @GetMapping("/")
     public String main() {
@@ -38,9 +42,7 @@ public class CommonController {
     }
 
     @GetMapping("/groups")
-    public String groups(
-            Model model
-    ) {
+    public String groups(Model model) {
         List<Group> groups = this.groupService.getAll();
 
         model.addAttribute("groups", groups);

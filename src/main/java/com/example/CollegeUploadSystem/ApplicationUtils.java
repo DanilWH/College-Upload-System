@@ -76,7 +76,6 @@ public class ApplicationUtils {
      * @return void
      */
     public void uploadMultipartFile(MultipartFile file, String directory, String filepath, String filename) throws IOException {
-        System.out.println(this.uploadPath);
         // create a new directory if doesn't exist.
         File fileObj = new File(this.uploadPath + "/" + directory + "/" + filepath);
         if (!fileObj.exists()) {
@@ -85,6 +84,14 @@ public class ApplicationUtils {
 
         // save the file in the directory.
         file.transferTo(new File(this.uploadPath + "/" + directory + "/" + filepath + filename));
+    }
+
+    public void deleteFile(String directory, String filepath) throws Exception {
+        File fileObj = new File(this.uploadPath + "/" + directory + "/" + filepath);
+
+        if (!fileObj.delete()) {
+            throw new Exception("Unable to delete the task old description file.");
+        }
     }
 
 }
