@@ -1,4 +1,4 @@
-package com.example.CollegeUploadSystem;
+package com.example.CollegeUploadSystem.utils;
 
 import com.example.CollegeUploadSystem.models.User;
 import com.example.CollegeUploadSystem.models.UserRoles;
