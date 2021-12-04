@@ -1,14 +1,17 @@
 package com.example.CollegeUploadSystem.utils;
 
+import com.example.CollegeUploadSystem.dto.JwtExceptionResponse;
 import com.example.CollegeUploadSystem.dto.LoginResponse;
 import com.example.CollegeUploadSystem.models.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.security.Key;
 import java.util.Date;
 
@@ -42,11 +45,14 @@ public class JwtUtils {
     }
 
     public Jws<Claims> parseJws(String jws) {
-        try {
-            return Jwts.parserBuilder().setSigningKey(this.KEY).build().parseClaimsJws(jws);
-        } catch (JwtException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid JWT", e);
-        }
+        return Jwts.parserBuilder().setSigningKey(this.KEY).build().parseClaimsJws(jws);
+    }
+
+    public void throwInvalidJwsException(HttpServletResponse response, JwtException exception) throws IOException {
+        response.setHeader("error", exception.getMessage());
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+
+        new ObjectMapper().writeValue(response.getOutputStream(), new JwtExceptionResponse(exception.getMessage()));
     }
 
     private String generateJws(User jwsOwner, Long expirationMs) {
