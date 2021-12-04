@@ -43,7 +43,7 @@ public class CommonController {
 
     @GetMapping("/groups")
     public String groups(Model model) {
-        List<Group> groups = this.groupService.getAll();
+        List<Group> groups = this.groupService.findAllActive();
 
         model.addAttribute("groups", groups);
         model.addAttribute("groupForm", new Group());

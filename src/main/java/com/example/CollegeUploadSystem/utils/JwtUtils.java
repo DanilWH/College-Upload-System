@@ -5,7 +5,9 @@ import com.example.CollegeUploadSystem.models.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Key;
 import java.util.Date;
@@ -43,7 +45,7 @@ public class JwtUtils {
         try {
             return Jwts.parserBuilder().setSigningKey(this.KEY).build().parseClaimsJws(jws);
         } catch (JwtException e) {
-            throw new RuntimeException(e);
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid JWT", e);
         }
     }
 
