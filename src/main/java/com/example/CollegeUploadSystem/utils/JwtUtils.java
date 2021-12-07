@@ -4,12 +4,16 @@ import com.example.CollegeUploadSystem.dto.AuthExceptionResponse;
 import com.example.CollegeUploadSystem.dto.LoginResponse;
 import com.example.CollegeUploadSystem.models.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Key;
@@ -48,8 +52,18 @@ public class JwtUtils {
         return Jwts.parserBuilder().setSigningKey(this.KEY).build().parseClaimsJws(jws);
     }
 
+    public String parseAuthorizationBearer(HttpServletRequest request) {
+        String value = request.getHeader("Authorization");
+
+        if (value != null && value.startsWith("Bearer ")) {
+            return value.substring("Bearer ".length());
+        }
+
+        throw new RuntimeException("The Authorization header isn't present or Bearer is missing");
+    }
+
     public void sendUnauthorizedResponse(HttpServletResponse response, RuntimeException exception) throws IOException {
-        response.setHeader("error", exception.getMessage());
+        response.setHeader("Error", exception.getMessage());
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
 
         new ObjectMapper().writeValue(response.getOutputStream(), new AuthExceptionResponse(exception.getMessage()));
