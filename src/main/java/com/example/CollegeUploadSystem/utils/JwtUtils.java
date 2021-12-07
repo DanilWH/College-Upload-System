@@ -1,6 +1,6 @@
 package com.example.CollegeUploadSystem.utils;
 
-import com.example.CollegeUploadSystem.dto.JwtExceptionResponse;
+import com.example.CollegeUploadSystem.dto.AuthExceptionResponse;
 import com.example.CollegeUploadSystem.dto.LoginResponse;
 import com.example.CollegeUploadSystem.models.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -48,11 +48,11 @@ public class JwtUtils {
         return Jwts.parserBuilder().setSigningKey(this.KEY).build().parseClaimsJws(jws);
     }
 
-    public void throwInvalidJwsException(HttpServletResponse response, JwtException exception) throws IOException {
+    public void sendUnauthorizedResponse(HttpServletResponse response, RuntimeException exception) throws IOException {
         response.setHeader("error", exception.getMessage());
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
 
-        new ObjectMapper().writeValue(response.getOutputStream(), new JwtExceptionResponse(exception.getMessage()));
+        new ObjectMapper().writeValue(response.getOutputStream(), new AuthExceptionResponse(exception.getMessage()));
     }
 
     private String generateJws(User jwsOwner, Long expirationMs) {

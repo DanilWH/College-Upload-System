@@ -1,9 +1,9 @@
 package com.example.CollegeUploadSystem.dto;
 
-public class JwtExceptionResponse {
+public class AuthExceptionResponse {
     private String errorMessage;
 
-    public JwtExceptionResponse(String errorMessage) {
+    public AuthExceptionResponse(String errorMessage) {
         this.errorMessage = errorMessage;
     }
 

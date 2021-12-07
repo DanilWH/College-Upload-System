@@ -53,5 +53,10 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         new ObjectMapper().writeValue(response.getOutputStream(), this.jwtUtils.packLoginResponse(loggedInUser, accessJws, refreshJws));
     }
 
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        this.jwtUtils.sendUnauthorizedResponse(response, failed);
+    }
+
     /* TODO implement refresh token. */
 }

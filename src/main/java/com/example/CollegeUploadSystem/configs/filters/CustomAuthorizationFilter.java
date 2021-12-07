@@ -36,7 +36,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             } catch (JwtException e) {
-                this.jwtUtils.throwInvalidJwsException(response, e);
+                this.jwtUtils.sendUnauthorizedResponse(response, e);
             }
         }
 
