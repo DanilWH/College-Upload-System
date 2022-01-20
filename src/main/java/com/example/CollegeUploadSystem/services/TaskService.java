@@ -35,25 +35,25 @@ public class TaskService {
         return this.taskRepo.findById(taskId).orElseThrow(NoResultException::new);
     }
 
-    public void addTask(Task taskForm, Group group, MultipartFile file) throws IOException {
-        if (file != null && !file.isEmpty()) {
-            String filepathFilename = uploadDescriptionFile(taskForm, group, file);
-            taskForm.setTaskDescriptionFile(filepathFilename);
-        }
+    public Task create(Task task, Group groupFromDb) throws IOException {
+//        if (file != null && !file.isEmpty()) {
+//            String filepathFilename = uploadDescriptionFile(task, groupFromDb, file);
+//            task.setTaskDescriptionFile(filepathFilename);
+//        }
 
-        taskForm.setGroup(group);
-        taskForm.setCreationDateTime(LocalDateTime.now());
+        task.setGroup(groupFromDb);
+        task.setCreationDateTime(LocalDateTime.now());
 
-        this.taskRepo.save(taskForm);
+        return this.taskRepo.save(task);
     }
 
-    public void updateTask(Task taskForm, Group group, MultipartFile file, boolean fileDeletion) throws Exception {
+    public Task updateTask(Group groupFromDb, Task taskFromDb, Task task, MultipartFile file, boolean fileDeletion) throws Exception {
         // we find the old version of the task and replace the necessary properties with new values.
         // Then just store the new task version in the database.
 
-        Task oldTaskObj = this.taskRepo.findById(taskForm.getId()).orElseThrow(NoResultException::new);
+        Task oldTaskObj = this.taskRepo.findById(task.getId()).orElseThrow(NoResultException::new);
 
-        oldTaskObj.setName(taskForm.getName());
+        oldTaskObj.setName(task.getName());
 
         // detach the junk description file if the checkbox is checked.
         if (fileDeletion) {
@@ -69,11 +69,11 @@ public class TaskService {
             }
 
             // attach the new descirption file.
-            String filepathFilename = uploadDescriptionFile(taskForm, group, file);
+            String filepathFilename = uploadDescriptionFile(task, groupFromDb, file);
             oldTaskObj.setTaskDescriptionFile(filepathFilename);
         }
 
-        this.taskRepo.save(oldTaskObj);
+        return this.taskRepo.save(oldTaskObj);
     }
 
     private String uploadDescriptionFile(Task taskForm, Group group, MultipartFile file) throws IOException {

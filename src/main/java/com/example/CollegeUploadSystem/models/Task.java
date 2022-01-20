@@ -1,28 +1,36 @@
 package com.example.CollegeUploadSystem.models;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tasks")
-public class Task {
+public class Task implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonView(Views.Id.class)
     private Long id;
 
     @NotBlank(message = "Поле не должно быть пустым")
     @Size(max = 255)
+    @JsonView(Views.IdName.class)
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id", referencedColumnName = "id")
+    @JsonView(Views.IdNameDescription.class)
     private Group group;
 
+    @JsonView(Views.IdNameDescription.class)
     private LocalDateTime creationDateTime;
 
     @Size(max = 255)
+    @JsonView(Views.IdName.class)
     private String taskDescriptionFile;
 
     public Long getId() {
