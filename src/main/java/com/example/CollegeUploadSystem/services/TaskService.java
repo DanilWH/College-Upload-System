@@ -6,11 +6,12 @@ import com.example.CollegeUploadSystem.repos.TaskRepo;
 import com.example.CollegeUploadSystem.utils.ApplicationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.NoResultException;
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -81,12 +82,11 @@ public class TaskService {
 //    }
 
     public void uploadDescriptionFile(MultipartFile file, String fileLocation) throws IOException {
-        // TODO check if the file is actually a file, not some other shit.
-        File fileObject = new File(fileLocation);
-        int lastIndex = fileObject.getPath().lastIndexOf("/");
-        String filepath = fileObject.getPath().substring(0, lastIndex + 1);
-        String filename = fileObject.getName();
-        this.applicationUtils.uploadMultipartFile(file, this.adminDirectory, filepath, filename);
+        if (file != null && !file.isEmpty()) {
+            this.applicationUtils.uploadMultipartFile(file, this.adminDirectory, fileLocation);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No file content.");
+        }
     }
 
     private String calculatePathToDescriptionFile(Task taskForm, Group group, String originalFilename) {

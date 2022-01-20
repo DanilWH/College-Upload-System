@@ -56,6 +56,7 @@ public class GroupController {
             @RequestParam("file") MultipartFile file,
             @RequestPart("group") String rawGroup
     ) throws IOException {
+        // TODO divide the requests.
         Group group = this.groupService.convertToJson(rawGroup);
         Set<ConstraintViolation<Group>> constraintViolations = this.validator.validate(group);
 

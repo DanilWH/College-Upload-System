@@ -72,7 +72,7 @@ public class StudentResultService {
             );
 
             // upload the file.
-            this.applicationUtils.uploadMultipartFile(file, this.userDirectory, filepath, filename);
+            this.applicationUtils.uploadMultipartFile(file, this.userDirectory, filepath + filename);
 
             studentResult.setFilename(filename);
             studentResult.setFilepath(filepath);
