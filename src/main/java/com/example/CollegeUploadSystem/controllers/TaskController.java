@@ -6,6 +6,8 @@ import com.example.CollegeUploadSystem.models.Views;
 import com.example.CollegeUploadSystem.services.TaskService;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -32,19 +34,18 @@ public class TaskController {
 
     @PostMapping("/groups/{groupId}/tasks")
     @JsonView(Views.IdName.class)
-    public Task create(@PathVariable("groupId") Group groupFromDb, @RequestBody Task task) throws IOException {
-        return this.taskService.create(task, groupFromDb);
+    public ResponseEntity<Task> create(@PathVariable("groupId") Group groupFromDb, @RequestBody Task task) throws IOException {
+        Task createdTask = this.taskService.create(task, groupFromDb);
+        return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/tasks/files")
+    public ResponseEntity fileUpload(@RequestParam("file") MultipartFile file, @RequestParam("fileLocation") String fileLocation) throws IOException {
+        this.taskService.uploadDescriptionFile(file, fileLocation);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 /*
-    @PostMapping("/tasks/files")
-    public FilepathResponse fileUpload(
-            @RequestParam("file") MultipartFile file
-    ) {
-        return this.taskService.
-    }
-*/
-
     @PutMapping("/group/{groupId}/tasks/{taskId}")
     public Task update(
             @PathVariable("groupId") Group groupFromDb,
@@ -54,6 +55,7 @@ public class TaskController {
     ) throws Exception {
         return this.taskService.updateTask(groupFromDb, taskFromDb, task, file, false);
     }
+*/
 
     @PostMapping("/group/{group}/add_or_update_task")
     public String addOrUpdateTask(

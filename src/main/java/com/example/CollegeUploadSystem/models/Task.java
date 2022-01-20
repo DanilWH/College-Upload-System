@@ -31,7 +31,7 @@ public class Task implements Serializable {
 
     @Size(max = 255)
     @JsonView(Views.IdName.class)
-    private String taskDescriptionFile;
+    private String descriptionFile;
 
     public Long getId() {
         return id;
@@ -65,11 +65,11 @@ public class Task implements Serializable {
         this.creationDateTime = creationDateTime;
     }
 
-    public String getTaskDescriptionFile() {
-        return taskDescriptionFile;
+    public String getDescriptionFile() {
+        return descriptionFile;
     }
 
-    public void setTaskDescriptionFile(String taskDescriptionFile) {
-        this.taskDescriptionFile = taskDescriptionFile;
+    public void setDescriptionFile(String descriptionFile) {
+        this.descriptionFile = descriptionFile;
     }
 }
