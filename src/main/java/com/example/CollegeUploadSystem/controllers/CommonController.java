@@ -1,6 +1,6 @@
 package com.example.CollegeUploadSystem.controllers;
 
-import com.example.CollegeUploadSystem.ApplicationUtils;
+import com.example.CollegeUploadSystem.utils.ApplicationUtils;
 import com.example.CollegeUploadSystem.models.Group;
 import com.example.CollegeUploadSystem.models.User;
 import com.example.CollegeUploadSystem.models.UserRoles;
@@ -43,7 +43,7 @@ public class CommonController {
 
     @GetMapping("/groups")
     public String groups(Model model) {
-        List<Group> groups = this.groupService.getAll();
+        List<Group> groups = this.groupService.findAllActive();
 
         model.addAttribute("groups", groups);
         model.addAttribute("groupForm", new Group());

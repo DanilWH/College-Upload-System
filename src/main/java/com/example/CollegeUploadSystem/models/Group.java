@@ -1,5 +1,8 @@
 package com.example.CollegeUploadSystem.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
@@ -12,12 +15,20 @@ import java.util.List;
 public class Group implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonView(Views.Id.class)
     private Long id;
 
     @NotBlank(message = "Заполните поле")
+    @JsonView(Views.IdName.class)
     private String name;
 
+    @JsonView(Views.IdNameDescription.class)
     private LocalDate creationDate;
+
+    // TODO database migration (increase the login and last_name columns in the users table).
+    // TODO database migration (alter add column).
+    @JsonIgnore
+    private Boolean isActive = true;
 
     @OneToMany(mappedBy = "group")
     private List<User> students = new ArrayList<>();
@@ -44,6 +55,14 @@ public class Group implements Serializable {
 
     public void setCreationDate(LocalDate creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
     }
 
     public List<User> getStudents() {

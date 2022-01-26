@@ -1,4 +1,4 @@
-package com.example.CollegeUploadSystem;
+package com.example.CollegeUploadSystem.utils;
 
 import com.example.CollegeUploadSystem.models.User;
 import com.example.CollegeUploadSystem.models.UserRoles;
@@ -75,15 +75,15 @@ public class ApplicationUtils {
      *
      * @return void
      */
-    public void uploadMultipartFile(MultipartFile file, String directory, String filepath, String filename) throws IOException {
+    public void uploadMultipartFile(MultipartFile file, String directory, String fileLocation) throws IOException {
         // create a new directory if doesn't exist.
-        File fileObj = new File(this.uploadPath + "/" + directory + "/" + filepath);
+        File fileObj = new File(this.uploadPath + "/" + directory + "/" + fileLocation);
         if (!fileObj.exists()) {
             fileObj.mkdirs();
         }
 
         // save the file in the directory.
-        file.transferTo(new File(this.uploadPath + "/" + directory + "/" + filepath + filename));
+        file.transferTo(new File(this.uploadPath + "/" + directory + "/" + fileLocation));
     }
 
     public void deleteFile(String directory, String filepath) throws Exception {

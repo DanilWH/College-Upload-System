@@ -1,6 +1,6 @@
 package com.example.CollegeUploadSystem.services;
 
-import com.example.CollegeUploadSystem.ApplicationUtils;
+import com.example.CollegeUploadSystem.utils.ApplicationUtils;
 import com.example.CollegeUploadSystem.models.Group;
 import com.example.CollegeUploadSystem.models.User;
 import com.example.CollegeUploadSystem.models.UserRoles;

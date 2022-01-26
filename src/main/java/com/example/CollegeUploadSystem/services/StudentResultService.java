@@ -1,6 +1,6 @@
 package com.example.CollegeUploadSystem.services;
 
-import com.example.CollegeUploadSystem.ApplicationUtils;
+import com.example.CollegeUploadSystem.utils.ApplicationUtils;
 import com.example.CollegeUploadSystem.models.Group;
 import com.example.CollegeUploadSystem.models.StudentResult;
 import com.example.CollegeUploadSystem.models.Task;
@@ -72,7 +72,7 @@ public class StudentResultService {
             );
 
             // upload the file.
-            this.applicationUtils.uploadMultipartFile(file, this.userDirectory, filepath, filename);
+            this.applicationUtils.uploadMultipartFile(file, this.userDirectory, filepath + filename);
 
             studentResult.setFilename(filename);
             studentResult.setFilepath(filepath);
