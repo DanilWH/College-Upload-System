@@ -118,6 +118,7 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
+		<!-- TODO remove Devtools on deploy.-->
 		<!-- Devtools. -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

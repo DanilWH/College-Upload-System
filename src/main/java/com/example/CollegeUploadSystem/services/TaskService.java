@@ -38,11 +38,6 @@ public class TaskService {
     }
 
     public Task create(Task task, Group groupFromDb) throws IOException {
-//        if (file != null && !file.isEmpty()) {
-//            String filepathFilename = calculatePathToDescriptionFile(task, groupFromDb, file);
-//            task.setTaskDescriptionFile(filepathFilename);
-//        }
-
         task.setGroup(groupFromDb);
         task.setCreationDateTime(LocalDateTime.now());
         // we get the request body with the taskDescriptionFile filled with the original file name. That's why we pass
@@ -52,34 +47,10 @@ public class TaskService {
         return this.taskRepo.save(task);
     }
 
-//    public Task updateTask(Group groupFromDb, Task taskFromDb, Task task, MultipartFile file, boolean fileDeletion) throws Exception {
-//        // we find the old version of the task and replace the necessary properties with new values.
-//        // Then just store the new task version in the database.
-//
-//        Task oldTaskObj = this.taskRepo.findById(task.getId()).orElseThrow(NoResultException::new);
-//
-//        oldTaskObj.setName(task.getName());
-//
-//        // detach the junk description file if the checkbox is checked.
-//        if (fileDeletion) {
-//            this.applicationUtils.deleteFile(this.adminDirectory, oldTaskObj.getTaskDescriptionFile());
-//            oldTaskObj.setTaskDescriptionFile(null);
-//        }
-//
-//        // check if a new description file is loaded.
-//        if (file != null && !file.isEmpty()) {
-//            // delete the junk description file if a new description file is loaded and the checkbox isn't checked.
-//            if (oldTaskObj.getTaskDescriptionFile() != null) {
-//                this.applicationUtils.deleteFile(this.adminDirectory, oldTaskObj.getTaskDescriptionFile());
-//            }
-//
-//            // attach the new descirption file.
-//            String filepathFilename = calculatePathToDescriptionFile(task, groupFromDb, file);
-//            oldTaskObj.setTaskDescriptionFile(filepathFilename);
-//        }
-//
-//        return this.taskRepo.save(oldTaskObj);
-//    }
+    public void delete(Long taskId) {
+        Task taskFromDb = this.taskRepo.findById(taskId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        this.taskRepo.delete(taskFromDb);
+    }
 
     public void uploadDescriptionFile(MultipartFile file, String fileLocation) throws IOException {
         if (file != null && !file.isEmpty()) {
@@ -87,6 +58,10 @@ public class TaskService {
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No file content.");
         }
+    }
+
+    public void deleteDescriptionFile(String fileLocation) throws Exception {
+        this.applicationUtils.deleteFile(this.adminDirectory, fileLocation);
     }
 
     private String calculatePathToDescriptionFile(Task taskForm, Group group, String originalFilename) {
@@ -100,4 +75,5 @@ public class TaskService {
 
         return filepath + filename;
     }
+
 }

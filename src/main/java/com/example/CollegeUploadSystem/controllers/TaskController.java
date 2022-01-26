@@ -34,14 +34,28 @@ public class TaskController {
 
     @PostMapping("/groups/{groupId}/tasks")
     @JsonView(Views.IdName.class)
-    public ResponseEntity<Task> create(@PathVariable("groupId") Group groupFromDb, @RequestBody Task task) throws IOException {
-        Task createdTask = this.taskService.create(task, groupFromDb);
-        return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
+    public Task create(@PathVariable("groupId") Group groupFromDb, @RequestBody Task task) throws IOException {
+        return this.taskService.create(task, groupFromDb);
     }
+
+    @DeleteMapping("/tasks/{taskId}")
+    public ResponseEntity delete(@PathVariable("taskId") Long taskId) {
+        this.taskService.delete(taskId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    /*** DESCRIPTION FILES PROCESSING. ***/
+
     @PostMapping("/tasks/files")
     public ResponseEntity fileUpload(@RequestParam("file") MultipartFile file, @RequestParam("fileLocation") String fileLocation) throws IOException {
         this.taskService.uploadDescriptionFile(file, fileLocation);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("/tasks/files")
+    public ResponseEntity fileDeletion(@RequestParam("fileLocation") String fileLocation) throws Exception {
+        this.taskService.deleteDescriptionFile(fileLocation);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 
