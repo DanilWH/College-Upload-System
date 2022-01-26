@@ -28,6 +28,7 @@ public class TaskController {
     }
 
     @GetMapping("/groups/{groupId}/tasks")
+    @JsonView(Views.IdName.class)
     public List<Task> getByGroupId(@PathVariable("groupId") Long groupId) {
         return this.taskService.getByGroupId(groupId);
     }
@@ -36,6 +37,12 @@ public class TaskController {
     @JsonView(Views.IdName.class)
     public Task create(@PathVariable("groupId") Group groupFromDb, @RequestBody Task task) throws IOException {
         return this.taskService.create(task, groupFromDb);
+    }
+
+    @PutMapping("/tasks/{taskId}")
+    @JsonView(Views.IdName.class)
+    public Task update(@PathVariable("taskId") Task taskFromDb, @RequestBody Task task) {
+        return this.taskService.update(taskFromDb, task);
     }
 
     @DeleteMapping("/tasks/{taskId}")

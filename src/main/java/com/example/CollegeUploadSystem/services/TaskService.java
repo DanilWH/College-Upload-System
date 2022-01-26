@@ -47,6 +47,13 @@ public class TaskService {
         return this.taskRepo.save(task);
     }
 
+    public Task update(Task taskFromDb, Task task) {
+        taskFromDb.setName(task.getName());
+        taskFromDb.setDescriptionFile(task.getDescriptionFile());
+
+        return this.taskRepo.save(taskFromDb);
+    }
+
     public void delete(Long taskId) {
         Task taskFromDb = this.taskRepo.findById(taskId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         this.taskRepo.delete(taskFromDb);
