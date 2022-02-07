@@ -1,32 +1,37 @@
 package com.example.CollegeUploadSystem.services;
 
-import com.example.CollegeUploadSystem.utils.ApplicationUtils;
 import com.example.CollegeUploadSystem.models.Group;
 import com.example.CollegeUploadSystem.models.User;
 import com.example.CollegeUploadSystem.models.UserRoles;
 import com.example.CollegeUploadSystem.repos.UserRepo;
+import com.example.CollegeUploadSystem.utils.ApplicationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.NoResultException;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 
 @Service
 public class UserService implements UserDetailsService {
+    public final PasswordEncoder passwordEncoder;
+    public final UserRepo userRepo;
+    public final ApplicationUtils applicationUtils;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private UserRepo userRepo;
-    @Autowired
-    private ApplicationUtils applicationUtils;
+    public UserService(PasswordEncoder passwordEncoder, UserRepo userRepo, ApplicationUtils applicationUtils) {
+        this.passwordEncoder = passwordEncoder;
+        this.userRepo = userRepo;
+        this.applicationUtils = applicationUtils;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
@@ -41,10 +46,6 @@ public class UserService implements UserDetailsService {
 
     public List<User> getByGroupIdOrderByLastName(Long groupId) {
         return this.userRepo.findByGroupIdOrderByLastName(groupId);
-    }
-
-    public User getById(Long userId) {
-        return this.userRepo.findById(userId).orElseThrow(NoResultException::new);
     }
 
     public User getByLogin(String login) {
@@ -75,7 +76,42 @@ public class UserService implements UserDetailsService {
         this.applicationUtils.refreshCurrentUserSession();
     }
 
-    public void addAllStudents(List<User> students, Group group, User admin) {
+    public List<User> createNewUsers(MultipartFile csvFile, Group group, User admin) throws IOException {
+        List<User> extractedUsers = new ArrayList<>();
+        // get the bytes of the file.
+        String fileContent = new String(csvFile.getBytes());
+        // prepare the file content for reading.
+        Scanner csvContent = new Scanner(fileContent);
+
+        while (csvContent.hasNextLine()) {
+            // read a single line of the csv file.
+            String row = csvContent.nextLine();
+
+            if (!row.isBlank()) {
+                String[] data = row.split("([,;])");
+
+                // do add a new student if the row contains the three part of the student's name.
+                if (data.length == 3)  {
+                    User newStudent = new User();
+                    newStudent.setFirstName(data[1]);
+                    newStudent.setLastName(data[0]);
+                    newStudent.setFatherName(data[2]);
+
+                    extractedUsers.add(newStudent);
+                }
+            }
+        }
+
+        // Sort the new student by their last names.
+        extractedUsers.sort((user1, user2) -> user1.getLastName().compareTo(user2.getLastName()));
+        // close the file buffer.
+        csvContent.close();
+
+        // save the students that belongs to the group in the database and return them.
+        return this.generateAndSaveAll(extractedUsers, group, admin);
+    }
+
+    private List<User> generateAndSaveAll(List<User> students, Group group, User admin) {
         List<User> processedStudents = new ArrayList<>();
 
         // prepare the students of the new group for storing in the database.
@@ -102,11 +138,22 @@ public class UserService implements UserDetailsService {
             student.setUserRoles(Collections.singleton(UserRoles.STUDENT));
             // make the student belong to the group.
             student.setGroup(group);
+
             // add the student to the processedStudents list.
             processedStudents.add(student);
         });
 
         // save the new students of the new group.
-        this.userRepo.saveAll(processedStudents);
+        return this.userRepo.saveAll(processedStudents);
+    }
+
+    public void deactivate(User user) {
+        user.setPassword(null);
+        this.userRepo.save(user);
+    }
+
+    public void deactivateAllByGroup(Group group) {
+        group.getStudents().forEach((student) -> student.setPassword(null));
+        this.userRepo.saveAll(group.getStudents());
     }
 }

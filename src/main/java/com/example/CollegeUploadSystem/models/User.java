@@ -3,6 +3,7 @@ package com.example.CollegeUploadSystem.models;
 import com.example.CollegeUploadSystem.validation.constrains.PasswordsMatch;
 import com.example.CollegeUploadSystem.validation.constrains.ValidLogin;
 import com.example.CollegeUploadSystem.validation.constrains.ValidPassword;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -19,13 +20,18 @@ import java.util.Set;
 public class User implements UserDetails, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonView(Views.Id.class)
     private Long id;
 
+    @JsonView(Views.IdName.class)
     private String firstName;
+    @JsonView(Views.IdName.class)
     private String lastName;
+    @JsonView(Views.IdNameDescription.class)
     private String fatherName;
 
     @ValidLogin
+    @JsonView(Views.IdNameDescription.class)
     private String login;
     @ValidPassword
     private String password;
@@ -49,6 +55,7 @@ public class User implements UserDetails, Serializable {
 
     @ManyToOne
     @JoinColumn(name = "group_id", referencedColumnName = "id")
+    @JsonView(Views.IdNameDescription.class)
     private Group group;
 
     @OneToMany(mappedBy = "user")
@@ -203,6 +210,6 @@ public class User implements UserDetails, Serializable {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.password != null;
     }
 }

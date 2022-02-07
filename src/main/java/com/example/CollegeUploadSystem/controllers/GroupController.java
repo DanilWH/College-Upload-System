@@ -1,20 +1,14 @@
 package com.example.CollegeUploadSystem.controllers;
 
 import com.example.CollegeUploadSystem.models.Group;
-import com.example.CollegeUploadSystem.models.User;
 import com.example.CollegeUploadSystem.models.Views;
 import com.example.CollegeUploadSystem.services.GroupService;
-import com.example.CollegeUploadSystem.services.TaskService;
-import com.example.CollegeUploadSystem.services.UserService;
 import com.fasterxml.jackson.annotation.JsonView;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.ConstraintViolation;
@@ -29,15 +23,11 @@ import java.util.Set;
 @RequestMapping("/api")
 public class GroupController {
     private final GroupService groupService;
-    private final TaskService taskService;
-    private final UserService userService;
     private final Validator validator;
 
     @Autowired
-    public GroupController(GroupService groupService, TaskService taskService, UserService userService) {
+    public GroupController(GroupService groupService) {
         this.groupService = groupService;
-        this.taskService = taskService;
-        this.userService = userService;
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         this.validator = factory.getValidator();
     }
@@ -51,24 +41,13 @@ public class GroupController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @JsonView(Views.IdName.class)
     @PostMapping("/groups")
-    public ResponseEntity<Group>  create(
-            @AuthenticationPrincipal User admin,
-            @RequestParam("file") MultipartFile file,
-            @RequestPart("group") String rawGroup
-    ) throws IOException {
-        // TODO divide the requests.
-        Group group = this.groupService.convertToJson(rawGroup);
+    public Group  create(@RequestBody Group group) throws IOException {
         Set<ConstraintViolation<Group>> constraintViolations = this.validator.validate(group);
 
-        // check the correctness of the file extension.
-        String fileExt = FilenameUtils.getExtension(file.getOriginalFilename());
-
-        if (!fileExt.equals("csv") || !constraintViolations.isEmpty()) {
+        if (!constraintViolations.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, constraintViolations.toString());
         }
-
-        Group createdGroup = this.groupService.create(file, group, admin);
-        return new ResponseEntity<>(createdGroup, HttpStatus.CREATED);
+        return this.groupService.create(group);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")

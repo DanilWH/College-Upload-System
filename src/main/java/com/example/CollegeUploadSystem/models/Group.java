@@ -18,7 +18,7 @@ public class Group implements Serializable {
     @JsonView(Views.Id.class)
     private Long id;
 
-    @NotBlank(message = "Заполните поле")
+    @NotBlank(message = "Fill the field")
     @JsonView(Views.IdName.class)
     private String name;
 
