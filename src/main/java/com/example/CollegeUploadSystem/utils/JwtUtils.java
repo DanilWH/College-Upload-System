@@ -41,6 +41,7 @@ public class JwtUtils {
         Long refreshExpiration = this.parseJws(refreshJws).getBody().getExpiration().getTime();
 
         return new LoginResponse()
+                .setId(jwsOwner.getId())
                 .setLogin(jwsOwner.getLogin())
                 .setAccessJws(accessJws)
                 .setRefreshJws(refreshJws)

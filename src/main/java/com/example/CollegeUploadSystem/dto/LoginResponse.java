@@ -1,11 +1,21 @@
 package com.example.CollegeUploadSystem.dto;
 
 public class LoginResponse {
+    private Long id;
     private String login;
     private String accessJws;
     private String refreshJws;
     private Long accessJwsExpirationMs;
     private Long refreshJwsExpirationMs;
+
+    public Long getId() {
+        return id;
+    }
+
+    public LoginResponse setId(Long id) {
+        this.id = id;
+        return this;
+    }
 
     public String getLogin() {
         return login;
