@@ -1,7 +1,7 @@
 package com.example.CollegeUploadSystem.utils;
 
-import com.example.CollegeUploadSystem.dto.AuthExceptionResponse;
-import com.example.CollegeUploadSystem.dto.LoginResponse;
+import com.example.CollegeUploadSystem.dto.response.AuthExceptionResponse;
+import com.example.CollegeUploadSystem.dto.response.LoginResponse;
 import com.example.CollegeUploadSystem.models.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;

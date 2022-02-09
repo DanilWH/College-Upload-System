@@ -1,6 +1,6 @@
 package com.example.CollegeUploadSystem.configs.filters;
 
-import com.example.CollegeUploadSystem.dto.LoginRequest;
+import com.example.CollegeUploadSystem.dto.request.LoginRequest;
 import com.example.CollegeUploadSystem.models.User;
 import com.example.CollegeUploadSystem.utils.JwtUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;

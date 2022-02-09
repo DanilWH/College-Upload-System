@@ -23,10 +23,10 @@ public class Task implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id", referencedColumnName = "id")
-    @JsonView(Views.IdNameDescription.class)
+    @JsonView(Views.FullProfile.class)
     private Group group;
 
-    @JsonView(Views.IdNameDescription.class)
+    @JsonView(Views.FullProfile.class)
     private LocalDateTime creationDateTime;
 
     @Size(max = 255)

@@ -1,4 +1,4 @@
-package com.example.CollegeUploadSystem.dto;
+package com.example.CollegeUploadSystem.dto.response;
 
 public class LoginResponse {
     private Long id;

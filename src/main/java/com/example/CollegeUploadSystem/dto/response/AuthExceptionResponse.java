@@ -1,4 +1,4 @@
-package com.example.CollegeUploadSystem.dto;
+package com.example.CollegeUploadSystem.dto.response;
 
 public class AuthExceptionResponse {
     private String errorMessage;

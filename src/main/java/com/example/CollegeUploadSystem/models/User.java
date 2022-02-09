@@ -27,11 +27,11 @@ public class User implements UserDetails, Serializable {
     private String firstName;
     @JsonView(Views.IdName.class)
     private String lastName;
-    @JsonView(Views.IdNameDescription.class)
+    @JsonView(Views.FullProfile.class)
     private String fatherName;
 
     @ValidLogin
-    @JsonView(Views.IdNameDescription.class)
+    @JsonView(Views.FullProfile.class)
     private String login;
     @ValidPassword
     private String password;
@@ -55,7 +55,7 @@ public class User implements UserDetails, Serializable {
 
     @ManyToOne
     @JoinColumn(name = "group_id", referencedColumnName = "id")
-    @JsonView(Views.IdNameDescription.class)
+    @JsonView(Views.FullProfile.class)
     private Group group;
 
     @OneToMany(mappedBy = "user")

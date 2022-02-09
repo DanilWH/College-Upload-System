@@ -1,4 +1,4 @@
-package com.example.CollegeUploadSystem.dto;
+package com.example.CollegeUploadSystem.dto.request;
 
 public class LoginRequest {
     private String login;

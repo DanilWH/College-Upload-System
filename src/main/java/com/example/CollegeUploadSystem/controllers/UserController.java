@@ -1,5 +1,6 @@
 package com.example.CollegeUploadSystem.controllers;
 
+import com.example.CollegeUploadSystem.dto.UserDto;
 import com.example.CollegeUploadSystem.models.Group;
 import com.example.CollegeUploadSystem.models.User;
 import com.example.CollegeUploadSystem.models.Views;
@@ -34,10 +35,17 @@ public class UserController {
         this.validator = factory.getValidator();
     }
 
+    @GetMapping("/users/me")
+    @JsonView(Views.FullProfile.class)
+    public UserDto getMyProfile(@AuthenticationPrincipal User currentUser) {
+        return new UserDto(currentUser);
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/users/{userId}")
-    @JsonView(Views.IdNameDescription.class)
-    public User getOne(@PathVariable("userId") User user) {
-        return user;
+    @JsonView(Views.FullProfile.class)
+    public UserDto getOne(@PathVariable("userId") User user) {
+        return new UserDto(user);
     }
 
     @GetMapping("/groups/{groupId}/users")
