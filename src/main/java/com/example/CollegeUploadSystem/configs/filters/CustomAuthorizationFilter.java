@@ -25,20 +25,24 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // do filter if the user isn't trying either to register or to log in.
-        if (!request.getRequestURI().equals("/api/auth/login")) {
-            try {
-                String jws = this.jwtUtils.parseAuthorizationBearer(request);
-                String login = this.jwtUtils.parseJws(jws).getBody().getSubject();
+        try {
+            String jws = this.jwtUtils.parseAuthorizationBearer(request);
+            String login = this.jwtUtils.parseJws(jws).getBody().getSubject();
 
-                User user = (User) this.userService.loadUserByUsername(login);
+            User user = (User) this.userService.loadUserByUsername(login);
 
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-            } catch (RuntimeException e) {
-                this.jwtUtils.sendUnauthorizedResponse(response, e);
-            }
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authToken);
+        } catch (RuntimeException e) {
+            this.jwtUtils.sendUnauthorizedResponse(response, e);
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        return path.equals("/api/auth/login") || path.equals("/api/groups") && request.getMethod().equals("GET");
     }
 }

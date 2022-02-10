@@ -25,8 +25,7 @@ public class Group implements Serializable {
     @JsonView(Views.FullProfile.class)
     private LocalDate creationDate;
 
-    // TODO database migration (increase the login and last_name columns in the users table).
-    // TODO database migration (alter add column).
+    // TODO database migration (alter add column isActive).
     @JsonIgnore
     private Boolean isActive = true;
 

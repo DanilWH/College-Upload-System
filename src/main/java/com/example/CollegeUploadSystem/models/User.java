@@ -23,13 +23,19 @@ public class User implements UserDetails, Serializable {
     @JsonView(Views.Id.class)
     private Long id;
 
+    // TODO database migration (increase the first_name column to 50 in the users table).
     @JsonView(Views.IdName.class)
     private String firstName;
+
+    // TODO database migration (increase the last_name column to 50 in the users table).
     @JsonView(Views.IdName.class)
     private String lastName;
+
+    // TODO database migration (increase the father_name column to 50 in the users table).
     @JsonView(Views.FullProfile.class)
     private String fatherName;
 
+    // TODO database migration (increase the login column to 60 in the users table).
     @ValidLogin
     @JsonView(Views.FullProfile.class)
     private String login;

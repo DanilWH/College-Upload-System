@@ -6,6 +6,7 @@ import com.example.CollegeUploadSystem.services.UserService;
 import com.example.CollegeUploadSystem.utils.JwtUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -66,6 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // It will effectively skip parts of the Spring Security filter chain
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/api/auth/login").permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/groups").permitAll();
         http.authorizeRequests().anyRequest().authenticated();
 
         http.addFilter(customAuthenticationFilter);
