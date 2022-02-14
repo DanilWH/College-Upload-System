@@ -58,10 +58,9 @@ public class GroupController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @DeleteMapping("/groups/{id}")
+    @PatchMapping("/groups/{id}")
     public ResponseEntity delete(@PathVariable("id") Group group) {
-        this.groupService.delete(group);
+        this.groupService.deactivate(group);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        // TODO implement deactivation of students.
     }
 }
