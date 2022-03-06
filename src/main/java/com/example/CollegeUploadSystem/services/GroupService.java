@@ -2,8 +2,9 @@ package com.example.CollegeUploadSystem.services;
 
 import com.example.CollegeUploadSystem.models.Group;
 import com.example.CollegeUploadSystem.repos.GroupRepo;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -13,13 +14,9 @@ import java.util.stream.Collectors;
 @Service
 public class GroupService {
     private final GroupRepo groupRepo;
-    private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
 
-    public GroupService(GroupRepo groupRepo, UserService userService, PasswordEncoder passwordEncoder) {
+    public GroupService(GroupRepo groupRepo) {
         this.groupRepo = groupRepo;
-        this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Group> findAllActive() {
@@ -32,7 +29,6 @@ public class GroupService {
 
     public Group create(Group group) throws IOException {
         group.setCreationDate(LocalDate.now());
-        // the csv format is supposed to be in the following format "LastName,FirstName,FatherName".
         // save the group in the database.
         Group savedGroup = this.groupRepo.save(group);
 
@@ -44,8 +40,14 @@ public class GroupService {
         return this.groupRepo.save(groupFromDb);
     }
 
-    public void deactivate(Group group) {
+    public void deactivate(Long groupId) {
+        Group group = this.groupRepo.findById(groupId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No such group"));
         group.setActive(false);
         this.groupRepo.save(group);
+    }
+
+    public void delete(Long groupId) {
+        Group group = this.groupRepo.findById(groupId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No such group."));
+        this.groupRepo.delete(group);
     }
 }

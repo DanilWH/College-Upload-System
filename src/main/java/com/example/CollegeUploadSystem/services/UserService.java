@@ -3,15 +3,18 @@ package com.example.CollegeUploadSystem.services;
 import com.example.CollegeUploadSystem.models.Group;
 import com.example.CollegeUploadSystem.models.User;
 import com.example.CollegeUploadSystem.models.UserRoles;
+import com.example.CollegeUploadSystem.repos.GroupRepo;
 import com.example.CollegeUploadSystem.repos.UserRepo;
 import com.example.CollegeUploadSystem.utils.ApplicationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -22,14 +25,16 @@ import java.util.Scanner;
 
 @Service
 public class UserService implements UserDetailsService {
-    public final PasswordEncoder passwordEncoder;
-    public final UserRepo userRepo;
-    public final ApplicationUtils applicationUtils;
+    private final UserRepo userRepo;
+    private final GroupRepo groupRepo;
+    private final PasswordEncoder passwordEncoder;
+    private final ApplicationUtils applicationUtils;
 
     @Autowired
-    public UserService(PasswordEncoder passwordEncoder, UserRepo userRepo, ApplicationUtils applicationUtils) {
-        this.passwordEncoder = passwordEncoder;
+    public UserService(UserRepo userRepo, GroupRepo groupRepo, PasswordEncoder passwordEncoder, ApplicationUtils applicationUtils) {
         this.userRepo = userRepo;
+        this.groupRepo = groupRepo;
+        this.passwordEncoder = passwordEncoder;
         this.applicationUtils = applicationUtils;
     }
 
@@ -81,6 +86,7 @@ public class UserService implements UserDetailsService {
         // get the bytes of the file.
         String fileContent = new String(csvFile.getBytes());
         // prepare the file content for reading.
+        // the csv file format is supposed to be in the following format "LastName,FirstName,FatherName".
         Scanner csvContent = new Scanner(fileContent);
 
         while (csvContent.hasNextLine()) {
@@ -152,8 +158,16 @@ public class UserService implements UserDetailsService {
         this.userRepo.save(user);
     }
 
-    public void deactivateAllByGroup(Group group) {
+    public void deactivateAllByGroup(Long groupId) {
+        // find the group by the ID, throw the 404 status code if the group not found.
+        Group group = this.groupRepo.findById(groupId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No such group"));
         group.getStudents().forEach((student) -> student.setPassword(null));
         this.userRepo.saveAll(group.getStudents());
+    }
+
+    public void deleteAllByGroup(Long groupId) {
+        // here, we don't need to return the 404 status code if the group not found,
+        // it'll be known with the group deletion request (the 2'nd sequential request).
+        this.userRepo.deleteByGroupId(groupId);
     }
 }

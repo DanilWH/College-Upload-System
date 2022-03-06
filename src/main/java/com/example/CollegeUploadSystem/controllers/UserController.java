@@ -81,8 +81,15 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PatchMapping("groups/{groupId}/users/status")
-    public ResponseEntity deactivateByGroup(@PathVariable("groupId") Group group) {
-        this.userService.deactivateAllByGroup(group);
+    public ResponseEntity deactivateByGroup(@PathVariable("groupId") Long groupId) {
+        this.userService.deactivateAllByGroup(groupId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @DeleteMapping("groups/{groupId}/users")
+    public ResponseEntity deleteByGroup(@PathVariable("groupId") Long groupId) {
+        this.userService.deleteAllByGroup(groupId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
