@@ -58,7 +58,7 @@ public class GroupController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PatchMapping("/groups/{id}") // TODO change to /groups/:id/status
+    @PatchMapping("/groups/{id}/status")
     public ResponseEntity deactivate(@PathVariable("id") Long groupId) {
         this.groupService.deactivate(groupId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
