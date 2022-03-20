@@ -66,7 +66,7 @@ public class UserController {
         String fileExt = FilenameUtils.getExtension(csvFile.getOriginalFilename());
 
         if (fileExt != null && !fileExt.equals("csv")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not appropriate file format! Must be CSV!");
+            throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Not appropriate file format! Must be CSV!");
         }
 
         return this.userService.createNewUsers(csvFile, group, admin);

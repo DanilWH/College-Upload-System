@@ -39,6 +39,7 @@ public class User implements UserDetails, Serializable {
     @ValidLogin
     @JsonView(Views.FullProfile.class)
     private String login;
+    // TODO database migration (change the login column to 30 in the users table).
     @ValidPassword
     private String password;
     @Transient
