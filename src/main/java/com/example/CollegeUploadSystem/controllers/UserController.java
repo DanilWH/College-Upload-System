@@ -1,6 +1,9 @@
 package com.example.CollegeUploadSystem.controllers;
 
 import com.example.CollegeUploadSystem.dto.UserDto;
+import com.example.CollegeUploadSystem.dto.input.FullNameInput;
+import com.example.CollegeUploadSystem.dto.input.ProfileLoginInput;
+import com.example.CollegeUploadSystem.dto.input.ProfilePasswordInput;
 import com.example.CollegeUploadSystem.models.Group;
 import com.example.CollegeUploadSystem.models.User;
 import com.example.CollegeUploadSystem.models.Views;
@@ -16,9 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -26,13 +27,10 @@ import java.util.List;
 @RequestMapping("/api")
 public class UserController {
     private final UserService userService;
-    private final Validator validator;
 
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        this.validator = factory.getValidator();
     }
 
     @GetMapping("/users/me")
@@ -73,22 +71,41 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
+    @PatchMapping("/users/{id}/full-name")
+    public ResponseEntity<Void> updateFullName(@PathVariable("id") Long id, @Valid @RequestBody FullNameInput fullNameInput) {
+        this.userService.updateFullName(id, fullNameInput);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PatchMapping("/users/{id}/login")
+    public ResponseEntity<Void> updateLogin(@PathVariable("id") Long id, @Valid @RequestBody ProfileLoginInput profileLoginInput) {
+        this.userService.updateLogin(id, profileLoginInput);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PatchMapping("/users/{id}/password")
+    public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal User currentUser, @PathVariable("id") Long id, @Valid @RequestBody ProfilePasswordInput profilePasswordInput) {
+        this.userService.updatePassword(currentUser, id, profilePasswordInput);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PatchMapping("/users/{userId}/status")
-    public ResponseEntity deactivate(@PathVariable("userId") User user) {
+    public ResponseEntity<Void> deactivate(@PathVariable("userId") User user) {
         this.userService.deactivate(user);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PatchMapping("groups/{groupId}/users/status")
-    public ResponseEntity deactivateByGroup(@PathVariable("groupId") Long groupId) {
+    public ResponseEntity<Void> deactivateByGroup(@PathVariable("groupId") Long groupId) {
         this.userService.deactivateAllByGroup(groupId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("groups/{groupId}/users")
-    public ResponseEntity deleteByGroup(@PathVariable("groupId") Long groupId) {
+    public ResponseEntity<Void> deleteByGroup(@PathVariable("groupId") Long groupId) {
         this.userService.deleteAllByGroup(groupId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

@@ -1,7 +1,7 @@
 package com.example.CollegeUploadSystem.utils;
 
-import com.example.CollegeUploadSystem.dto.response.AuthExceptionResponse;
-import com.example.CollegeUploadSystem.dto.response.LoginResponse;
+import com.example.CollegeUploadSystem.dto.output.AuthExceptionOutput;
+import com.example.CollegeUploadSystem.dto.output.AuthOutput;
 import com.example.CollegeUploadSystem.models.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
@@ -36,11 +36,11 @@ public class JwtUtils {
         return this.generateJws(jwsOwner, this.refreshTokenExpirationMs);
     }
 
-    public LoginResponse packLoginResponse(User jwsOwner, String accessJws, String refreshJws) {
+    public AuthOutput packLoginResponse(User jwsOwner, String accessJws, String refreshJws) {
         Long accessExpiration = this.parseJws(accessJws).getBody().getExpiration().getTime();
         Long refreshExpiration = this.parseJws(refreshJws).getBody().getExpiration().getTime();
 
-        return new LoginResponse()
+        return new AuthOutput()
                 .setId(jwsOwner.getId())
                 .setLogin(jwsOwner.getLogin())
                 .setAccessJws(accessJws)
@@ -67,7 +67,8 @@ public class JwtUtils {
         response.setHeader("Error", exception.getMessage());
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
 
-        new ObjectMapper().writeValue(response.getOutputStream(), new AuthExceptionResponse(exception.getMessage()));
+        // TODO: replace AuthExceptionOutput to ApiErrorOutput.
+        new ObjectMapper().writeValue(response.getOutputStream(), new AuthExceptionOutput(exception.getMessage()));
     }
 
     private String generateJws(User jwsOwner, Long expirationMs) {

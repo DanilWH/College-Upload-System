@@ -1,8 +1,5 @@
 package com.example.CollegeUploadSystem.models;
 
-import com.example.CollegeUploadSystem.validation.constrains.PasswordsMatch;
-import com.example.CollegeUploadSystem.validation.constrains.ValidLogin;
-import com.example.CollegeUploadSystem.validation.constrains.ValidPassword;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,7 +13,6 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-@PasswordsMatch
 public class User implements UserDetails, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -36,14 +32,10 @@ public class User implements UserDetails, Serializable {
     private String fatherName;
 
     // TODO database migration (increase the login column to 60 in the users table).
-    @ValidLogin
     @JsonView(Views.FullProfile.class)
     private String login;
-    // TODO database migration (change the login column to 30 in the users table).
-    @ValidPassword
+    // TODO database migration (change the password column to 30 in the users table).
     private String password;
-    @Transient
-    private String confirmPassword;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_creator_id")
@@ -125,14 +117,6 @@ public class User implements UserDetails, Serializable {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
-
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
     }
 
     public User getUserCreator() {

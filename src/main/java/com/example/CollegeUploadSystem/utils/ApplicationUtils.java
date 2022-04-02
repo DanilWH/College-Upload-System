@@ -14,16 +14,25 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class ApplicationUtils {
 
+    private final Validator validator;
+
     @Value("${upload.path}")
     private String uploadPath;
+
+    public ApplicationUtils(Validator validator) {
+        this.validator = validator;
+    }
 
     /**
      * Throws the 403 (Forbidden) error if a student tries to edit someone else's profile.
@@ -92,6 +101,15 @@ public class ApplicationUtils {
         if (!fileObj.delete()) {
             throw new Exception("Unable to delete the task old description file.");
         }
+    }
+
+    public <T> Set<ConstraintViolation<T>> validateBean(T bean) {
+        Set<ConstraintViolation<T>> violations = this.validator.validate(bean);
+        if (!violations.isEmpty()) {
+            return violations;
+        }
+
+        return null;
     }
 
 }

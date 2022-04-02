@@ -1,6 +1,6 @@
-package com.example.CollegeUploadSystem.dto.response;
+package com.example.CollegeUploadSystem.dto.output;
 
-public class FilepathResponse {
+public class FilepathOutput {
     private String filepath;
 
     public String getFilepath() {

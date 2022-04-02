@@ -60,7 +60,7 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
         }
 
         List<String> messages = validator.getMessages(ruleResult);
-        String messageTemplate = String.join("<br>", messages);
+        String messageTemplate = String.join("\n", messages);
 
         context.buildConstraintViolationWithTemplate(messageTemplate)
                 .addConstraintViolation()

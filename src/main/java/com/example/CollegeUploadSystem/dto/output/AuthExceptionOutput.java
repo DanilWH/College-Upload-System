@@ -1,9 +1,9 @@
-package com.example.CollegeUploadSystem.dto.response;
+package com.example.CollegeUploadSystem.dto.output;
 
-public class AuthExceptionResponse {
+public class AuthExceptionOutput {
     private String errorMessage;
 
-    public AuthExceptionResponse(String errorMessage) {
+    public AuthExceptionOutput(String errorMessage) {
         this.errorMessage = errorMessage;
     }
 

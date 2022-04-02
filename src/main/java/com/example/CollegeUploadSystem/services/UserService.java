@@ -1,5 +1,8 @@
 package com.example.CollegeUploadSystem.services;
 
+import com.example.CollegeUploadSystem.dto.input.FullNameInput;
+import com.example.CollegeUploadSystem.dto.input.ProfileLoginInput;
+import com.example.CollegeUploadSystem.dto.input.ProfilePasswordInput;
 import com.example.CollegeUploadSystem.models.Group;
 import com.example.CollegeUploadSystem.models.User;
 import com.example.CollegeUploadSystem.models.UserRoles;
@@ -57,6 +60,7 @@ public class UserService implements UserDetailsService {
         return this.userRepo.findByLogin(login);
     }
 
+    @Deprecated
     public void updateUserProfile(User userToUpdate, User currentUser, User userModel) {
         // the admin has the right to change a student's first name, last name, and father's name.
         // but the student doesn't itself.
@@ -153,6 +157,58 @@ public class UserService implements UserDetailsService {
         return this.userRepo.saveAll(processedStudents);
     }
 
+    public void updateFullName(Long id, FullNameInput fullNameInput) {
+        User user = this.userRepo.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        user.setFirstName(fullNameInput.getFirstName());
+        user.setLastName(fullNameInput.getLastName());
+        user.setFatherName(fullNameInput.getFatherName());
+
+        this.userRepo.save(user);
+    }
+
+    public void updateLogin(Long id, ProfileLoginInput profileLoginInput) {
+        User user = this.userRepo.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        // TODO: ask shashin if I need to check that only the current user can change his login.
+
+        // check if the login exists in the database.
+        User duplicateUser = this.userRepo.findByLogin(profileLoginInput.getLogin());
+        if (duplicateUser != null && !duplicateUser.getId().equals(id)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "The login is not unique");
+        }
+
+        user.setLogin(profileLoginInput.getLogin());
+
+        this.userRepo.save(user);
+    }
+
+    public void updatePassword(User currentUser, Long id, ProfilePasswordInput profilePasswordInput) {
+        User user = this.userRepo.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        // check additional security stuff for students.
+        if (!currentUser.getUserRoles().contains(UserRoles.ADMIN)) {
+            // a student can only change his own password.
+            if (!currentUser.getId().equals(id)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "A student can not change the password of anyone but its own one.");
+            }
+            // a student, when changing his password, has to enter the old password.
+            if (!this.passwordEncoder.matches(profilePasswordInput.getOldPassword(), user.getPassword())) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Old password is wrong");
+            }
+        }
+
+
+        // encode the new password.
+        String encryptedPassword = this.passwordEncoder.encode(profilePasswordInput.getPassword());
+
+        user.setPassword(encryptedPassword);
+        user.setPasswordChanger(currentUser);
+        user.setPasswordChangeTime(LocalDateTime.now());
+
+        this.userRepo.save(user);
+    }
+
     public void deactivate(User user) {
         user.setPassword(null);
         this.userRepo.save(user);
@@ -167,7 +223,7 @@ public class UserService implements UserDetailsService {
 
     public void deleteAllByGroup(Long groupId) {
         // here, we don't need to return the 404 status code if the group not found,
-        // it'll be known with the group deletion request (the 2'nd sequential request).
+        // it'll be known with the group deletion input (the 2'nd sequential input).
         this.userRepo.deleteByGroupId(groupId);
     }
 }

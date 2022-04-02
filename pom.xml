@@ -50,7 +50,7 @@
         </dependency>
         -->
 
-		<!-- RememberMe dependency. -->
+		<!-- RememberMe dependency. --> <!-- TODO: remove. -->
 		<dependency>
 			<groupId>org.springframework.session</groupId>
 			<artifactId>spring-session-jdbc</artifactId>

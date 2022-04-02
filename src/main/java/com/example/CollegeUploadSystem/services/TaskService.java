@@ -40,7 +40,7 @@ public class TaskService {
     public Task create(Task task, Group groupFromDb) throws IOException {
         task.setGroup(groupFromDb);
         task.setCreationDateTime(LocalDateTime.now());
-        // we get the request body with the taskDescriptionFile filled with the original file name. That's why we pass
+        // we get the input body with the taskDescriptionFile filled with the original file name. That's why we pass
         // it for calculating the file's path.
         task.setDescriptionFile(calculatePathToDescriptionFile(task, groupFromDb, task.getDescriptionFile()));
 

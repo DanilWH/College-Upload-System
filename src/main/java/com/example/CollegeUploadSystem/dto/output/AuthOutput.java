@@ -1,6 +1,6 @@
-package com.example.CollegeUploadSystem.dto.response;
+package com.example.CollegeUploadSystem.dto.output;
 
-public class LoginResponse {
+public class AuthOutput {
     private Long id;
     private String login;
     private String accessJws;
@@ -12,7 +12,7 @@ public class LoginResponse {
         return id;
     }
 
-    public LoginResponse setId(Long id) {
+    public AuthOutput setId(Long id) {
         this.id = id;
         return this;
     }
@@ -21,7 +21,7 @@ public class LoginResponse {
         return login;
     }
 
-    public LoginResponse setLogin(String login) {
+    public AuthOutput setLogin(String login) {
         this.login = login;
         return this;
     }
@@ -30,7 +30,7 @@ public class LoginResponse {
         return accessJws;
     }
 
-    public LoginResponse setAccessJws(String accessJws) {
+    public AuthOutput setAccessJws(String accessJws) {
         this.accessJws = accessJws;
         return this;
     }
@@ -39,7 +39,7 @@ public class LoginResponse {
         return refreshJws;
     }
 
-    public LoginResponse setRefreshJws(String refreshJws) {
+    public AuthOutput setRefreshJws(String refreshJws) {
         this.refreshJws = refreshJws;
         return this;
     }
@@ -48,7 +48,7 @@ public class LoginResponse {
         return accessJwsExpirationMs;
     }
 
-    public LoginResponse setAccessJwsExpirationMs(Long accessJwsExpirationMs) {
+    public AuthOutput setAccessJwsExpirationMs(Long accessJwsExpirationMs) {
         this.accessJwsExpirationMs = accessJwsExpirationMs;
         return this;
     }
@@ -57,7 +57,7 @@ public class LoginResponse {
         return refreshJwsExpirationMs;
     }
 
-    public LoginResponse setRefreshJwsExpirationMs(Long refreshJwsExpirationMs) {
+    public AuthOutput setRefreshJwsExpirationMs(Long refreshJwsExpirationMs) {
         this.refreshJwsExpirationMs = refreshJwsExpirationMs;
         return this;
     }

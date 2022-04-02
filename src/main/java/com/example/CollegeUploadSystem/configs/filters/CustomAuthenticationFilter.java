@@ -1,6 +1,6 @@
 package com.example.CollegeUploadSystem.configs.filters;
 
-import com.example.CollegeUploadSystem.dto.request.LoginRequest;
+import com.example.CollegeUploadSystem.dto.input.AuthInput;
 import com.example.CollegeUploadSystem.models.User;
 import com.example.CollegeUploadSystem.utils.JwtUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,11 +29,11 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
             // get the body and parse it.
-            LoginRequest loginRequest = new ObjectMapper().readValue(request.getInputStream(), LoginRequest.class);
+            AuthInput authInput = new ObjectMapper().readValue(request.getInputStream(), AuthInput.class);
             // authenticate the user with its login and password.
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                    loginRequest.getLogin(),
-                    loginRequest.getPassword()
+                    authInput.getLogin(),
+                    authInput.getPassword()
             );
 
             return this.authenticationManager.authenticate(authToken);
@@ -49,7 +49,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         String accessJws = this.jwtUtils.generateAccessJws(loggedInUser);
         String refreshJws = this.jwtUtils.generateRefreshJws(loggedInUser);
 
-        // send the generated JWSs as a JSON response.
+        // send the generated JWSs as a JSON output.
         new ObjectMapper().writeValue(response.getOutputStream(), this.jwtUtils.packLoginResponse(loggedInUser, accessJws, refreshJws));
     }
 

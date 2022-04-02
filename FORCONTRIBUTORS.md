@@ -11,3 +11,10 @@ In order to turn your updates into reality (that is, to apply them on the server
 - update the jar file (`mvn clean package`)
 - start the Spring Boot Application service (`sudo systemctl start college-upload-system.service`)
 
+## Project parameters
+
+First name size: min - 2, max - 50;  
+Last name size: min - 2, max - 50;  
+Father name size: min - 4, max - 50;  
+Login size: min - 1, max - 60;  
+Password size: min - 8, max - 30;

@@ -1,6 +1,6 @@
-package com.example.CollegeUploadSystem.dto.request;
+package com.example.CollegeUploadSystem.dto.input;
 
-public class LoginRequest {
+public class AuthInput {
     private String login;
     private String password;
 
