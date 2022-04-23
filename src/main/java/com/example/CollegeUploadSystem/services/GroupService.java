@@ -19,6 +19,12 @@ public class GroupService {
         this.groupRepo = groupRepo;
     }
 
+    public Group findById(Long id) {
+        return this.groupRepo.findById(id).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "The group with the ID of " + id + " was not found."
+        ));
+    }
+
     public List<Group> findAllActive() {
         // we list the active groups only.
         return this.groupRepo.findAll()

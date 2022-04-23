@@ -41,6 +41,8 @@ public class UserService implements UserDetailsService {
         this.applicationUtils = applicationUtils;
     }
 
+    /*** RETRIEVE ***/
+
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         User user = this.userRepo.findByLogin(login);
@@ -52,12 +54,16 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    public List<User> getByGroupIdOrderByLastName(Long groupId) {
-        return this.userRepo.findByGroupIdOrderByLastName(groupId);
+    public User findById(Long id) {
+        return this.userRepo.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The user was not found."));
     }
 
-    public User getByLogin(String login) {
+    public User findByLogin(String login) {
         return this.userRepo.findByLogin(login);
+    }
+
+    public List<User> findByGroupIdOrderByLastName(Long groupId) {
+        return this.userRepo.findByGroupIdOrderByLastName(groupId);
     }
 
     @Deprecated
@@ -84,6 +90,8 @@ public class UserService implements UserDetailsService {
         // dynamically update a logged user's session.
         this.applicationUtils.refreshCurrentUserSession();
     }
+
+    /*** CREATE ***/
 
     public List<User> createNewUsers(MultipartFile csvFile, Group group, User admin) throws IOException {
         List<User> extractedUsers = new ArrayList<>();
@@ -157,9 +165,9 @@ public class UserService implements UserDetailsService {
         return this.userRepo.saveAll(processedStudents);
     }
 
-    public void updateFullName(Long id, FullNameInput fullNameInput) {
-        User user = this.userRepo.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    /*** UPDATE ***/
 
+    public void updateFullName(User user, FullNameInput fullNameInput) {
         user.setFirstName(fullNameInput.getFirstName());
         user.setLastName(fullNameInput.getLastName());
         user.setFatherName(fullNameInput.getFatherName());
@@ -167,14 +175,12 @@ public class UserService implements UserDetailsService {
         this.userRepo.save(user);
     }
 
-    public void updateLogin(Long id, ProfileLoginInput profileLoginInput) {
-        User user = this.userRepo.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-
+    public void updateLogin(User user, ProfileLoginInput profileLoginInput) {
         // TODO: ask shashin if I need to check that only the current user can change his login.
 
         // check if the login exists in the database.
         User duplicateUser = this.userRepo.findByLogin(profileLoginInput.getLogin());
-        if (duplicateUser != null && !duplicateUser.getId().equals(id)) {
+        if (duplicateUser != null && !duplicateUser.getId().equals(user.getId())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "The login is not unique");
         }
 
@@ -183,13 +189,11 @@ public class UserService implements UserDetailsService {
         this.userRepo.save(user);
     }
 
-    public void updatePassword(User currentUser, Long id, ProfilePasswordInput profilePasswordInput) {
-        User user = this.userRepo.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-
+    public void updatePassword(User currentUser, User user, ProfilePasswordInput profilePasswordInput) {
         // check additional security stuff for students.
         if (!currentUser.getUserRoles().contains(UserRoles.ADMIN)) {
             // a student can only change his own password.
-            if (!currentUser.getId().equals(id)) {
+            if (!currentUser.getId().equals(user.getId())) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "A student can not change the password of anyone but its own one.");
             }
             // a student, when changing his password, has to enter the old password.
@@ -209,22 +213,19 @@ public class UserService implements UserDetailsService {
         this.userRepo.save(user);
     }
 
-    public void deactivate(Long id) {
-        User user = this.userRepo.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-
+    public void deactivate(User user) {
         user.setPassword(null);
-
         this.userRepo.save(user);
     }
 
-    public void deactivateAllByGroup(Long groupId) {
-        // find the group by the ID, throw the 404 status code if the group not found.
-        Group group = this.groupRepo.findById(groupId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No such group"));
+    public void deactivateAllByGroup(Group group) {
         group.getStudents().forEach((student) -> student.setPassword(null));
         this.userRepo.saveAll(group.getStudents());
     }
 
-    public void deleteAllByGroup(Long groupId) {
+    /*** DELETE ***/
+
+    public void deleteAllByGroupId(Long groupId) {
         // here, we don't need to return the 404 status code if the group not found,
         // it'll be known with the group deletion input (the 2'nd sequential input).
         this.userRepo.deleteByGroupId(groupId);

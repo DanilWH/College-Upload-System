@@ -7,6 +7,7 @@ import com.example.CollegeUploadSystem.dto.input.ProfilePasswordInput;
 import com.example.CollegeUploadSystem.models.Group;
 import com.example.CollegeUploadSystem.models.User;
 import com.example.CollegeUploadSystem.models.Views;
+import com.example.CollegeUploadSystem.services.GroupService;
 import com.example.CollegeUploadSystem.services.UserService;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.apache.commons.io.FilenameUtils;
@@ -26,11 +27,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class UserController {
+
     private final UserService userService;
+    private final GroupService groupService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, GroupService groupService) {
         this.userService = userService;
+        this.groupService = groupService;
     }
 
     /*** GET ***/
@@ -44,14 +48,15 @@ public class UserController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/users/{userId}")
     @JsonView(Views.FullProfile.class)
-    public UserDto getOne(@PathVariable("userId") User user) {
+    public UserDto getOne(@PathVariable("userId") Long userId) {
+        User user = this.userService.findById(userId);
         return new UserDto(user);
     }
 
     @GetMapping("/groups/{groupId}/users")
     @JsonView(Views.IdName.class)
-    public List<User> list(@PathVariable Long groupId) {
-        return this.userService.getByGroupIdOrderByLastName(groupId);
+    public List<User> list(@PathVariable("groupId") Long groupId) {
+        return this.userService.findByGroupIdOrderByLastName(groupId);
     }
 
     /*** GENERATE ***/
@@ -60,7 +65,7 @@ public class UserController {
     @PostMapping("groups/{groupId}/users")
     @JsonView(Views.IdName.class)
     public List<User> generate(
-            @PathVariable("groupId") Group group,
+            @PathVariable("groupId") Long groupId,
             @RequestParam("csvFile") MultipartFile csvFile,
             @AuthenticationPrincipal User admin
     ) throws IOException {
@@ -71,22 +76,28 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Not appropriate file format! Must be CSV!");
         }
 
+        Group group = this.groupService.findById(groupId);
+
         return this.userService.createNewUsers(csvFile, group, admin);
     }
 
     /*** DEACTIVATE ***/
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PostMapping("/users/{id}/status")
-    public ResponseEntity<Void> deactivate(@PathVariable("id") Long id) {
-        this.userService.deactivate(id);
+    @PostMapping("/users/{userId}/status")
+    public ResponseEntity<Void> deactivate(@PathVariable("userId") Long userId) {
+        User user = this.userService.findById(userId);
+        this.userService.deactivate(user);
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("groups/{groupId}/users/status")
     public ResponseEntity<Void> deactivateByGroup(@PathVariable("groupId") Long groupId) {
-        this.userService.deactivateAllByGroup(groupId);
+        Group group = this.groupService.findById(groupId);
+        this.userService.deactivateAllByGroup(group);
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -94,21 +105,27 @@ public class UserController {
     /*** UPDATE ***/
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PatchMapping("/users/{id}/full-name")
-    public ResponseEntity<Void> updateFullName(@PathVariable("id") Long id, @Valid @RequestBody FullNameInput fullNameInput) {
-        this.userService.updateFullName(id, fullNameInput);
+    @PatchMapping("/users/{userId}/full-name")
+    public ResponseEntity<Void> updateFullName(@PathVariable("userId") Long userId, @Valid @RequestBody FullNameInput fullNameInput) {
+        User user = this.userService.findById(userId);
+        this.userService.updateFullName(user, fullNameInput);
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PatchMapping("/users/{id}/login")
-    public ResponseEntity<Void> updateLogin(@PathVariable("id") Long id, @Valid @RequestBody ProfileLoginInput profileLoginInput) {
-        this.userService.updateLogin(id, profileLoginInput);
+    @PatchMapping("/users/{userId}/login")
+    public ResponseEntity<Void> updateLogin(@PathVariable("userId") Long userId, @Valid @RequestBody ProfileLoginInput profileLoginInput) {
+        User user = this.userService.findById(userId);
+        this.userService.updateLogin(user, profileLoginInput);
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PatchMapping("/users/{id}/password")
-    public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal User currentUser, @PathVariable("id") Long id, @Valid @RequestBody ProfilePasswordInput profilePasswordInput) {
-        this.userService.updatePassword(currentUser, id, profilePasswordInput);
+    @PatchMapping("/users/{userId}/password")
+    public ResponseEntity<Void> updatePassword(@AuthenticationPrincipal User currentUser, @PathVariable("userId") Long userId, @Valid @RequestBody ProfilePasswordInput profilePasswordInput) {
+        User user = this.userService.findById(userId);
+        this.userService.updatePassword(currentUser, user, profilePasswordInput);
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -117,7 +134,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("groups/{groupId}/users")
     public ResponseEntity<Void> deleteByGroup(@PathVariable("groupId") Long groupId) {
-        this.userService.deleteAllByGroup(groupId);
+        this.userService.deleteAllByGroupId(groupId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

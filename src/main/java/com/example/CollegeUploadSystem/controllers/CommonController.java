@@ -79,7 +79,7 @@ public class CommonController {
         // put the current user session in the constraint validator and compare if the user has changed its
         // login or not so we know if we should check the user's new login existence in the database.
         if (!initialUser.getLogin().equals(userModel.getLogin())) {
-            if (this.userService.getByLogin(userModel.getLogin()) != null) {
+            if (this.userService.findByLogin(userModel.getLogin()) != null) {
                 FieldError error = new FieldError(bindingResult.getObjectName(),
                         "login",
                         "Логин " + userModel.getLogin() + " занят другим пользователем"
