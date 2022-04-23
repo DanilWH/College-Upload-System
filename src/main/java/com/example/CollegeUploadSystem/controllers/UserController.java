@@ -33,6 +33,8 @@ public class UserController {
         this.userService = userService;
     }
 
+    /*** GET ***/
+
     @GetMapping("/users/me")
     @JsonView(Views.FullProfile.class)
     public UserDto getMyProfile(@AuthenticationPrincipal User currentUser) {
@@ -52,6 +54,8 @@ public class UserController {
         return this.userService.getByGroupIdOrderByLastName(groupId);
     }
 
+    /*** GENERATE ***/
+
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("groups/{groupId}/users")
     @JsonView(Views.IdName.class)
@@ -69,6 +73,25 @@ public class UserController {
 
         return this.userService.createNewUsers(csvFile, group, admin);
     }
+
+    /*** DEACTIVATE ***/
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/users/{id}/status")
+    public ResponseEntity<Void> deactivate(@PathVariable("id") Long id) {
+        this.userService.deactivate(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("groups/{groupId}/users/status")
+    public ResponseEntity<Void> deactivateByGroup(@PathVariable("groupId") Long groupId) {
+        this.userService.deactivateAllByGroup(groupId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+
+    /*** UPDATE ***/
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PatchMapping("/users/{id}/full-name")
@@ -89,19 +112,7 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @PatchMapping("/users/{userId}/status")
-    public ResponseEntity<Void> deactivate(@PathVariable("userId") User user) {
-        this.userService.deactivate(user);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @PatchMapping("groups/{groupId}/users/status")
-    public ResponseEntity<Void> deactivateByGroup(@PathVariable("groupId") Long groupId) {
-        this.userService.deactivateAllByGroup(groupId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+    /*** DELETE ***/
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("groups/{groupId}/users")

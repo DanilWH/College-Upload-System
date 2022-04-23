@@ -209,8 +209,11 @@ public class UserService implements UserDetailsService {
         this.userRepo.save(user);
     }
 
-    public void deactivate(User user) {
+    public void deactivate(Long id) {
+        User user = this.userRepo.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
         user.setPassword(null);
+
         this.userRepo.save(user);
     }
 
