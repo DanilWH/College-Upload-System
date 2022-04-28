@@ -8,6 +8,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+// TODO: remove JsonView annotations.
 @Entity
 @Table(name = "tasks")
 public class Task implements Serializable {

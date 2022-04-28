@@ -1,8 +1,11 @@
 package com.example.CollegeUploadSystem.controllers;
 
+import com.example.CollegeUploadSystem.dto.TaskDto;
+import com.example.CollegeUploadSystem.mappers.TaskMapper;
 import com.example.CollegeUploadSystem.models.Group;
 import com.example.CollegeUploadSystem.models.Task;
 import com.example.CollegeUploadSystem.models.Views;
+import com.example.CollegeUploadSystem.services.GroupService;
 import com.example.CollegeUploadSystem.services.TaskService;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,42 +15,72 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
 public class TaskController {
+
     private final TaskService taskService;
+    private final GroupService groupService;
+    private final TaskMapper taskMapper;
 
     @Autowired
-    public TaskController(TaskService taskService) {
+    public TaskController(TaskService taskService, GroupService groupService, TaskMapper taskMapper) {
         this.taskService = taskService;
+        this.groupService = groupService;
+        this.taskMapper = taskMapper;
     }
 
     @GetMapping("/groups/{groupId}/tasks")
     @JsonView(Views.IdName.class)
-    public List<Task> getByGroupId(@PathVariable("groupId") Long groupId) {
-        return this.taskService.getByGroupId(groupId);
+    public List<TaskDto> getByGroupId(@PathVariable("groupId") Long groupId) {
+        return this.taskService.getByGroupId(groupId)
+                .stream()
+                .map(this.taskMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/groups/{groupId}/tasks")
     @JsonView(Views.IdName.class)
-    public Task create(@PathVariable("groupId") Group groupFromDb, @RequestBody Task task) throws IOException {
-        return this.taskService.create(task, groupFromDb);
+    public TaskDto create(@PathVariable("groupId") Long groupId, @Valid @RequestBody TaskDto taskDto) throws IOException {
+        // get the original group copy from the database.
+        Group groupFromDb = this.groupService.findById(groupId);
+
+        // convert the TaskDto the its entity.
+        Task task = this.taskMapper.toEntity(taskDto);
+
+        // save the new task in the database.
+        Task createdTask = this.taskService.create(task, groupFromDb);
+
+        // convert the created task to the DTO and return it.
+        return this.taskMapper.toDto(createdTask);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/tasks/{taskId}")
     @JsonView(Views.IdName.class)
-    public Task update(@PathVariable("taskId") Task taskFromDb, @RequestBody Task task) {
-        return this.taskService.update(taskFromDb, task);
+    public TaskDto update(@PathVariable("taskId") Long taskId, @Valid @RequestBody TaskDto taskDto) {
+        // find the original version of the task in the database.
+        Task taskFromDb = this.taskService.getById(taskId);
+
+        // convert the DTO version to the entity.
+        Task task = this.taskMapper.toEntity(taskDto);
+
+        // save the changed in the database.
+        Task updatedTask = this.taskService.update(taskFromDb, task);
+
+        // convert the entity to the dto and return it.
+        return this.taskMapper.toDto(updatedTask);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/tasks/{taskId}")
-    public ResponseEntity delete(@PathVariable("taskId") Long taskId) {
+    public ResponseEntity<Void> delete(@PathVariable("taskId") Long taskId) {
         this.taskService.delete(taskId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -56,14 +89,14 @@ public class TaskController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/tasks/files")
-    public ResponseEntity fileUpload(@RequestParam("file") MultipartFile file, @RequestParam("fileLocation") String fileLocation) throws IOException {
+    public ResponseEntity<Void> fileUpload(@RequestParam("file") MultipartFile file, @RequestParam("fileLocation") String fileLocation) throws IOException {
         this.taskService.uploadDescriptionFile(file, fileLocation);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/tasks/files")
-    public ResponseEntity fileDeletion(@RequestParam("fileLocation") String fileLocation) throws Exception {
+    public ResponseEntity<Void> fileDeletion(@RequestParam("fileLocation") String fileLocation) throws Exception {
         this.taskService.deleteDescriptionFile(fileLocation);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

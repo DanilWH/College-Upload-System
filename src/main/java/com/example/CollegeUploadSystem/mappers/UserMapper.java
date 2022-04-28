@@ -9,6 +9,7 @@ import org.mapstruct.Mapping;
 public interface UserMapper {
 
     @Mapping(target = "groupDto", source = "user.group")
+    // TODO: rename to "toDto".
     UserDto userToUserDto(User user);
 
 }

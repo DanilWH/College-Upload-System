@@ -10,7 +10,7 @@ public class GroupDto {
     @JsonView(Views.Id.class)
     private Long id;
 
-    @NotBlank(message = "Fill the field")
+    @NotBlank(message = "The field must not be blank")
     @JsonView(Views.IdName.class)
     private String name;
 

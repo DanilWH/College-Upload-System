@@ -4,7 +4,6 @@ import com.example.CollegeUploadSystem.models.Group;
 import com.example.CollegeUploadSystem.models.Task;
 import com.example.CollegeUploadSystem.repos.TaskRepo;
 import com.example.CollegeUploadSystem.utils.ApplicationUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -24,10 +23,14 @@ public class TaskService {
 
     @Value("${admin.directory}")
     private String adminDirectory;
-    @Autowired
-    private TaskRepo taskRepo;
-    @Autowired
-    private ApplicationUtils applicationUtils;
+
+    private final TaskRepo taskRepo;
+    private final ApplicationUtils applicationUtils;
+
+    public TaskService(TaskRepo taskRepo, ApplicationUtils applicationUtils) {
+        this.taskRepo = taskRepo;
+        this.applicationUtils = applicationUtils;
+    }
 
     public List<Task> getByGroupId(Long groupId) {
         return this.taskRepo.findByGroupIdOrderByCreationDateTimeDesc(groupId);
