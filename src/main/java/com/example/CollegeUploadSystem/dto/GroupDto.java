@@ -1,10 +1,7 @@
 package com.example.CollegeUploadSystem.dto;
 
-import com.example.CollegeUploadSystem.models.Group;
 import com.example.CollegeUploadSystem.models.Views;
 import com.fasterxml.jackson.annotation.JsonView;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
@@ -26,15 +23,11 @@ public class GroupDto {
     public GroupDto() {
     }
 
-    public GroupDto(Group group) {
-        if (group == null) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Group is null");
-        }
-
-        this.id = group.getId();
-        this.name = group.getName();
-        this.creationDate = group.getCreationDate();
-        this.isActive = group.getActive();
+    public GroupDto(Long id, @NotBlank(message = "Fill the field") String name, LocalDate creationDate, Boolean isActive) {
+        this.id = id;
+        this.name = name;
+        this.creationDate = creationDate;
+        this.isActive = isActive;
     }
 
     public Long getId() {

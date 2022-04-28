@@ -1,15 +1,11 @@
 package com.example.CollegeUploadSystem.dto;
 
-import com.example.CollegeUploadSystem.models.User;
 import com.example.CollegeUploadSystem.models.UserRoles;
 import com.example.CollegeUploadSystem.models.Views;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Set;
 
 public class UserDto implements Serializable {
@@ -27,32 +23,23 @@ public class UserDto implements Serializable {
     private String login;
 
     @JsonView(Views.FullProfile.class)
-    private Set<UserRoles> roles;
+    private Set<UserRoles> userRoles;
 
-    @JsonView(Views.IdName.class)
+    @JsonView(Views.FullProfile.class)
     @JsonProperty(value = "group")
     private GroupDto groupDto;
 
     public UserDto() {
     }
 
-    public UserDto(User user) {
-        if (user == null) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User is null");
-        }
-
-        this.id = user.getId();
-        this.firstName = user.getFirstName();
-        this.lastName = user.getLastName();
-        this.fatherName = user.getFatherName();
-        this.login = user.getLogin();
-        this.roles = new HashSet<>(user.getUserRoles());
-
-        if (user.getGroup() != null) {
-            this.groupDto = new GroupDto(user.getGroup());
-        } else {
-            this.groupDto = null;
-        }
+    public UserDto(Long id, String firstName, String lastName, String fatherName, String login, Set<UserRoles> userRoles, GroupDto groupDto) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.fatherName = fatherName;
+        this.login = login;
+        this.userRoles = userRoles;
+        this.groupDto = groupDto;
     }
 
     public Long getId() {
@@ -100,12 +87,12 @@ public class UserDto implements Serializable {
         return this;
     }
 
-    public Set<UserRoles> getRoles() {
-        return roles;
+    public Set<UserRoles> getUserRoles() {
+        return userRoles;
     }
 
-    public UserDto setRoles(Set<UserRoles> roles) {
-        this.roles = roles;
+    public UserDto setUserRoles(Set<UserRoles> userRoles) {
+        this.userRoles = userRoles;
         return this;
     }
 

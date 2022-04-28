@@ -4,6 +4,7 @@ import com.example.CollegeUploadSystem.dto.UserDto;
 import com.example.CollegeUploadSystem.dto.input.FullNameInput;
 import com.example.CollegeUploadSystem.dto.input.ProfileLoginInput;
 import com.example.CollegeUploadSystem.dto.input.ProfilePasswordInput;
+import com.example.CollegeUploadSystem.mappers.UserMapper;
 import com.example.CollegeUploadSystem.models.Group;
 import com.example.CollegeUploadSystem.models.User;
 import com.example.CollegeUploadSystem.models.Views;
@@ -31,11 +32,13 @@ public class UserController {
 
     private final UserService userService;
     private final GroupService groupService;
+    private final UserMapper userMapper;
 
     @Autowired
-    public UserController(UserService userService, GroupService groupService) {
+    public UserController(UserService userService, GroupService groupService, UserMapper userMapper) {
         this.userService = userService;
         this.groupService = groupService;
+        this.userMapper = userMapper;
     }
 
     /*** GET ***/
@@ -43,7 +46,7 @@ public class UserController {
     @GetMapping("/users/me")
     @JsonView(Views.FullProfile.class)
     public UserDto getMyProfile(@AuthenticationPrincipal User currentUser) {
-        return new UserDto(currentUser);
+        return this.userMapper.userToUserDto(currentUser);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -51,7 +54,7 @@ public class UserController {
     @JsonView(Views.FullProfile.class)
     public UserDto getOne(@PathVariable("userId") Long userId) {
         User user = this.userService.findById(userId);
-        return new UserDto(user);
+        return this.userMapper.userToUserDto(user);
     }
 
     @GetMapping("/groups/{groupId}/users")
@@ -59,7 +62,7 @@ public class UserController {
     public List<UserDto> list(@PathVariable("groupId") Long groupId) {
         return this.userService.findByGroupIdOrderByLastName(groupId)
                 .stream()
-                .map(UserDto::new)
+                .map(this.userMapper::userToUserDto)
                 .collect(Collectors.toList());
     }
 
