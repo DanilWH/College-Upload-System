@@ -22,6 +22,7 @@ import java.util.Set;
 @RestController
 @RequestMapping("/api")
 public class GroupController {
+
     private final GroupService groupService;
     private final Validator validator;
 

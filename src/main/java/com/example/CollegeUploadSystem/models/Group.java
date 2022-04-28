@@ -1,6 +1,5 @@
 package com.example.CollegeUploadSystem.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
@@ -26,7 +25,7 @@ public class Group implements Serializable {
     private LocalDate creationDate;
 
     // TODO database migration (alter add column isActive).
-    @JsonIgnore
+    @JsonView(Views.FullProfile.class)
     private Boolean isActive = true;
 
     @OneToMany(mappedBy = "group")

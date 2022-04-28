@@ -23,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -55,8 +56,11 @@ public class UserController {
 
     @GetMapping("/groups/{groupId}/users")
     @JsonView(Views.IdName.class)
-    public List<User> list(@PathVariable("groupId") Long groupId) {
-        return this.userService.findByGroupIdOrderByLastName(groupId);
+    public List<UserDto> list(@PathVariable("groupId") Long groupId) {
+        return this.userService.findByGroupIdOrderByLastName(groupId)
+                .stream()
+                .map(UserDto::new)
+                .collect(Collectors.toList());
     }
 
     /*** GENERATE ***/
@@ -64,11 +68,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("groups/{groupId}/users")
     @JsonView(Views.IdName.class)
-    public List<User> generate(
-            @PathVariable("groupId") Long groupId,
-            @RequestParam("csvFile") MultipartFile csvFile,
-            @AuthenticationPrincipal User admin
-    ) throws IOException {
+    public ResponseEntity<Void> generate(@PathVariable("groupId") Long groupId, @RequestParam("csvFile") MultipartFile csvFile, @AuthenticationPrincipal User admin) throws IOException {
         // check the correctness of the file extension.
         String fileExt = FilenameUtils.getExtension(csvFile.getOriginalFilename());
 
@@ -76,9 +76,11 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Not appropriate file format! Must be CSV!");
         }
 
+        // generate the new users.
         Group group = this.groupService.findById(groupId);
+        this.userService.createNewUsers(csvFile, group, admin);
 
-        return this.userService.createNewUsers(csvFile, group, admin);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     /*** DEACTIVATE ***/

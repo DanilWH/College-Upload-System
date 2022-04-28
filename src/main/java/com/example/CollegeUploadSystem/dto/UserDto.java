@@ -3,9 +3,13 @@ package com.example.CollegeUploadSystem.dto;
 import com.example.CollegeUploadSystem.models.User;
 import com.example.CollegeUploadSystem.models.UserRoles;
 import com.example.CollegeUploadSystem.models.Views;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 public class UserDto implements Serializable {
@@ -25,17 +29,34 @@ public class UserDto implements Serializable {
     @JsonView(Views.FullProfile.class)
     private Set<UserRoles> roles;
 
-    @JsonView(Views.FullProfile.class)
-    private Long groupId;
+    @JsonView(Views.IdName.class)
+    @JsonProperty(value = "group")
+    private GroupDto groupDto;
+
+    public UserDto() {
+    }
 
     public UserDto(User user) {
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "User is null");
+        }
+
         this.id = user.getId();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.fatherName = user.getFatherName();
         this.login = user.getLogin();
-        this.roles = user.getUserRoles();
-        this.groupId = (user.getGroup() == null)? null : user.getGroup().getId();
+        this.roles = new HashSet<>(user.getUserRoles());
+
+        if (user.getGroup() != null) {
+            this.groupDto = new GroupDto(user.getGroup());
+        } else {
+            this.groupDto = null;
+        }
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public UserDto setId(Long id) {
@@ -43,9 +64,17 @@ public class UserDto implements Serializable {
         return this;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
     public UserDto setFirstName(String firstName) {
         this.firstName = firstName;
         return this;
+    }
+
+    public String getLastName() {
+        return lastName;
     }
 
     public UserDto setLastName(String lastName) {
@@ -53,9 +82,17 @@ public class UserDto implements Serializable {
         return this;
     }
 
+    public String getFatherName() {
+        return fatherName;
+    }
+
     public UserDto setFatherName(String fatherName) {
         this.fatherName = fatherName;
         return this;
+    }
+
+    public String getLogin() {
+        return login;
     }
 
     public UserDto setLogin(String login) {
@@ -63,13 +100,21 @@ public class UserDto implements Serializable {
         return this;
     }
 
+    public Set<UserRoles> getRoles() {
+        return roles;
+    }
+
     public UserDto setRoles(Set<UserRoles> roles) {
         this.roles = roles;
         return this;
     }
 
-    public UserDto setGroupId(Long groupId) {
-        this.groupId = groupId;
+    public GroupDto getGroupDto() {
+        return groupDto;
+    }
+
+    public UserDto setGroupDto(GroupDto groupDto) {
+        this.groupDto = groupDto;
         return this;
     }
 }
