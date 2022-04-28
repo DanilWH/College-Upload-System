@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: remove JsonView annotations.
 @Entity
 @Table(name = "college_groups")
 public class Group implements Serializable {
@@ -26,7 +27,7 @@ public class Group implements Serializable {
 
     // TODO database migration (alter add column isActive).
     @JsonView(Views.FullProfile.class)
-    private Boolean isActive = true;
+    private Boolean isActive;
 
     @OneToMany(mappedBy = "group")
     private List<User> students = new ArrayList<>();

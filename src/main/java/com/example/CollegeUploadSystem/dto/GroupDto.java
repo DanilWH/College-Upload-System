@@ -18,7 +18,7 @@ public class GroupDto {
     private LocalDate creationDate;
 
     @JsonView(Views.FullProfile.class)
-    private Boolean isActive = true;
+    private Boolean isActive;
 
     public GroupDto() {
     }

@@ -1,5 +1,7 @@
 package com.example.CollegeUploadSystem.controllers;
 
+import com.example.CollegeUploadSystem.dto.GroupDto;
+import com.example.CollegeUploadSystem.mappers.GroupMapper;
 import com.example.CollegeUploadSystem.models.Group;
 import com.example.CollegeUploadSystem.models.Views;
 import com.example.CollegeUploadSystem.services.GroupService;
@@ -9,65 +11,76 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
 public class GroupController {
 
     private final GroupService groupService;
-    private final Validator validator;
+    private final GroupMapper groupMapper;
 
     @Autowired
-    public GroupController(GroupService groupService) {
+    public GroupController(GroupService groupService, GroupMapper groupMapper) {
         this.groupService = groupService;
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        this.validator = factory.getValidator();
+        this.groupMapper = groupMapper;
     }
 
     @JsonView(Views.IdName.class)
     @GetMapping("/groups")
-    public List<Group> list() {
-        return this.groupService.findAllActive();
+    public List<GroupDto> list() {
+        // find all the needed groups and map the list of them to their DTO.
+        return this.groupService.findAllActive()
+                .stream()
+                .map(this.groupMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @JsonView(Views.IdName.class)
     @PostMapping("/groups")
-    public Group  create(@RequestBody Group group) throws IOException {
-        Set<ConstraintViolation<Group>> constraintViolations = this.validator.validate(group);
+    public GroupDto  create(@Valid @RequestBody GroupDto groupDto) throws IOException {
+        // convert the dto to the entity.
+        Group group = this.groupMapper.toEntity(groupDto);
 
-        if (!constraintViolations.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, constraintViolations.toString());
-        }
-        return this.groupService.create(group);
+        // save the new group in the database.
+        Group createdGroup = this.groupService.create(group);
+
+        // convert the saved group to its DTO and return it.
+        return this.groupMapper.toDto(createdGroup);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @JsonView(Views.IdName.class)
-    @PutMapping("/groups/{id}")
-    public Group update(@PathVariable("id") Group groupFromDb, @RequestBody Group group) {
-        return this.groupService.update(groupFromDb, group);
+    @PutMapping("/groups/{groupId}")
+    public GroupDto update(@PathVariable("groupId") Long groupId, @Valid @RequestBody GroupDto groupDto) {
+        // find the original group copy in the database.
+        Group groupFromDb = this.groupService.findById(groupId);
+
+        // convert the received group DTO to the entity.
+        Group group = this.groupMapper.toEntity(groupDto);
+
+        // apply the changes and save them in the database.
+        Group updatedGroup = this.groupService.update(groupFromDb, group);
+
+        // convert the updated group entity to its DTO and return it.
+        return this.groupMapper.toDto(updatedGroup);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PatchMapping("/groups/{id}/status")
-    public ResponseEntity deactivate(@PathVariable("id") Long groupId) {
+    @PatchMapping("/groups/{groupId}/status")
+    public ResponseEntity<Void> deactivate(@PathVariable("groupId") Long groupId) {
         this.groupService.deactivate(groupId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @DeleteMapping("/groups/{id}")
-    public ResponseEntity delete(@PathVariable("id") Long groupId) {
+    @DeleteMapping("/groups/{groupId}")
+    public ResponseEntity<Void> delete(@PathVariable("groupId") Long groupId) {
         this.groupService.delete(groupId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

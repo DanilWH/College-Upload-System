@@ -35,10 +35,10 @@ public class GroupService {
 
     public Group create(Group group) throws IOException {
         group.setCreationDate(LocalDate.now());
-        // save the group in the database.
-        Group savedGroup = this.groupRepo.save(group);
+        group.setActive(true);
 
-        return savedGroup;
+        // save the group in the database.
+        return this.groupRepo.save(group);
     }
 
     public Group update(Group groupFromDb, Group group) {

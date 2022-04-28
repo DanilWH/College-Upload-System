@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+// TODO: remove JsonView annotations.
 @Entity
 @Table(name = "users")
 public class User implements UserDetails, Serializable {
