@@ -1,32 +1,23 @@
 package com.example.CollegeUploadSystem.models;
 
-import com.fasterxml.jackson.annotation.JsonView;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: remove JsonView annotations.
 @Entity
 @Table(name = "college_groups")
 public class Group implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonView(Views.Id.class)
     private Long id;
 
-    @NotBlank(message = "Fill the field")
-    @JsonView(Views.IdName.class)
     private String name;
 
-    @JsonView(Views.FullProfile.class)
     private LocalDate creationDate;
 
     // TODO database migration (alter add column isActive).
-    @JsonView(Views.FullProfile.class)
     private Boolean isActive;
 
     @OneToMany(mappedBy = "group")

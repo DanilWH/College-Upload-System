@@ -1,6 +1,5 @@
 package com.example.CollegeUploadSystem.models;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -11,29 +10,23 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-// TODO: remove JsonView annotations.
 @Entity
 @Table(name = "users")
 public class User implements UserDetails, Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonView(Views.Id.class)
     private Long id;
 
     // TODO database migration (increase the first_name column to 50 in the users table).
-    @JsonView(Views.IdName.class)
     private String firstName;
 
     // TODO database migration (increase the last_name column to 50 in the users table).
-    @JsonView(Views.IdName.class)
     private String lastName;
 
     // TODO database migration (increase the father_name column to 50 in the users table).
-    @JsonView(Views.FullProfile.class)
     private String fatherName;
 
     // TODO database migration (increase the login column to 60 in the users table).
-    @JsonView(Views.FullProfile.class)
     private String login;
     // TODO database migration (change the password column to 30 in the users table).
     private String password;
@@ -55,13 +48,13 @@ public class User implements UserDetails, Serializable {
 
     @ManyToOne
     @JoinColumn(name = "group_id", referencedColumnName = "id")
-    @JsonView(Views.FullProfile.class)
     private Group group;
 
     @OneToMany(mappedBy = "user")
     @OrderBy(value = "task_id")
     private List<StudentResult> results;
 
+/*
     public StudentResult getResultByTask(Task task) {
         for (StudentResult result : this.results) {
             if (task.getId() == result.getTask().getId()) {
@@ -71,6 +64,7 @@ public class User implements UserDetails, Serializable {
 
         return null;
     }
+*/
 
     public Long getId() {
         return id;
