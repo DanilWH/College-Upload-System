@@ -11,7 +11,9 @@ public class StudentResult {
     private Long id;
 
     private String filename;
+
     private String filepath;
+
     private LocalDateTime dateTime;
 
     @ManyToOne(fetch = FetchType.LAZY)

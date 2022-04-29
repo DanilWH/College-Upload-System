@@ -66,31 +66,6 @@ public class UserService implements UserDetailsService {
         return this.userRepo.findByGroupIdOrderByLastName(groupId);
     }
 
-    @Deprecated
-    public void updateUserProfile(User userToUpdate, User currentUser, User userModel) {
-        // the admin has the right to change a student's first name, last name, and father's name.
-        // but the student doesn't itself.
-        if (currentUser.getUserRoles().contains(UserRoles.ADMIN)) {
-            userToUpdate.setFirstName(userModel.getFirstName());
-            userToUpdate.setLastName(userModel.getLastName());
-            userToUpdate.setFatherName(userModel.getFatherName());
-        }
-
-        userToUpdate.setLogin(userModel.getLogin());
-
-        // we don't want to change the user's password if the password is null.
-        if (userModel.getPassword() != null) {
-            userToUpdate.setPassword(passwordEncoder.encode(userModel.getPassword()));
-            userToUpdate.setPasswordChanger(currentUser);
-            userToUpdate.setPasswordChangeTime(LocalDateTime.now());
-        }
-
-        this.userRepo.save(userToUpdate);
-
-        // dynamically update a logged user's session.
-        this.applicationUtils.refreshCurrentUserSession();
-    }
-
     /*** CREATE ***/
 
     public List<User> createNewUsers(MultipartFile csvFile, Group group, User admin) throws IOException {

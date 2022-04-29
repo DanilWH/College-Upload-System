@@ -85,8 +85,15 @@ public class ApplicationUtils {
      * @return void
      */
     public void uploadMultipartFile(MultipartFile file, String directory, String fileLocation) throws IOException {
+        // check if the uploading file is empty.
+        if (file.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "The file is empty");
+        }
+
         // create a new directory if doesn't exist.
         File fileObj = new File(this.uploadPath + "/" + directory + "/" + fileLocation);
+
+        // make the necessary directories if they don't exist on the server.
         if (!fileObj.exists()) {
             fileObj.mkdirs();
         }
@@ -99,10 +106,12 @@ public class ApplicationUtils {
         File fileObj = new File(this.uploadPath + "/" + directory + "/" + filepath);
 
         if (!fileObj.delete()) {
+            // TODO: throw ResponseStatusException
             throw new Exception("Unable to delete the task old description file.");
         }
     }
 
+    @Deprecated(since = "(In a controller) Use the @Valid annotation instead.")
     public <T> Set<ConstraintViolation<T>> validateBean(T bean) {
         Set<ConstraintViolation<T>> violations = this.validator.validate(bean);
         if (!violations.isEmpty()) {

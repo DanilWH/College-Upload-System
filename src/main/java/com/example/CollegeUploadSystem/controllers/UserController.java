@@ -83,7 +83,7 @@ public class UserController {
         Group group = this.groupService.findById(groupId);
         this.userService.createNewUsers(csvFile, group, admin);
 
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     /*** DEACTIVATE ***/
@@ -105,7 +105,6 @@ public class UserController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 
     /*** UPDATE ***/
 
@@ -143,34 +142,4 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-/*
-    @PostMapping("/upload")
-    public String upload(
-            @AuthenticationPrincipal User currentUser,
-            @RequestParam Long groupId,
-            @RequestParam Long taskId,
-            @RequestParam MultipartFile file,
-            Model model
-    ) throws IOException {
-        // check if the current user belongs to the appropriate group.
-        if (!currentUser.getGroup().getId().equals(groupId)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
-
-        StudentResult studentResult = this.studentResultService.getByTaskIdAndUserId(taskId, currentUser.getId());
-
-        if (file != null && !file.isEmpty()) {
-            // load the group and the task only if the student has a file to upload.
-            Group group = this.groupService.getById(groupId);
-            Task task = this.taskService.getById(taskId);
-
-            // upload the file
-            this.studentResultService.uploadStudentResult(currentUser, studentResult, group, task, file);
-        } else {
-            model.addAttribute("uploadError", "Пожалуйста выберите файл.");
-        }
-
-        return students(currentUser, groupId, null, model);
-    }
-*/
 }

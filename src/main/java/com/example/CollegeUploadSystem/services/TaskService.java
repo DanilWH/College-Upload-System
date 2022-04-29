@@ -4,6 +4,7 @@ import com.example.CollegeUploadSystem.models.Group;
 import com.example.CollegeUploadSystem.models.Task;
 import com.example.CollegeUploadSystem.repos.TaskRepo;
 import com.example.CollegeUploadSystem.utils.ApplicationUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class TaskService {
     private final TaskRepo taskRepo;
     private final ApplicationUtils applicationUtils;
 
+    @Autowired
     public TaskService(TaskRepo taskRepo, ApplicationUtils applicationUtils) {
         this.taskRepo = taskRepo;
         this.applicationUtils = applicationUtils;

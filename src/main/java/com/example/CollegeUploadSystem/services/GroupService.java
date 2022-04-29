@@ -2,6 +2,7 @@ package com.example.CollegeUploadSystem.services;
 
 import com.example.CollegeUploadSystem.models.Group;
 import com.example.CollegeUploadSystem.repos.GroupRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -13,8 +14,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class GroupService {
+
     private final GroupRepo groupRepo;
 
+    @Autowired
     public GroupService(GroupRepo groupRepo) {
         this.groupRepo = groupRepo;
     }
