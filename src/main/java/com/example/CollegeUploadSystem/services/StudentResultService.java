@@ -43,7 +43,7 @@ public class StudentResultService {
         return this.studentResultRepo.findByTaskIdAndUserId(taskId, userId);
     }
 
-    public void upload(User currentUser, Group group, Task task, MultipartFile file) throws IOException {
+    public StudentResult upload(User currentUser, Group group, Task task, MultipartFile file) throws IOException {
         // TODO: decide if i need to check that the current user uploads the file under his cell.
         // check if the current user belongs to the appropriate group.
         // if (!currentUser.getGroup().getId().equals(groupId)) {
@@ -63,6 +63,7 @@ public class StudentResultService {
         // filename is the unique file name.
         String filepath = String.format("%s_%s/%s/", group.getName(), group.getCreationDate().getYear(), task.getName());
 
+        // TODO: check the filename for special characters (use the same approach as in Task description file).
         // create the file name.
         String filename = String.format("%s%s_%s_%s",
                 currentUser.getLastName(),
@@ -82,7 +83,7 @@ public class StudentResultService {
         studentResult.setTask(task);
 
         // and finally save the new result in the database.
-        this.studentResultRepo.save(studentResult);
+        return this.studentResultRepo.save(studentResult);
     }
 
     public void delete(StudentResult studentResult) {

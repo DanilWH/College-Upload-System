@@ -1,12 +1,12 @@
 package com.example.CollegeUploadSystem.controllers;
 
-import com.example.CollegeUploadSystem.models.Group;
-import com.example.CollegeUploadSystem.models.StudentResult;
-import com.example.CollegeUploadSystem.models.Task;
-import com.example.CollegeUploadSystem.models.User;
+import com.example.CollegeUploadSystem.dto.StudentResultDto;
+import com.example.CollegeUploadSystem.mappers.StudentResultMapper;
+import com.example.CollegeUploadSystem.models.*;
 import com.example.CollegeUploadSystem.services.GroupService;
 import com.example.CollegeUploadSystem.services.StudentResultService;
 import com.example.CollegeUploadSystem.services.TaskService;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,25 +24,28 @@ public class StudentResultController {
     private final StudentResultService studentResultService;
     private final GroupService groupService;
     private final TaskService taskService;
+    private final StudentResultMapper studentResultMapper;
 
     @Autowired
-    public StudentResultController(StudentResultService studentResultService, GroupService groupService, TaskService taskService) {
+    public StudentResultController(StudentResultService studentResultService, GroupService groupService, TaskService taskService, StudentResultMapper studentResultMapper) {
         this.studentResultService = studentResultService;
         this.groupService = groupService;
         this.taskService = taskService;
+        this.studentResultMapper = studentResultMapper;
     }
 
     @PreAuthorize("hasAuthority('STUDENT')")
     @PostMapping("groups/{groupId}/tasks/{taskId}/student-results")
-    public ResponseEntity<Void> upload(@AuthenticationPrincipal User currentUser, @PathVariable("groupId") Long groupId, @PathVariable("taskId") Long taskId, @RequestParam("file") MultipartFile file) throws IOException {
+    @JsonView(Views.IdName.class)
+    public StudentResultDto upload(@AuthenticationPrincipal User currentUser, @PathVariable("groupId") Long groupId, @PathVariable("taskId") Long taskId, @RequestParam("file") MultipartFile file) throws IOException {
         // find the originals in the database.
         Group groupFromDatabase = this.groupService.findById(groupId);
         Task taskFromDatabase = this.taskService.getById(taskId);
 
         // upload the file by the criterias of the found Group and Task.
-        this.studentResultService.upload(currentUser, groupFromDatabase, taskFromDatabase, file);
+        StudentResult newStudentResult = this.studentResultService.upload(currentUser, groupFromDatabase, taskFromDatabase, file);
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return this.studentResultMapper.toDto(newStudentResult);
     }
 
     @PreAuthorize("hasAuthority('STUDENT')")
