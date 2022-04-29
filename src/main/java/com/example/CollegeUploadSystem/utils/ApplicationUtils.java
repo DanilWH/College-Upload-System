@@ -102,12 +102,11 @@ public class ApplicationUtils {
         file.transferTo(new File(this.uploadPath + "/" + directory + "/" + fileLocation));
     }
 
-    public void deleteFile(String directory, String filepath) throws Exception {
+    public void deleteFile(String directory, String filepath) {
         File fileObj = new File(this.uploadPath + "/" + directory + "/" + filepath);
 
         if (!fileObj.delete()) {
-            // TODO: throw ResponseStatusException
-            throw new Exception("Unable to delete the task old description file.");
+            throw new ResponseStatusException(HttpStatus.GONE, "The file has already been deleted.");
         }
     }
 

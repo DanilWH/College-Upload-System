@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -87,14 +86,11 @@ public class StudentResultService {
     }
 
     public void delete(StudentResult studentResult) {
-        // TODO: refactor - use applicationUtils to delete the file.
-
-        // delete the file from the directory.
-        File fileObj = new File(this.uploadPath + "/" + this.userDirectory + "/" + studentResult.getFilepath() + studentResult.getFilename());
-        fileObj.delete();
-
         // delete the student result data in the database.
         this.studentResultRepo.delete(studentResult);
+
+        // delete the file on the server.
+        this.applicationUtils.deleteFile(this.userDirectory, "/" + studentResult.getFilepath() + studentResult.getFilename());
     }
 
 }
