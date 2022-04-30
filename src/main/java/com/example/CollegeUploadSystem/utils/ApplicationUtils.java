@@ -2,8 +2,10 @@ package com.example.CollegeUploadSystem.utils;
 
 import com.example.CollegeUploadSystem.models.User;
 import com.example.CollegeUploadSystem.models.UserRoles;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,6 +20,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.io.File;
 import java.io.IOException;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -30,6 +33,7 @@ public class ApplicationUtils {
     @Value("${upload.path}")
     private String uploadPath;
 
+    @Autowired
     public ApplicationUtils(Validator validator) {
         this.validator = validator;
     }
@@ -77,6 +81,13 @@ public class ApplicationUtils {
         Authentication newAuth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(), auth.getCredentials(), authorities);
 
         SecurityContextHolder.getContext().setAuthentication(newAuth);
+    }
+
+    public String recognizeMediaType(String filename) {
+        // TODO: think of if the method should return a String or a MediaType.
+
+        String contentType = URLConnection.guessContentTypeFromName(filename);
+        return (contentType == null) ? MediaType.APPLICATION_OCTET_STREAM_VALUE : contentType;
     }
 
     /**

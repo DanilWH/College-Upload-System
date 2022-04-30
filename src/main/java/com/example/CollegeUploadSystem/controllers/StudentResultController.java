@@ -6,16 +6,22 @@ import com.example.CollegeUploadSystem.models.*;
 import com.example.CollegeUploadSystem.services.GroupService;
 import com.example.CollegeUploadSystem.services.StudentResultService;
 import com.example.CollegeUploadSystem.services.TaskService;
+import com.example.CollegeUploadSystem.utils.ApplicationUtils;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 @RestController
 @RequestMapping("/api")
@@ -25,13 +31,30 @@ public class StudentResultController {
     private final GroupService groupService;
     private final TaskService taskService;
     private final StudentResultMapper studentResultMapper;
+    private final ApplicationUtils applicationUtils;
 
     @Autowired
-    public StudentResultController(StudentResultService studentResultService, GroupService groupService, TaskService taskService, StudentResultMapper studentResultMapper) {
+    public StudentResultController(StudentResultService studentResultService, GroupService groupService, TaskService taskService, StudentResultMapper studentResultMapper, ApplicationUtils applicationUtils) {
         this.studentResultService = studentResultService;
         this.groupService = groupService;
         this.taskService = taskService;
         this.studentResultMapper = studentResultMapper;
+        this.applicationUtils = applicationUtils;
+    }
+
+    @GetMapping("/student-results/{studentResultId}/files")
+    public ResponseEntity<Resource> download(@PathVariable("studentResultId") Long studentResultId, HttpServletRequest request) throws MalformedURLException {
+        // get the file as a Resource.
+        Resource resource = this.studentResultService.loadFileAsResource(studentResultId);
+
+        // figure out the media type of the downloading file.
+        String mediaType = this.applicationUtils.recognizeMediaType(resource.getFilename());
+
+        // TODO: check the "inline" option.
+        return ResponseEntity.ok()
+                .contentType(MediaType.valueOf(mediaType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
     }
 
     @PreAuthorize("hasAuthority('STUDENT')")
