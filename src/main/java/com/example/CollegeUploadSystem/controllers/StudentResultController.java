@@ -42,6 +42,8 @@ public class StudentResultController {
         this.applicationUtils = applicationUtils;
     }
 
+    // TODO: DON'T FORGET TO IMPLEMENT THE GET REQUEST TO FETCH A LIST OF STUDENTS' RESULTS.
+
     @GetMapping("/student-results/{studentResultId}/files")
     public ResponseEntity<Resource> download(@PathVariable("studentResultId") Long studentResultId, HttpServletRequest request) throws MalformedURLException {
         // get the file as a Resource.

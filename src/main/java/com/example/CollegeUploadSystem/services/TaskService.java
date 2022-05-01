@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.persistence.NoResultException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,12 +33,12 @@ public class TaskService {
         this.applicationUtils = applicationUtils;
     }
 
-    public List<Task> getByGroupId(Long groupId) {
-        return this.taskRepo.findByGroupIdOrderByCreationDateTimeDesc(groupId);
+    public Task getById(Long taskId) {
+        return this.taskRepo.findById(taskId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The task with an ID of " + taskId + " was not found."));
     }
 
-    public Task getById(Long taskId) {
-        return this.taskRepo.findById(taskId).orElseThrow(NoResultException::new);
+    public List<Task> getByGroupId(Long groupId) {
+        return this.taskRepo.findByGroupIdOrderByCreationDateTimeDesc(groupId);
     }
 
     public Task create(Task task, Group groupFromDb) throws IOException {
@@ -60,16 +59,12 @@ public class TaskService {
     }
 
     public void delete(Long taskId) {
-        Task taskFromDb = this.taskRepo.findById(taskId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Task taskFromDb = this.getById(taskId);
         this.taskRepo.delete(taskFromDb);
     }
 
     public void uploadDescriptionFile(MultipartFile file, String fileLocation) throws IOException {
-        if (file != null && !file.isEmpty()) {
-            this.applicationUtils.uploadMultipartFile(file, this.adminDirectory, fileLocation);
-        } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No file content.");
-        }
+        this.applicationUtils.uploadMultipartFile(file, this.adminDirectory, fileLocation);
     }
 
     public void deleteDescriptionFile(String fileLocation) throws Exception {

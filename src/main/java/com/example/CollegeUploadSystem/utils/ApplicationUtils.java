@@ -97,7 +97,7 @@ public class ApplicationUtils {
      */
     public void uploadMultipartFile(MultipartFile file, String directory, String fileLocation) throws IOException {
         // check if the uploading file is empty.
-        if (file.isEmpty()) {
+        if (file != null && file.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "The file is empty");
         }
 
