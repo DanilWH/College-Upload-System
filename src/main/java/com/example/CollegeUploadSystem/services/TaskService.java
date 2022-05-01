@@ -46,7 +46,7 @@ public class TaskService {
         task.setCreationDateTime(LocalDateTime.now());
         // we get the input body with the taskDescriptionFile filled with the original file name. That's why we pass
         // it for calculating the file's path.
-        task.setDescriptionFile(calculatePathToDescriptionFile(task, groupFromDb, task.getDescriptionFile()));
+//        task.setDescriptionFile(calculatePathToDescriptionFile(task, groupFromDb, task.getDescriptionFile()));
 
         return this.taskRepo.save(task);
     }
@@ -63,8 +63,18 @@ public class TaskService {
         this.taskRepo.delete(taskFromDb);
     }
 
-    public void uploadDescriptionFile(MultipartFile file, String fileLocation) throws IOException {
+    public Task attachFileToTask(Task taskFromDb, MultipartFile file) throws IOException {
+        // calculate the path for the uploading description file.
+        String fileLocation = this.calculatePathToDescriptionFile(taskFromDb, taskFromDb.getGroup(), file.getOriginalFilename());
+
+        // upload the description file on the server.
         this.applicationUtils.uploadMultipartFile(file, this.adminDirectory, fileLocation);
+
+        // set the path with the file location.
+        taskFromDb.setDescriptionFile(fileLocation);
+
+        // save the task with the path to the description file in the database and return it.
+        return this.taskRepo.save(taskFromDb);
     }
 
     public void deleteDescriptionFile(String fileLocation) throws Exception {

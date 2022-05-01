@@ -88,12 +88,21 @@ public class TaskController {
     /*** DESCRIPTION FILES PROCESSING. ***/
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PostMapping("/tasks/files")
-    public ResponseEntity<Void> fileUpload(@RequestParam("file") MultipartFile file, @RequestParam("fileLocation") String fileLocation) throws IOException {
-        this.taskService.uploadDescriptionFile(file, fileLocation);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @PostMapping("/tasks/{taskId}/file")
+    @JsonView(Views.IdName.class)
+    public TaskDto fileUpload(@PathVariable("taskId") Long taskId, @RequestParam("file") MultipartFile file) throws IOException {
+        // find the original version of the task in the database.
+        Task taskFromDb = this.taskService.getById(taskId);
+
+        // attach the additional file to the task, set the file location path to the "descriptionFile" field,
+        // save the updated version of the task in the database.
+        Task taskWithAttachedFile = this.taskService.attachFileToTask(taskFromDb, file);
+
+        // convert the task to the DTO and return it.
+        return this.taskMapper.toDto(taskWithAttachedFile);
     }
 
+    // TODO: implement file deletion by the new method.
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/tasks/files")
     public ResponseEntity<Void> fileDeletion(@RequestParam("fileLocation") String fileLocation) throws Exception {

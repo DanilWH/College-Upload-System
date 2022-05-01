@@ -19,6 +19,7 @@ public class Task implements Serializable {
 
     private LocalDateTime creationDateTime;
 
+    // TODO: database migration (alter the "task_description_file" column name to "description_file").
     private String descriptionFile;
 
     public Long getId() {
