@@ -49,6 +49,7 @@ public class StudentResultService {
     }
 
     public Resource loadFileAsResource(Long studentResultId) throws MalformedURLException {
+        // TODO: refactor.
         StudentResult studentResultFromDb = this.getById(studentResultId);
 
         Path fileStorageLocation = Paths.get(this.uploadPath + "/" + this.userDirectory).toAbsolutePath().normalize();

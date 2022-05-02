@@ -41,29 +41,37 @@ public class TaskService {
         return this.taskRepo.findByGroupIdOrderByCreationDateTimeDesc(groupId);
     }
 
-    public Task create(Task task, Group groupFromDb) throws IOException {
+    public Task create(Task task, Group groupFromDb) {
         task.setGroup(groupFromDb);
         task.setCreationDateTime(LocalDateTime.now());
-        // we get the input body with the taskDescriptionFile filled with the original file name. That's why we pass
-        // it for calculating the file's path.
-//        task.setDescriptionFile(calculatePathToDescriptionFile(task, groupFromDb, task.getDescriptionFile()));
-
         return this.taskRepo.save(task);
     }
 
     public Task update(Task taskFromDb, Task task) {
         taskFromDb.setName(task.getName());
-        taskFromDb.setDescriptionFile(task.getDescriptionFile());
-
         return this.taskRepo.save(taskFromDb);
     }
 
     public void delete(Long taskId) {
         Task taskFromDb = this.getById(taskId);
+
+        // delete the task from the database first.
         this.taskRepo.delete(taskFromDb);
+
+        // then, delete the task description file if it exists.
+        if (taskFromDb.getDescriptionFile() != null) {
+            this.applicationUtils.deleteFile(this.adminDirectory, taskFromDb.getDescriptionFile());
+        }
+
     }
 
     public Task attachFileToTask(Task taskFromDb, MultipartFile file) throws IOException {
+        // check if the task already has a description file.
+        if (taskFromDb.getDescriptionFile() != null) {
+            // TODO: find out (ask Shashin) if I need to just delete the old file instead of throwing an error.
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Another description file has already been uploaded to the task. Delete the old descriptoin file if you want to upload a new one.");
+        }
+
         // calculate the path for the uploading description file.
         String fileLocation = this.calculatePathToDescriptionFile(taskFromDb, taskFromDb.getGroup(), file.getOriginalFilename());
 
@@ -77,8 +85,17 @@ public class TaskService {
         return this.taskRepo.save(taskFromDb);
     }
 
-    public void deleteDescriptionFile(String fileLocation) throws Exception {
-        this.applicationUtils.deleteFile(this.adminDirectory, fileLocation);
+    public Task deleteFileFromTask(Task taskFromDb) throws Exception {
+        // set the "descriptionFileLocation" to null (detach the file from the task).
+        taskFromDb.setDescriptionFile(null);
+
+        // save the version of the task without the description file in the database first.
+        Task taskWithoutFile = this.taskRepo.save(taskFromDb);
+
+        // then, delete the description file from the server.
+        this.applicationUtils.deleteFile(this.adminDirectory, taskFromDb.getDescriptionFile());
+
+        return taskWithoutFile;
     }
 
     private String calculatePathToDescriptionFile(Task taskForm, Group group, String originalFilename) {

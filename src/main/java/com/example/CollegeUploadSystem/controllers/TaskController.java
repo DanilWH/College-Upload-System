@@ -47,7 +47,7 @@ public class TaskController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/groups/{groupId}/tasks")
     @JsonView(Views.IdName.class)
-    public TaskDto create(@PathVariable("groupId") Long groupId, @Valid @RequestBody TaskDto taskDto) throws IOException {
+    public TaskDto create(@PathVariable("groupId") Long groupId, @Valid @RequestBody TaskDto taskDto) {
         // get the original group copy from the database.
         Group groupFromDb = this.groupService.findById(groupId);
 
@@ -104,9 +104,16 @@ public class TaskController {
 
     // TODO: implement file deletion by the new method.
     @PreAuthorize("hasAuthority('ADMIN')")
-    @DeleteMapping("/tasks/files")
-    public ResponseEntity<Void> fileDeletion(@RequestParam("fileLocation") String fileLocation) throws Exception {
-        this.taskService.deleteDescriptionFile(fileLocation);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @DeleteMapping("/tasks/{taskId}/file")
+    @JsonView(Views.IdName.class)
+    public TaskDto fileDeletion(@PathVariable("taskId") Long taskId) throws Exception {
+        // find the original version of the task in the database.
+        Task taskFromDb = this.taskService.getById(taskId);
+
+        // detach the description file from the task and delete it from the server.
+        Task taskWithoutFile = this.taskService.deleteFileFromTask(taskFromDb);
+
+        // convert the task to the DTO and return it.
+        return this.taskMapper.toDto(taskWithoutFile);
     }
 }
