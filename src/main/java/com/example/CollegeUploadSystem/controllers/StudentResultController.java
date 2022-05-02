@@ -47,8 +47,10 @@ public class StudentResultController {
     @GetMapping("/student-results/{studentResultId}/files")
     public ResponseEntity<Resource> download(@PathVariable("studentResultId") Long studentResultId, HttpServletRequest request) throws MalformedURLException {
         // TODO: permit the endpoint for all the users.
+        StudentResult studentResultFromDb = this.studentResultService.getById(studentResultId);
+
         // get the file as a Resource.
-        Resource resource = this.studentResultService.loadFileAsResource(studentResultId);
+        Resource resource = this.studentResultService.getStudentResultFileAsResource(studentResultFromDb);
 
         // figure out the media type of the downloading file.
         String mediaType = this.applicationUtils.recognizeMediaType(resource.getFilename());

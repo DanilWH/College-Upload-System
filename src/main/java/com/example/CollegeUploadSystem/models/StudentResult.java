@@ -16,6 +16,7 @@ public class StudentResult {
 
     private LocalDateTime dateTime;
 
+    // TODO: make user_id and task_id composite keys.
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;

@@ -9,7 +9,6 @@ import com.example.CollegeUploadSystem.utils.ApplicationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,8 +16,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -48,19 +45,8 @@ public class StudentResultService {
         return this.studentResultRepo.findByTaskIdAndUserId(taskId, userId);
     }
 
-    public Resource loadFileAsResource(Long studentResultId) throws MalformedURLException {
-        // TODO: refactor.
-        StudentResult studentResultFromDb = this.getById(studentResultId);
-
-        Path fileStorageLocation = Paths.get(this.uploadPath + "/" + this.userDirectory).toAbsolutePath().normalize();
-        Path filePath = fileStorageLocation.resolve(studentResultFromDb.getFilepath() + studentResultFromDb.getFilename()).normalize();
-        Resource resource = new UrlResource(filePath.toUri());
-
-        if (!resource.exists()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The file located in " + filePath + " was not found.");
-        }
-
-        return resource;
+    public Resource getStudentResultFileAsResource(StudentResult studentResultFromDb) throws MalformedURLException {
+        return this.applicationUtils.loadFileAsResource(this.userDirectory, studentResultFromDb.getFilepath() + studentResultFromDb.getFilename());
     }
 
     public StudentResult upload(User currentUser, Group group, Task task, MultipartFile file) throws IOException {
@@ -71,7 +57,7 @@ public class StudentResultService {
         // }
 
         // check if there is a result of the specific user, in the specific group, under the specific task in the database.
-        if (this.getByTaskIdAndUserId(task.getId(), group.getId()) != null) {
+        if (this.getByTaskIdAndUserId(task.getId(), currentUser.getId()) != null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "The result already exists. Delete the old one if you want to upload another result.");
         }
 

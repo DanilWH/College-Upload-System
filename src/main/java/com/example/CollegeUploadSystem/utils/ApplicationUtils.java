@@ -95,9 +95,9 @@ public class ApplicationUtils {
         return (contentType == null) ? MediaType.APPLICATION_OCTET_STREAM_VALUE : contentType;
     }
 
-    public Resource loadFileAsResource(String userDirectory, String fileLocation) throws MalformedURLException {
+    public Resource loadFileAsResource(String directory, String fileLocation) throws MalformedURLException {
         // TODO: refactor.
-        Path fileStorageLocation = Paths.get(this.uploadPath + "/" + userDirectory).toAbsolutePath().normalize();
+        Path fileStorageLocation = Paths.get(this.uploadPath + "/" + directory).toAbsolutePath().normalize();
         Path filePath = fileStorageLocation.resolve(fileLocation).normalize();
         Resource resource = new UrlResource(filePath.toUri());
 
