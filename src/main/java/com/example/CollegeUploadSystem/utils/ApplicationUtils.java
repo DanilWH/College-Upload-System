@@ -4,6 +4,8 @@ import com.example.CollegeUploadSystem.models.User;
 import com.example.CollegeUploadSystem.models.UserRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,7 +22,10 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URLConnection;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -88,6 +93,19 @@ public class ApplicationUtils {
 
         String contentType = URLConnection.guessContentTypeFromName(filename);
         return (contentType == null) ? MediaType.APPLICATION_OCTET_STREAM_VALUE : contentType;
+    }
+
+    public Resource loadFileAsResource(String userDirectory, String fileLocation) throws MalformedURLException {
+        // TODO: refactor.
+        Path fileStorageLocation = Paths.get(this.uploadPath + "/" + userDirectory).toAbsolutePath().normalize();
+        Path filePath = fileStorageLocation.resolve(fileLocation).normalize();
+        Resource resource = new UrlResource(filePath.toUri());
+
+        if (!resource.exists()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The file was not found.");
+        }
+
+        return resource;
     }
 
     /**

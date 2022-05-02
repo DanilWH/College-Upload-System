@@ -6,12 +6,14 @@ import com.example.CollegeUploadSystem.repos.TaskRepo;
 import com.example.CollegeUploadSystem.utils.ApplicationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -65,6 +67,14 @@ public class TaskService {
 
     }
 
+    public Resource getDescriptionFileAsResource(Task taskFromDb) throws MalformedURLException {
+        if (taskFromDb.getDescriptionFile() == null) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "There is no file attached to the task with an ID of" + taskFromDb.getId() + ".");
+        }
+
+        return this.applicationUtils.loadFileAsResource(this.adminDirectory, taskFromDb.getDescriptionFile());
+    }
+
     public Task attachFileToTask(Task taskFromDb, MultipartFile file) throws IOException {
         // check if the task already has a description file.
         if (taskFromDb.getDescriptionFile() != null) {
@@ -112,5 +122,4 @@ public class TaskService {
 
         return filepath + filename;
     }
-
 }

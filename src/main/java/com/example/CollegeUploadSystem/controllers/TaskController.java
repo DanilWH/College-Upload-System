@@ -7,9 +7,13 @@ import com.example.CollegeUploadSystem.models.Task;
 import com.example.CollegeUploadSystem.models.Views;
 import com.example.CollegeUploadSystem.services.GroupService;
 import com.example.CollegeUploadSystem.services.TaskService;
+import com.example.CollegeUploadSystem.utils.ApplicationUtils;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,12 +32,14 @@ public class TaskController {
     private final TaskService taskService;
     private final GroupService groupService;
     private final TaskMapper taskMapper;
+    private final ApplicationUtils applicationUtils;
 
     @Autowired
-    public TaskController(TaskService taskService, GroupService groupService, TaskMapper taskMapper) {
+    public TaskController(TaskService taskService, GroupService groupService, TaskMapper taskMapper, ApplicationUtils applicationUtils) {
         this.taskService = taskService;
         this.groupService = groupService;
         this.taskMapper = taskMapper;
+        this.applicationUtils = applicationUtils;
     }
 
     @GetMapping("/groups/{groupId}/tasks")
@@ -86,6 +93,21 @@ public class TaskController {
     }
 
     /*** DESCRIPTION FILES PROCESSING. ***/
+
+
+    @GetMapping("/tasks/{taskId}/file")
+    public ResponseEntity<Resource> fileDownload(@PathVariable("taskId") Long taskId) throws MalformedURLException {
+        // TODO: permit the endpoint for all the users.
+        Task taskFromDb = this.taskService.getById(taskId);
+
+        Resource resource = this.taskService.getDescriptionFileAsResource(taskFromDb);
+        String mediaType = this.applicationUtils.recognizeMediaType(taskFromDb.getDescriptionFile());
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.valueOf(mediaType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
+    }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/tasks/{taskId}/file")

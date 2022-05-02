@@ -46,6 +46,7 @@ public class StudentResultController {
 
     @GetMapping("/student-results/{studentResultId}/files")
     public ResponseEntity<Resource> download(@PathVariable("studentResultId") Long studentResultId, HttpServletRequest request) throws MalformedURLException {
+        // TODO: permit the endpoint for all the users.
         // get the file as a Resource.
         Resource resource = this.studentResultService.loadFileAsResource(studentResultId);
 
