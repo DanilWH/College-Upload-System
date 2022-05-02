@@ -64,7 +64,7 @@ public class TaskController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/tasks/{taskId}")
     @JsonView(Views.IdName.class)
-    public TaskDto update(@PathVariable("taskId") Long taskId, @Valid @RequestBody TaskDto taskDto) {
+    public synchronized TaskDto update(@PathVariable("taskId") Long taskId, @Valid @RequestBody TaskDto taskDto) {
         // find the original version of the task in the database.
         Task taskFromDb = this.taskService.getById(taskId);
 
@@ -90,7 +90,7 @@ public class TaskController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/tasks/{taskId}/file")
     @JsonView(Views.IdName.class)
-    public TaskDto fileUpload(@PathVariable("taskId") Long taskId, @RequestParam("file") MultipartFile file) throws IOException {
+    public synchronized TaskDto fileUpload(@PathVariable("taskId") Long taskId, @RequestParam("file") MultipartFile file) throws IOException {
         // find the original version of the task in the database.
         Task taskFromDb = this.taskService.getById(taskId);
 
@@ -106,7 +106,7 @@ public class TaskController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/tasks/{taskId}/file")
     @JsonView(Views.IdName.class)
-    public TaskDto fileDeletion(@PathVariable("taskId") Long taskId) throws Exception {
+    public synchronized TaskDto fileDeletion(@PathVariable("taskId") Long taskId) throws Exception {
         // find the original version of the task in the database.
         Task taskFromDb = this.taskService.getById(taskId);
 

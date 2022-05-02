@@ -85,7 +85,10 @@ public class TaskService {
         return this.taskRepo.save(taskFromDb);
     }
 
-    public Task deleteFileFromTask(Task taskFromDb) throws Exception {
+    public Task deleteFileFromTask(Task taskFromDb) {
+        // store the task description file location in a variable to use it later when deleting the file.
+        String descriptionFileLocation = taskFromDb.getDescriptionFile();
+
         // set the "descriptionFileLocation" to null (detach the file from the task).
         taskFromDb.setDescriptionFile(null);
 
@@ -93,7 +96,7 @@ public class TaskService {
         Task taskWithoutFile = this.taskRepo.save(taskFromDb);
 
         // then, delete the description file from the server.
-        this.applicationUtils.deleteFile(this.adminDirectory, taskFromDb.getDescriptionFile());
+        this.applicationUtils.deleteFile(this.adminDirectory, descriptionFileLocation);
 
         return taskWithoutFile;
     }
