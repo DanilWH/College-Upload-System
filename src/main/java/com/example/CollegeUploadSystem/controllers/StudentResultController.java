@@ -43,7 +43,6 @@ public class StudentResultController {
         this.applicationUtils = applicationUtils;
     }
 
-    // TODO: DON'T FORGET TO IMPLEMENT THE GET REQUEST TO FETCH A LIST OF STUDENTS' RESULTS.
     @GetMapping("/groups/{groupId}/student-results")
     public List<StudentResultDto> list(@PathVariable("groupId") Long groupId) {
         return this.studentResultService.getAllByGroupId(groupId)
@@ -54,7 +53,6 @@ public class StudentResultController {
 
     @GetMapping("/student-results/{studentResultId}/file")
     public ResponseEntity<Resource> download(@PathVariable("studentResultId") Long studentResultId) throws MalformedURLException {
-        // TODO: permit the endpoint for all the users.
         StudentResult studentResultFromDb = this.studentResultService.getById(studentResultId);
 
         // get the file as a Resource.

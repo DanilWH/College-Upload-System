@@ -89,8 +89,6 @@ public class ApplicationUtils {
     }
 
     public String recognizeMediaType(String filename) {
-        // TODO: think of if the method should return a String or a MediaType.
-
         String contentType = URLConnection.guessContentTypeFromName(filename);
         return (contentType == null) ? MediaType.APPLICATION_OCTET_STREAM_VALUE : contentType;
     }

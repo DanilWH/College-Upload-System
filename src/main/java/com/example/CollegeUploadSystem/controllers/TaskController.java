@@ -97,7 +97,6 @@ public class TaskController {
 
     @GetMapping("/tasks/{taskId}/file")
     public ResponseEntity<Resource> fileDownload(@PathVariable("taskId") Long taskId) throws MalformedURLException {
-        // TODO: permit the endpoint for all the users.
         Task taskFromDb = this.taskService.getById(taskId);
 
         Resource resource = this.taskService.getDescriptionFileAsResource(taskFromDb);
@@ -124,7 +123,6 @@ public class TaskController {
         return this.taskMapper.toDto(taskWithAttachedFile);
     }
 
-    // TODO: implement file deletion by the new method.
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/tasks/{taskId}/file")
     @JsonView(Views.IdName.class)

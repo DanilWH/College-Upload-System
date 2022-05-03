@@ -44,11 +44,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        // TODO: remove the commented code when tested.
-//        String path = request.getRequestURI();
-//        return path.equals("/api/auth/login")
-//                || path.equals("/api/groups") && request.getMethod().equals("GET");
-
         return new AntPathRequestMatcher("/api/auth/login").matches(request)
                 || new AntPathRequestMatcher("/api/groups", HttpMethod.GET.name(), true).matches(request)
                 || new AntPathRequestMatcher("/api/groups/*/tasks", HttpMethod.GET.name(), true).matches(request) // permit to get all the tasks of a certain group.
