@@ -71,6 +71,7 @@ public class GroupController {
         return this.groupMapper.toDto(updatedGroup);
     }
 
+    // TODO: change patch to post.
     @PreAuthorize("hasAuthority('ADMIN')")
     @PatchMapping("/groups/{groupId}/status")
     public ResponseEntity<Void> deactivate(@PathVariable("groupId") Long groupId) {

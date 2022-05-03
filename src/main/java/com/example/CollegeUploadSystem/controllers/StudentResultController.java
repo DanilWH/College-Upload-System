@@ -19,7 +19,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
@@ -44,8 +43,8 @@ public class StudentResultController {
 
     // TODO: DON'T FORGET TO IMPLEMENT THE GET REQUEST TO FETCH A LIST OF STUDENTS' RESULTS.
 
-    @GetMapping("/student-results/{studentResultId}/files")
-    public ResponseEntity<Resource> download(@PathVariable("studentResultId") Long studentResultId, HttpServletRequest request) throws MalformedURLException {
+    @GetMapping("/student-results/{studentResultId}/file")
+    public ResponseEntity<Resource> download(@PathVariable("studentResultId") Long studentResultId) throws MalformedURLException {
         // TODO: permit the endpoint for all the users.
         StudentResult studentResultFromDb = this.studentResultService.getById(studentResultId);
 

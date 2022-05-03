@@ -66,8 +66,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // “stateless” – is a guarantee that the application will not create any session at all.
         // It will effectively skip parts of the Spring Security filter chain
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeRequests().antMatchers("/api/auth/login").permitAll();
-        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/groups").permitAll();
+        http.authorizeRequests().antMatchers("/api/auth/login").permitAll(); // permit to sign in.
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/groups").permitAll(); // permit to get all the groups.
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/groups/*/tasks").permitAll(); // permit to get all the tasks of a certain group.
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/groups/*/users").permitAll(); // permit to get all the students of a certain group.
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/tasks/*/file").permitAll(); // permit to get the description file of a certain task.
+        // TODO: http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/groups/*/student-results").permitAll(); // permit to get all the student results of a certain group.
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/student-results/*/file").permitAll(); // permit to get the file of a certain student result.
         http.authorizeRequests().anyRequest().authenticated();
 
         http.addFilter(customAuthenticationFilter);

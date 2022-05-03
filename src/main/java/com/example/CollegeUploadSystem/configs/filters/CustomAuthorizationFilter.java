@@ -3,8 +3,10 @@ package com.example.CollegeUploadSystem.configs.filters;
 import com.example.CollegeUploadSystem.models.User;
 import com.example.CollegeUploadSystem.services.UserService;
 import com.example.CollegeUploadSystem.utils.JwtUtils;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -42,7 +44,17 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String path = request.getRequestURI();
-        return path.equals("/api/auth/login") || path.equals("/api/groups") && request.getMethod().equals("GET");
+        // TODO: remove the commented code when tested.
+//        String path = request.getRequestURI();
+//        return path.equals("/api/auth/login")
+//                || path.equals("/api/groups") && request.getMethod().equals("GET");
+
+        return new AntPathRequestMatcher("/api/auth/login").matches(request)
+                || new AntPathRequestMatcher("/api/groups", HttpMethod.GET.name(), true).matches(request)
+                || new AntPathRequestMatcher("/api/groups/*/tasks", HttpMethod.GET.name(), true).matches(request) // permit to get all the tasks of a certain group.
+                || new AntPathRequestMatcher("/api/groups/*/users", HttpMethod.GET.name(), true).matches(request) // permit to get all the students of a certain group.
+                || new AntPathRequestMatcher("/api/tasks/*/file", HttpMethod.GET.name(), true).matches(request) // permit to get the description file of a certain task.
+//                || new AntPathRequestMatcher("/api/groups/*/student-results", HttpMethod.GET.name(), true).matches(request) // permit to get all the student results of a certain group.
+                || new AntPathRequestMatcher("/api/student-results/*/file", HttpMethod.GET.name(), true).matches(request); // permit to get the file of a certain student result.
     }
 }
