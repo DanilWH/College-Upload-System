@@ -70,9 +70,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/groups").permitAll(); // permit to get all the groups.
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/groups/*/tasks").permitAll(); // permit to get all the tasks of a certain group.
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/groups/*/users").permitAll(); // permit to get all the students of a certain group.
-        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/tasks/*/file").permitAll(); // permit to get the description file of a certain task.
-        // TODO: http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/groups/*/student-results").permitAll(); // permit to get all the student results of a certain group.
-        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/student-results/*/file").permitAll(); // permit to get the file of a certain student result.
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/tasks/*/file").permitAll(); // permit to download the description file of a certain task.
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/groups/*/student-results").permitAll(); // permit to get all the student results of a certain group.
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/student-results/*/file").permitAll(); // permit to download the file of a certain student result.
         http.authorizeRequests().anyRequest().authenticated();
 
         http.addFilter(customAuthenticationFilter);

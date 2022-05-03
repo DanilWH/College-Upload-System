@@ -53,8 +53,8 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                 || new AntPathRequestMatcher("/api/groups", HttpMethod.GET.name(), true).matches(request)
                 || new AntPathRequestMatcher("/api/groups/*/tasks", HttpMethod.GET.name(), true).matches(request) // permit to get all the tasks of a certain group.
                 || new AntPathRequestMatcher("/api/groups/*/users", HttpMethod.GET.name(), true).matches(request) // permit to get all the students of a certain group.
-                || new AntPathRequestMatcher("/api/tasks/*/file", HttpMethod.GET.name(), true).matches(request) // permit to get the description file of a certain task.
-//                || new AntPathRequestMatcher("/api/groups/*/student-results", HttpMethod.GET.name(), true).matches(request) // permit to get all the student results of a certain group.
-                || new AntPathRequestMatcher("/api/student-results/*/file", HttpMethod.GET.name(), true).matches(request); // permit to get the file of a certain student result.
+                || new AntPathRequestMatcher("/api/tasks/*/file", HttpMethod.GET.name(), true).matches(request) // permit to download the description file of a certain task.
+                || new AntPathRequestMatcher("/api/groups/*/student-results", HttpMethod.GET.name(), true).matches(request) // permit to get all the student results of a certain group.
+                || new AntPathRequestMatcher("/api/student-results/*/file", HttpMethod.GET.name(), true).matches(request); // permit to download the file of a certain student result.
     }
 }
