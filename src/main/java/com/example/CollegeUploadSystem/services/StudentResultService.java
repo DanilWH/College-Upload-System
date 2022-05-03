@@ -1,6 +1,5 @@
 package com.example.CollegeUploadSystem.services;
 
-import com.example.CollegeUploadSystem.models.Group;
 import com.example.CollegeUploadSystem.models.StudentResult;
 import com.example.CollegeUploadSystem.models.Task;
 import com.example.CollegeUploadSystem.models.User;
@@ -59,12 +58,11 @@ public class StudentResultService {
         return this.applicationUtils.loadFileAsResource(this.userDirectory, studentResultFromDb.getFilepath() + studentResultFromDb.getFilename());
     }
 
-    public StudentResult upload(User currentUser, Group group, Task task, MultipartFile file) throws IOException {
-        // TODO: decide if i need to check that the current user uploads the file under his cell.
-        // check if the current user belongs to the appropriate group.
-        // if (!currentUser.getGroup().getId().equals(groupId)) {
-        //     throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        // }
+    public StudentResult upload(User currentUser, Task task, MultipartFile file) throws IOException {
+        // check if the current user attaches the file to the task that belongs to the group which the current user (student) is in.
+        if (!currentUser.getGroup().getId().equals(task.getGroup().getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "A student can not attach the file to the task that does not belong to his group");
+        }
 
         // check if there is a result of the specific user, in the specific group, under the specific task in the database.
         if (this.getByTaskIdAndUserId(task.getId(), currentUser.getId()) != null) {
@@ -77,7 +75,7 @@ public class StudentResultService {
         // uploadPath is the root directory where all the upload are stored.
         // filepath is the directory specified by the group name and the task name.
         // filename is the unique file name.
-        String filepath = String.format("%s_%s/%s/", group.getName(), group.getCreationDate().getYear(), task.getName());
+        String filepath = String.format("%s_%s/%s/", currentUser.getGroup().getName(), currentUser.getGroup().getCreationDate().getYear(), task.getName());
 
         // TODO: check the filename for special characters (use the same approach as in Task description file).
         // create the file name.

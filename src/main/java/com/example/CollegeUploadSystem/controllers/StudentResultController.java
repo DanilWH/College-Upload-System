@@ -71,15 +71,14 @@ public class StudentResultController {
     }
 
     @PreAuthorize("hasAuthority('STUDENT')")
-    @PostMapping("groups/{groupId}/tasks/{taskId}/student-results")
+    @PostMapping("/tasks/{taskId}/student-results")
     @JsonView(Views.IdName.class)
-    public StudentResultDto upload(@AuthenticationPrincipal User currentUser, @PathVariable("groupId") Long groupId, @PathVariable("taskId") Long taskId, @RequestParam("file") MultipartFile file) throws IOException {
+    public StudentResultDto upload(@AuthenticationPrincipal User currentUser, @PathVariable("taskId") Long taskId, @RequestParam("file") MultipartFile file) throws IOException {
         // find the originals in the database.
-        Group groupFromDatabase = this.groupService.findById(groupId);
         Task taskFromDatabase = this.taskService.getById(taskId);
 
-        // upload the file by the criterias of the found Group and Task.
-        StudentResult newStudentResult = this.studentResultService.upload(currentUser, groupFromDatabase, taskFromDatabase, file);
+        // upload the file by the criterias of the current user's Group and the found Task.
+        StudentResult newStudentResult = this.studentResultService.upload(currentUser, taskFromDatabase, file);
 
         return this.studentResultMapper.toDto(newStudentResult);
     }
