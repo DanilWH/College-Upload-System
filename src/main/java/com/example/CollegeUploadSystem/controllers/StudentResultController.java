@@ -21,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -42,6 +44,13 @@ public class StudentResultController {
     }
 
     // TODO: DON'T FORGET TO IMPLEMENT THE GET REQUEST TO FETCH A LIST OF STUDENTS' RESULTS.
+    @GetMapping("/groups/{groupId}/student-results")
+    public List<StudentResultDto> list(@PathVariable("groupId") Long groupId) {
+        return this.studentResultService.getAllByGroupId(groupId)
+                .stream()
+                .map(this.studentResultMapper::toDto)
+                .collect(Collectors.toList());
+    }
 
     @GetMapping("/student-results/{studentResultId}/file")
     public ResponseEntity<Resource> download(@PathVariable("studentResultId") Long studentResultId) throws MalformedURLException {
