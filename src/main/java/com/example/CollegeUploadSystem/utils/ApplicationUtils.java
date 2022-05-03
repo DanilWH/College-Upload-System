@@ -96,10 +96,8 @@ public class ApplicationUtils {
     }
 
     public Resource loadFileAsResource(String directory, String fileLocation) throws MalformedURLException {
-        // TODO: refactor.
-        Path fileStorageLocation = Paths.get(this.uploadPath + "/" + directory).toAbsolutePath().normalize();
-        Path filePath = fileStorageLocation.resolve(fileLocation).normalize();
-        Resource resource = new UrlResource(filePath.toUri());
+        Path fileStorageLocation = Paths.get(this.uploadPath + "/" + directory + "/" + fileLocation).toAbsolutePath().normalize();
+        Resource resource = new UrlResource(fileStorageLocation.toUri());
 
         if (!resource.exists()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The file was not found.");
