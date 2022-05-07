@@ -100,7 +100,7 @@ public class TaskController {
         Task taskFromDb = this.taskService.getById(taskId);
 
         Resource resource = this.taskService.getDescriptionFileAsResource(taskFromDb);
-        String mediaType = this.applicationUtils.recognizeMediaType(taskFromDb.getDescriptionFile());
+        String mediaType = this.applicationUtils.recognizeMediaType(taskFromDb.getDescriptionFileLocation());
 
         return ResponseEntity.ok()
                 .contentType(MediaType.valueOf(mediaType))

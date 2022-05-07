@@ -24,7 +24,7 @@ public class TaskDto {
 
     @Size(max = 255)
     @JsonView(Views.IdName.class)
-    private String descriptionFile;
+    private String descriptionFileLocation;
 
     public Long getId() {
         return id;
@@ -62,12 +62,12 @@ public class TaskDto {
         return this;
     }
 
-    public String getDescriptionFile() {
-        return descriptionFile;
+    public String getDescriptionFileLocation() {
+        return descriptionFileLocation;
     }
 
-    public TaskDto setDescriptionFile(String descriptionFile) {
-        this.descriptionFile = descriptionFile;
+    public TaskDto setDescriptionFileLocation(String descriptionFileLocation) {
+        this.descriptionFileLocation = descriptionFileLocation;
         return this;
     }
 }

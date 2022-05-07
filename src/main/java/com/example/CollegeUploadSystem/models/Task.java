@@ -21,7 +21,7 @@ public class Task implements Serializable {
 
     // TODO: rename to descriptionFileLocation;
     // TODO: database migration (alter the "task_description_file" column name to "description_file_location").
-    private String descriptionFile;
+    private String descriptionFileLocation;
 
     public Long getId() {
         return id;
@@ -55,11 +55,11 @@ public class Task implements Serializable {
         this.creationDateTime = creationDateTime;
     }
 
-    public String getDescriptionFile() {
-        return descriptionFile;
+    public String getDescriptionFileLocation() {
+        return descriptionFileLocation;
     }
 
-    public void setDescriptionFile(String descriptionFile) {
-        this.descriptionFile = descriptionFile;
+    public void setDescriptionFileLocation(String descriptionFile) {
+        this.descriptionFileLocation = descriptionFile;
     }
 }

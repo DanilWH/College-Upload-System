@@ -61,23 +61,23 @@ public class TaskService {
         this.taskRepo.delete(taskFromDb);
 
         // then, delete the task description file if it exists.
-        if (taskFromDb.getDescriptionFile() != null) {
-            this.applicationUtils.deleteFile(this.adminDirectory, taskFromDb.getDescriptionFile());
+        if (taskFromDb.getDescriptionFileLocation() != null) {
+            this.applicationUtils.deleteFile(this.adminDirectory, taskFromDb.getDescriptionFileLocation());
         }
 
     }
 
     public Resource getDescriptionFileAsResource(Task taskFromDb) throws MalformedURLException {
-        if (taskFromDb.getDescriptionFile() == null) {
+        if (taskFromDb.getDescriptionFileLocation() == null) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "There is no file attached to the task with an ID of" + taskFromDb.getId() + ".");
         }
 
-        return this.applicationUtils.loadFileAsResource(this.adminDirectory, taskFromDb.getDescriptionFile());
+        return this.applicationUtils.loadFileAsResource(this.adminDirectory, taskFromDb.getDescriptionFileLocation());
     }
 
     public Task attachFileToTask(Task taskFromDb, MultipartFile file) throws IOException {
         // check if the task already has a description file.
-        if (taskFromDb.getDescriptionFile() != null) {
+        if (taskFromDb.getDescriptionFileLocation() != null) {
             // TODO: find out (ask Shashin) if I need to just delete the old file instead of throwing an error.
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Another description file has already been uploaded to the task. Delete the old descriptoin file if you want to upload a new one.");
         }
@@ -89,7 +89,7 @@ public class TaskService {
         this.applicationUtils.uploadMultipartFile(file, this.adminDirectory, fileLocation);
 
         // set the path with the file location.
-        taskFromDb.setDescriptionFile(fileLocation);
+        taskFromDb.setDescriptionFileLocation(fileLocation);
 
         // save the task with the path to the description file in the database and return it.
         return this.taskRepo.save(taskFromDb);
@@ -97,10 +97,10 @@ public class TaskService {
 
     public Task deleteFileFromTask(Task taskFromDb) {
         // store the task description file location in a variable to use it later when deleting the file.
-        String descriptionFileLocation = taskFromDb.getDescriptionFile();
+        String descriptionFileLocation = taskFromDb.getDescriptionFileLocation();
 
         // set the "descriptionFileLocation" to null (detach the file from the task).
-        taskFromDb.setDescriptionFile(null);
+        taskFromDb.setDescriptionFileLocation(null);
 
         // save the version of the task without the description file in the database first.
         Task taskWithoutFile = this.taskRepo.save(taskFromDb);
