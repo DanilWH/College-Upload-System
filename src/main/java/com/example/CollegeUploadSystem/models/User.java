@@ -17,18 +17,13 @@ public class User implements UserDetails, Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    // TODO database migration (increase the first_name column to 50 in the users table).
     private String firstName;
 
-    // TODO database migration (increase the last_name column to 50 in the users table).
     private String lastName;
 
-    // TODO database migration (increase the father_name column to 50 in the users table).
     private String fatherName;
 
-    // TODO database migration (increase the login column to 60 in the users table).
     private String login;
-    // TODO database migration (change the password column to 30 in the users table).
     private String password;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -54,6 +49,7 @@ public class User implements UserDetails, Serializable {
     @OrderBy(value = "task_id")
     private List<StudentResult> results;
 
+    // TODO: remove
 /*
     public StudentResult getResultByTask(Task task) {
         for (StudentResult result : this.results) {

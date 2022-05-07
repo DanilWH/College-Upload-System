@@ -17,7 +17,6 @@ public class Group implements Serializable {
 
     private LocalDate creationDate;
 
-    // TODO database migration (alter add column isActive).
     private Boolean isActive;
 
     @OneToMany(mappedBy = "group")
