@@ -83,7 +83,7 @@ public class UserService implements UserDetailsService {
             if (!row.isBlank()) {
                 String[] data = row.split("([,;])");
 
-                // do add a new student if the row contains the three part of the student's name.
+                // do add a new student if the row contains the three parts of the student's name.
                 if (data.length == 3)  {
                     User newStudent = new User();
                     newStudent.setFirstName(data[1]);

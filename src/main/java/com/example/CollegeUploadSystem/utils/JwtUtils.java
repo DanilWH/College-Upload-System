@@ -67,7 +67,7 @@ public class JwtUtils {
         response.setHeader("Error", exception.getMessage());
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
 
-        // TODO: replace AuthExceptionOutput to ApiErrorOutput.
+        // TODO: consider to replace AuthExceptionOutput to ApiErrorOutput or just throw a ResponseStatusException.
         new ObjectMapper().writeValue(response.getOutputStream(), new AuthExceptionOutput(exception.getMessage()));
     }
 

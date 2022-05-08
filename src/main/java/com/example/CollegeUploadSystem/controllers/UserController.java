@@ -46,7 +46,7 @@ public class UserController {
     @GetMapping("/users/me")
     @JsonView(Views.FullProfile.class)
     public UserDto getMyProfile(@AuthenticationPrincipal User currentUser) {
-        return this.userMapper.userToUserDto(currentUser);
+        return this.userMapper.toDto(currentUser);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -54,7 +54,7 @@ public class UserController {
     @JsonView(Views.FullProfile.class)
     public UserDto getOne(@PathVariable("userId") Long userId) {
         User user = this.userService.findById(userId);
-        return this.userMapper.userToUserDto(user);
+        return this.userMapper.toDto(user);
     }
 
     @GetMapping("/groups/{groupId}/users")
@@ -62,7 +62,7 @@ public class UserController {
     public List<UserDto> list(@PathVariable("groupId") Long groupId) {
         return this.userService.findByGroupIdOrderByLastName(groupId)
                 .stream()
-                .map(this.userMapper::userToUserDto)
+                .map(this.userMapper::toDto)
                 .collect(Collectors.toList());
     }
 

@@ -9,7 +9,6 @@ import java.io.Serializable;
 import java.util.Set;
 
 public class UserDto implements Serializable {
-    // TODO: set sizes to the fields.
     @JsonView(Views.Id.class)
     private Long id;
 

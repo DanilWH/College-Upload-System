@@ -24,6 +24,7 @@ public class User implements UserDetails, Serializable {
     private String fatherName;
 
     private String login;
+    // TODO: look for https://stackoverflow.com/questions/5881169/what-column-type-length-should-i-use-for-storing-a-bcrypt-hashed-password-in-a-d
     private String password;
 
     @ManyToOne(fetch = FetchType.LAZY)
