@@ -100,7 +100,12 @@ public class StudentResultService {
         return this.studentResultRepo.save(studentResult);
     }
 
-    public void delete(StudentResult studentResult) {
+    public void delete(User currentUser, StudentResult studentResult) {
+        // a student can delete only his onw results, so we check it.
+        if (!currentUser.getId().equals(studentResult.getUser().getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "It is forbidden to delete someone else's result.");
+        }
+
         // delete the student result data in the database.
         this.studentResultRepo.delete(studentResult);
 

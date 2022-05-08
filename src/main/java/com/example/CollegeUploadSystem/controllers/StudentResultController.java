@@ -83,12 +83,12 @@ public class StudentResultController {
 
     @PreAuthorize("hasAuthority('STUDENT')")
     @DeleteMapping("/student-results/{studentResultId}")
-    public ResponseEntity<Void> delete(@PathVariable("studentResultId") Long studentResultId) {
+    public ResponseEntity<Void> delete(@AuthenticationPrincipal User currentUser, @PathVariable("studentResultId") Long studentResultId) {
         // find the original instance in the database.
         StudentResult studentResultFromDatabase = this.studentResultService.getById(studentResultId);
 
         // delete the file and its data in the database.
-        this.studentResultService.delete(studentResultFromDatabase);
+        this.studentResultService.delete(currentUser, studentResultFromDatabase);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
