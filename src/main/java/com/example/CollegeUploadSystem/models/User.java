@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -30,12 +30,14 @@ public class User implements UserDetails, Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_creator_id")
     private User userCreator;
-    private LocalDateTime creationTime;
+    private ZonedDateTime creationTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "password_changer_id")
     private User passwordChanger;
-    private LocalDateTime passwordChangeTime;
+    private ZonedDateTime passwordChangeTime;
+
+    private ZonedDateTime lastLogoutTime;
 
     @ElementCollection(targetClass = UserRoles.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
@@ -118,11 +120,11 @@ public class User implements UserDetails, Serializable {
     public void setUserCreator(User userCreator) {
         this.userCreator = userCreator;
     }
-    public LocalDateTime getCreationTime() {
+    public ZonedDateTime getCreationTime() {
         return creationTime;
     }
 
-    public void setCreationTime(LocalDateTime creationTime) {
+    public void setCreationTime(ZonedDateTime creationTime) {
         this.creationTime = creationTime;
     }
 
@@ -134,12 +136,20 @@ public class User implements UserDetails, Serializable {
         this.passwordChanger = passwordChanger;
     }
 
-    public LocalDateTime getPasswordChangeTime() {
+    public ZonedDateTime getPasswordChangeTime() {
         return passwordChangeTime;
     }
 
-    public void setPasswordChangeTime(LocalDateTime passwordChangeTime) {
+    public void setPasswordChangeTime(ZonedDateTime passwordChangeTime) {
         this.passwordChangeTime = passwordChangeTime;
+    }
+
+    public ZonedDateTime getLastLogoutTime() {
+        return lastLogoutTime;
+    }
+
+    public void setLastLogoutTime(ZonedDateTime lastLogoutTime) {
+        this.lastLogoutTime = lastLogoutTime;
     }
 
     public Set<UserRoles> getUserRoles() {

@@ -3,6 +3,7 @@ package com.example.CollegeUploadSystem.configs.filters;
 import com.example.CollegeUploadSystem.models.User;
 import com.example.CollegeUploadSystem.services.UserService;
 import com.example.CollegeUploadSystem.utils.JwtUtils;
+import io.jsonwebtoken.Claims;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,11 +29,16 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // do filter if the user isn't trying either to register or to log in.
         try {
+            // extract the JWT from the header.
             String jws = this.jwtUtils.parseAuthorizationBearer(request);
-            String login = this.jwtUtils.parseJws(jws).getBody().getSubject();
 
-            User user = (User) this.userService.loadUserByUsername(login);
+            // get the claims stored in the JWT.
+            Claims jwtClaims = this.jwtUtils.parseJws(jws).getBody();
 
+            // validate the JWT claims and get the user object.
+            User user = this.jwtUtils.validateClaims(jwtClaims);
+
+            // put the user into the security context.
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authToken);
         } catch (RuntimeException e) {

@@ -77,6 +77,7 @@ public class ApplicationUtils {
      *
      * @return void
      */
+    @Deprecated
     public void refreshCurrentUserSession() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 

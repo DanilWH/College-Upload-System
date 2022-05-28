@@ -17,6 +17,7 @@ public class Task implements Serializable {
     @JoinColumn(name = "group_id", referencedColumnName = "id")
     private Group group;
 
+    // TODO: change to ZonedDateTime.
     private LocalDateTime creationDateTime;
 
     private String descriptionFileLocation;

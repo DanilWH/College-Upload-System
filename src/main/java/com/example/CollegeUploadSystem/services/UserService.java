@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -120,13 +120,15 @@ public class UserService implements UserDetailsService {
             // every student's login is the password by default.
             student.setPassword(passwordEncoder.encode(student.getLogin()));
             // set the creation time.
-            student.setCreationTime(LocalDateTime.now());
+            student.setCreationTime(ZonedDateTime.now());
             // set admin as the creator of the current student.
             student.setUserCreator(admin);
             // set the time of the student creation as the time which the password was changed at.
             student.setPasswordChangeTime(student.getCreationTime());
             // set the student creator as the student password changer.
             student.setPasswordChanger(student.getUserCreator());
+            // set the tim eof the student creations as the last time the user logged out.
+            student.setLastLogoutTime(student.getCreationTime());
             // set the role to the student.
             student.setUserRoles(Collections.singleton(UserRoles.STUDENT));
             // make the student belong to the group.
@@ -165,6 +167,7 @@ public class UserService implements UserDetailsService {
     }
 
     public void updatePassword(User currentUser, User user, ProfilePasswordInput profilePasswordInput) {
+/*
         // check additional security stuff for students.
         if (!currentUser.getUserRoles().contains(UserRoles.ADMIN)) {
             // a student can only change his own password.
@@ -176,6 +179,19 @@ public class UserService implements UserDetailsService {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Old password is wrong");
             }
         }
+*/
+
+        if (currentUser.getId().equals(user.getId())) {
+            // any user, when changing his own password, has to enter the old password.
+            if (!this.passwordEncoder.matches(profilePasswordInput.getOldPassword(), user.getPassword())) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Old password is wrong");
+            }
+        } else {
+            // except this is the admin, a student can not change someone else's password, his own one only.
+            if (!currentUser.getUserRoles().contains(UserRoles.ADMIN)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "A student can not change the password of anyone but its own one.");
+            }
+        }
 
 
         // encode the new password.
@@ -183,7 +199,7 @@ public class UserService implements UserDetailsService {
 
         user.setPassword(encryptedPassword);
         user.setPasswordChanger(currentUser);
-        user.setPasswordChangeTime(LocalDateTime.now());
+        user.setPasswordChangeTime(ZonedDateTime.now());
 
         this.userRepo.save(user);
     }
