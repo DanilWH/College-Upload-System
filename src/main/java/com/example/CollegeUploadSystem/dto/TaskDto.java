@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 public class TaskDto {
     @JsonView(Views.Id.class)
@@ -20,7 +20,7 @@ public class TaskDto {
     private GroupDto groupDto;
 
     @JsonView(Views.FullProfile.class)
-    private LocalDateTime creationDateTime;
+    private ZonedDateTime creationDateTime;
 
     @Size(max = 255)
     @JsonView(Views.IdName.class)
@@ -53,11 +53,11 @@ public class TaskDto {
         return this;
     }
 
-    public LocalDateTime getCreationDateTime() {
+    public ZonedDateTime getCreationDateTime() {
         return creationDateTime;
     }
 
-    public TaskDto setCreationDateTime(LocalDateTime creationDateTime) {
+    public TaskDto setCreationDateTime(ZonedDateTime creationDateTime) {
         this.creationDateTime = creationDateTime;
         return this;
     }

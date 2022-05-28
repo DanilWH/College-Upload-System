@@ -2,7 +2,7 @@ package com.example.CollegeUploadSystem.models;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "tasks")
@@ -17,8 +17,7 @@ public class Task implements Serializable {
     @JoinColumn(name = "group_id", referencedColumnName = "id")
     private Group group;
 
-    // TODO: change to ZonedDateTime.
-    private LocalDateTime creationDateTime;
+    private ZonedDateTime creationDateTime;
 
     private String descriptionFileLocation;
 
@@ -46,11 +45,11 @@ public class Task implements Serializable {
         this.group = group;
     }
 
-    public LocalDateTime getCreationDateTime() {
+    public ZonedDateTime getCreationDateTime() {
         return creationDateTime;
     }
 
-    public void setCreationDateTime(LocalDateTime creationDateTime) {
+    public void setCreationDateTime(ZonedDateTime creationDateTime) {
         this.creationDateTime = creationDateTime;
     }
 

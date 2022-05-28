@@ -14,7 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,7 +45,7 @@ public class TaskService {
 
     public Task create(Task task, Group groupFromDb) {
         task.setGroup(groupFromDb);
-        task.setCreationDateTime(LocalDateTime.now());
+        task.setCreationDateTime(ZonedDateTime.now());
         return this.taskRepo.save(task);
     }
 
