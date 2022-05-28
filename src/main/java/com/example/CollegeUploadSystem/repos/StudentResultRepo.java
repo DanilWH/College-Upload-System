@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface StudentResultRepo extends JpaRepository<StudentResult, Long> {
 
-    StudentResult findByTaskIdAndUserId(Long taskId, Long userId);
+    StudentResult findByUserIdAndTaskId(Long userId, Long taskId);
 
     @Query("select sr from StudentResult sr where task_id in :taskIds")
     List<StudentResult> findAllByTaskId(@Param("taskIds") List<Long> taskIds);

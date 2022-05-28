@@ -44,9 +44,8 @@ public class StudentResultService {
         return this.studentResultRepo.findById(studentResultId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "The student result with the ID of " + studentResultId + " was not found."));
     }
 
-    public StudentResult getByTaskIdAndUserId(Long taskId, Long userId) {
-        // TODO: change the query to "findByUserIdAndTaskId"
-        return this.studentResultRepo.findByTaskIdAndUserId(taskId, userId);
+    public StudentResult getByUserIdAndTaskId(Long userId, Long taskId) {
+        return this.studentResultRepo.findByUserIdAndTaskId(userId, taskId);
     }
 
     public List<StudentResult> getAllByGroupId(Long groupId) {
@@ -65,7 +64,7 @@ public class StudentResultService {
         }
 
         // check if there is a result of the specific user, in the specific group, under the specific task in the database.
-        if (this.getByTaskIdAndUserId(task.getId(), currentUser.getId()) != null) {
+        if (this.getByUserIdAndTaskId(currentUser.getId(), task.getId()) != null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "The result already exists. Delete the old one if you want to upload another result.");
         }
 
