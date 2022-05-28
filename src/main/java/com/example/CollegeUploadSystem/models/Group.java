@@ -2,7 +2,7 @@ package com.example.CollegeUploadSystem.models;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class Group implements Serializable {
     private String name;
 
     // TODO: change to ZonedDate.
-    private LocalDate creationDate;
+    private ZonedDateTime creationDate;
 
     private Boolean isActive;
 
@@ -39,11 +39,11 @@ public class Group implements Serializable {
         this.name = name;
     }
 
-    public LocalDate getCreationDate() {
+    public ZonedDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDate creationDate) {
+    public void setCreationDate(ZonedDateTime creationDate) {
         this.creationDate = creationDate;
     }
 

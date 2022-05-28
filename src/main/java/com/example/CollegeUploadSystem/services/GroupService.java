@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,7 +37,7 @@ public class GroupService {
     }
 
     public Group create(Group group) throws IOException {
-        group.setCreationDate(LocalDate.now());
+        group.setCreationDate(ZonedDateTime.now());
         group.setActive(true);
 
         // save the group in the database.

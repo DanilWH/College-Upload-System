@@ -4,7 +4,8 @@ import com.example.CollegeUploadSystem.models.Views;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class GroupDto {
     @JsonView(Views.Id.class)
@@ -15,7 +16,7 @@ public class GroupDto {
     private String name;
 
     @JsonView(Views.FullProfile.class)
-    private LocalDate creationDate;
+    private ZonedDateTime creationDate;
 
     @JsonView(Views.FullProfile.class)
     private Boolean isActive;
@@ -23,7 +24,7 @@ public class GroupDto {
     public GroupDto() {
     }
 
-    public GroupDto(Long id, @NotBlank(message = "Fill the field") String name, LocalDate creationDate, Boolean isActive) {
+    public GroupDto(Long id, @NotBlank(message = "Fill the field") String name, ZonedDateTime creationDate, Boolean isActive) {
         this.id = id;
         this.name = name;
         this.creationDate = creationDate;
@@ -48,11 +49,11 @@ public class GroupDto {
         return this;
     }
 
-    public LocalDate getCreationDate() {
-        return creationDate;
+    public String getCreationDate() {
+        return creationDate.format(DateTimeFormatter.ISO_OFFSET_DATE);
     }
 
-    public GroupDto setCreationDate(LocalDate creationDate) {
+    public GroupDto setCreationDate(ZonedDateTime creationDate) {
         this.creationDate = creationDate;
         return this;
     }
