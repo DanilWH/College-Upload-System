@@ -21,8 +21,6 @@ import java.util.UUID;
 @Service
 public class TaskService {
 
-    private final String REGEXR_STRING = "([#%&{} /<>*? $!\\'\":@+`|=])";
-
     @Value("${admin.directory}")
     private String adminDirectory;
 
@@ -113,8 +111,8 @@ public class TaskService {
 
     private String calculatePathToDescriptionFile(Task taskForm, Group group, String originalFilename) {
         // replace all the prohibited symbols with the "-" symbol.
-        String taskNameForFilename = taskForm.getName().replaceAll(REGEXR_STRING, "-");
-        String originalFilenameForFilename = originalFilename.replaceAll(REGEXR_STRING, "-");
+        String taskNameForFilename = taskForm.getName().replaceAll(ApplicationUtils.REGEXR_STRING, ApplicationUtils.REPLACEMENT_STRING);
+        String originalFilenameForFilename = originalFilename.replaceAll(ApplicationUtils.REGEXR_STRING, ApplicationUtils.REPLACEMENT_STRING);
 
         // define the file path and the file name.
         String filepath = String.format("%s_%s/", group.getName(), group.getCreationDate().getYear());

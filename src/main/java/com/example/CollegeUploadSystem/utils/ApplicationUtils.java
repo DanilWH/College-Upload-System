@@ -32,6 +32,8 @@ import java.util.Set;
 
 @Component
 public class ApplicationUtils {
+    public static final String REPLACEMENT_STRING = "-";
+    public static final String REGEXR_STRING = "([#%&^()\\[\\]{} /<>*?$!\\'\":@+`|=])";
 
     private final Validator validator;
 

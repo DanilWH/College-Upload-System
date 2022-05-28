@@ -24,8 +24,6 @@ import java.util.stream.Collectors;
 @Service
 public class StudentResultService {
 
-    @Value("${upload.path}")
-    private String uploadPath;
     @Value("${user.directory}")
     private String userDirectory;
 
@@ -68,25 +66,28 @@ public class StudentResultService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "The result already exists. Delete the old one if you want to upload another result.");
         }
 
-        // create the new StudentResult.
-        StudentResult studentResult = new StudentResult();
-
         // uploadPath is the root directory where all the upload are stored.
         // filepath is the directory specified by the group name and the task name.
         // filename is the unique file name.
-        String filepath = String.format("%s_%s/%s/", currentUser.getGroup().getName(), currentUser.getGroup().getCreationDate().getYear(), task.getName());
+        String filepath = String.format("%s_%s/%s/",
+                currentUser.getGroup().getName().replaceAll(ApplicationUtils.REGEXR_STRING, ApplicationUtils.REPLACEMENT_STRING),
+                currentUser.getGroup().getCreationDate().getYear(),
+                task.getName().replaceAll(ApplicationUtils.REGEXR_STRING, ApplicationUtils.REPLACEMENT_STRING)
+        );
 
-        // TODO: check the filename for special characters (use the same approach as in Task description file).
         // create the file name.
         String filename = String.format("%s%s_%s_%s",
                 currentUser.getLastName(),
                 currentUser.getFirstName(),
                 UUID.randomUUID(),
-                file.getOriginalFilename()
+                file.getOriginalFilename().replaceAll(ApplicationUtils.REGEXR_STRING, ApplicationUtils.REPLACEMENT_STRING)
         );
 
         // upload the file.
         this.applicationUtils.uploadMultipartFile(file, this.userDirectory, filepath + filename);
+
+        // create the new StudentResult.
+        StudentResult studentResult = new StudentResult();
 
         // fill the fields of the new student result entity.
         studentResult.setFilename(filename);
