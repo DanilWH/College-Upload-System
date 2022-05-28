@@ -1,7 +1,7 @@
 package com.example.CollegeUploadSystem.models;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "students_results")
@@ -14,8 +14,7 @@ public class StudentResult {
 
     private String filepath;
 
-    // TODO: change to ZonedDateTime.
-    private LocalDateTime dateTime;
+    private ZonedDateTime dateTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
@@ -49,11 +48,11 @@ public class StudentResult {
         this.filepath = filepath;
     }
 
-    public LocalDateTime getDateTime() {
+    public ZonedDateTime getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
+    public void setDateTime(ZonedDateTime dateTime) {
         this.dateTime = dateTime;
     }
 

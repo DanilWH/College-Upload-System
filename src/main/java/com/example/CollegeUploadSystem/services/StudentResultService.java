@@ -16,7 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -92,7 +92,7 @@ public class StudentResultService {
         // fill the fields of the new student result entity.
         studentResult.setFilename(filename);
         studentResult.setFilepath(filepath);
-        studentResult.setDateTime(LocalDateTime.now());
+        studentResult.setDateTime(ZonedDateTime.now());
         studentResult.setUser(currentUser);
         studentResult.setTask(task);
 

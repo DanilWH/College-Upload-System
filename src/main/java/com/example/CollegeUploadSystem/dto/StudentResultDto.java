@@ -3,7 +3,7 @@ package com.example.CollegeUploadSystem.dto;
 import com.example.CollegeUploadSystem.models.Views;
 import com.fasterxml.jackson.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 public class StudentResultDto {
 
@@ -17,7 +17,7 @@ public class StudentResultDto {
     private String filepath;
 
     @JsonView(Views.IdName.class)
-    private LocalDateTime dateTime;
+    private ZonedDateTime dateTime;
 
     @JsonView(Views.IdName.class)
     @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
@@ -34,7 +34,8 @@ public class StudentResultDto {
     public StudentResultDto() {
     }
 
-    public StudentResultDto(Long id, String filename, String filepath, LocalDateTime dateTime, UserDto userDto, TaskDto taskDto) {
+    // TODO: remove the excessive constructor.
+    public StudentResultDto(Long id, String filename, String filepath, ZonedDateTime dateTime, UserDto userDto, TaskDto taskDto) {
         this.id = id;
         this.filename = filename;
         this.filepath = filepath;
@@ -70,11 +71,11 @@ public class StudentResultDto {
         return this;
     }
 
-    public LocalDateTime getDateTime() {
+    public ZonedDateTime getDateTime() {
         return dateTime;
     }
 
-    public StudentResultDto setDateTime(LocalDateTime dateTime) {
+    public StudentResultDto setDateTime(ZonedDateTime dateTime) {
         this.dateTime = dateTime;
         return this;
     }

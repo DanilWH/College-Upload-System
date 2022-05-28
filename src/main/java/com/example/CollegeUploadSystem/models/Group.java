@@ -15,7 +15,6 @@ public class Group implements Serializable {
 
     private String name;
 
-    // TODO: change to ZonedDate.
     private ZonedDateTime creationDate;
 
     private Boolean isActive;
