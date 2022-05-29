@@ -221,4 +221,11 @@ public class UserService implements UserDetailsService {
         // it'll be known with the group deletion input (the 2'nd sequential input).
         this.userRepo.deleteByGroupId(groupId);
     }
+
+    public void invalidateTokens(User currentUser) {
+        // by updating the last logout time we automatically invalidate the access token and refresh token both, since
+        // we check if the user's last logout time is earlier than the time which the token was issued at.
+        currentUser.setLastLogoutTime(ZonedDateTime.now());
+        this.userRepo.save(currentUser);
+    }
 }
