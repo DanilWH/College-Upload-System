@@ -31,19 +31,6 @@ public class StudentResultDto {
     @JsonProperty("taskId")
     private TaskDto taskDto;
 
-    public StudentResultDto() {
-    }
-
-    // TODO: remove the excessive constructor.
-    public StudentResultDto(Long id, String filename, String filepath, ZonedDateTime dateTime, UserDto userDto, TaskDto taskDto) {
-        this.id = id;
-        this.filename = filename;
-        this.filepath = filepath;
-        this.dateTime = dateTime;
-        this.userDto = userDto;
-        this.taskDto = taskDto;
-    }
-
     public Long getId() {
         return id;
     }
