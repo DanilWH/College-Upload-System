@@ -2,12 +2,12 @@ package com.example.CollegeUploadSystem.utils;
 
 import com.example.CollegeUploadSystem.models.User;
 import com.example.CollegeUploadSystem.models.UserRoles;
+import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,7 +23,6 @@ import javax.validation.Validator;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -91,9 +90,10 @@ public class ApplicationUtils {
         SecurityContextHolder.getContext().setAuthentication(newAuth);
     }
 
-    public String recognizeMediaType(String filename) throws IOException {
-        String contentType = Files.probeContentType(Path.of(filename));
-        return (contentType == null) ? MediaType.APPLICATION_OCTET_STREAM_VALUE : contentType;
+    public String recognizeMediaType(String filename) {
+        // TODO: consider to use the file's content (the file's bytes) to detect the MIME type.
+        // use the filename to detect the file's MIME type.
+        return new Tika().detect(filename);
     }
 
     public Resource loadFileAsResource(String directory, String fileLocation) throws MalformedURLException {

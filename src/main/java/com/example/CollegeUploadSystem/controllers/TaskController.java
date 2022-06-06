@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -95,7 +96,7 @@ public class TaskController {
 
 
     @GetMapping("/tasks/{taskId}/file")
-    public ResponseEntity<Resource> fileDownload(@PathVariable("taskId") Long taskId) throws IOException {
+    public ResponseEntity<Resource> fileDownload(@PathVariable("taskId") Long taskId) throws MalformedURLException {
         Task taskFromDb = this.taskService.getById(taskId);
 
         Resource resource = this.taskService.getDescriptionFileAsResource(taskFromDb);

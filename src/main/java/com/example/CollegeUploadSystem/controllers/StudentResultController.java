@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,7 +55,7 @@ public class StudentResultController {
     }
 
     @GetMapping("/student-results/{studentResultId}/file")
-    public ResponseEntity<Resource> download(@PathVariable("studentResultId") Long studentResultId) throws IOException {
+    public ResponseEntity<Resource> download(@PathVariable("studentResultId") Long studentResultId) throws MalformedURLException {
         StudentResult studentResultFromDb = this.studentResultService.getById(studentResultId);
 
         // get the file as a Resource.

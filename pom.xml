@@ -18,6 +18,13 @@
 		<org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
 	</properties>
 	<dependencies>
+		<!-- Apache Tika for getting a file's MIME type. -->
+		<dependency>
+			<groupId>org.apache.tika</groupId>
+			<artifactId>tika-core</artifactId>
+			<version>2.4.0</version>
+		</dependency>
+
 		<!-- MapStruct. -->
 		<dependency>
 			<groupId>org.mapstruct</groupId>
