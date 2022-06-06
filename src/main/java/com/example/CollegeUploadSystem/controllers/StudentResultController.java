@@ -2,7 +2,10 @@ package com.example.CollegeUploadSystem.controllers;
 
 import com.example.CollegeUploadSystem.dto.StudentResultDto;
 import com.example.CollegeUploadSystem.mappers.StudentResultMapper;
-import com.example.CollegeUploadSystem.models.*;
+import com.example.CollegeUploadSystem.models.StudentResult;
+import com.example.CollegeUploadSystem.models.Task;
+import com.example.CollegeUploadSystem.models.User;
+import com.example.CollegeUploadSystem.models.Views;
 import com.example.CollegeUploadSystem.services.GroupService;
 import com.example.CollegeUploadSystem.services.StudentResultService;
 import com.example.CollegeUploadSystem.services.TaskService;
@@ -20,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,7 +54,7 @@ public class StudentResultController {
     }
 
     @GetMapping("/student-results/{studentResultId}/file")
-    public ResponseEntity<Resource> download(@PathVariable("studentResultId") Long studentResultId) throws MalformedURLException {
+    public ResponseEntity<Resource> download(@PathVariable("studentResultId") Long studentResultId) throws IOException {
         StudentResult studentResultFromDb = this.studentResultService.getById(studentResultId);
 
         // get the file as a Resource.

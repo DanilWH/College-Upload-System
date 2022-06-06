@@ -167,20 +167,6 @@ public class UserService implements UserDetailsService {
     }
 
     public void updatePassword(User currentUser, User user, ProfilePasswordInput profilePasswordInput) {
-/*
-        // check additional security stuff for students.
-        if (!currentUser.getUserRoles().contains(UserRoles.ADMIN)) {
-            // a student can only change his own password.
-            if (!currentUser.getId().equals(user.getId())) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "A student can not change the password of anyone but its own one.");
-            }
-            // a student, when changing his password, has to enter the old password.
-            if (!this.passwordEncoder.matches(profilePasswordInput.getOldPassword(), user.getPassword())) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Old password is wrong");
-            }
-        }
-*/
-
         if (currentUser.getId().equals(user.getId())) {
             // any user, when changing his own password, has to enter the old password.
             if (!this.passwordEncoder.matches(profilePasswordInput.getOldPassword(), user.getPassword())) {

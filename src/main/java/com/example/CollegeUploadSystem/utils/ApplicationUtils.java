@@ -23,7 +23,7 @@ import javax.validation.Validator;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URLConnection;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -91,8 +91,8 @@ public class ApplicationUtils {
         SecurityContextHolder.getContext().setAuthentication(newAuth);
     }
 
-    public String recognizeMediaType(String filename) {
-        String contentType = URLConnection.guessContentTypeFromName(filename);
+    public String recognizeMediaType(String filename) throws IOException {
+        String contentType = Files.probeContentType(Path.of(filename));
         return (contentType == null) ? MediaType.APPLICATION_OCTET_STREAM_VALUE : contentType;
     }
 
