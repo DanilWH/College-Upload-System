@@ -32,9 +32,9 @@ public class GroupController {
 
     @JsonView(Views.IdName.class)
     @GetMapping("/groups")
-    public List<GroupDto> list() {
+    public List<GroupDto> list(@RequestParam("isActive") boolean isActive) {
         // find all the needed groups and map the list of them to their DTO.
-        return this.groupService.findAllActive()
+        return this.groupService.findAll(isActive)
                 .stream()
                 .map(this.groupMapper::toDto)
                 .collect(Collectors.toList());

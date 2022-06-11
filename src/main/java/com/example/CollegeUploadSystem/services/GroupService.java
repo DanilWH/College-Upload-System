@@ -28,11 +28,10 @@ public class GroupService {
         ));
     }
 
-    public List<Group> findAllActive() {
-        // we list the active groups only.
+    public List<Group> findAll(boolean isActive) {
         return this.groupRepo.findAll()
                 .stream()
-                .filter(Group::getActive)
+                .filter(group -> group.getActive() == isActive)
                 .collect(Collectors.toList());
     }
 
