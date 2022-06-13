@@ -19,7 +19,7 @@ public class GroupDto {
     private ZonedDateTime creationDate;
 
     @JsonView(Views.FullProfile.class)
-    private Boolean isActive;
+    private boolean isActive;
 
     public GroupDto() {
     }
@@ -58,11 +58,11 @@ public class GroupDto {
         return this;
     }
 
-    public Boolean getActive() {
+    public boolean isActive() {
         return isActive;
     }
 
-    public GroupDto setActive(Boolean active) {
+    public GroupDto setActive(boolean active) {
         isActive = active;
         return this;
     }

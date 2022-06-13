@@ -31,7 +31,7 @@ public class GroupService {
     public List<Group> findAll(boolean isActive) {
         return this.groupRepo.findAll()
                 .stream()
-                .filter(group -> group.getActive() == isActive)
+                .filter(group -> group.isActive() == isActive)
                 .collect(Collectors.toList());
     }
 
