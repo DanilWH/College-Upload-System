@@ -9,6 +9,7 @@ import org.mapstruct.Mapping;
 public interface UserMapper {
 
     @Mapping(target = "groupDto", source = "user.group")
+    @Mapping(target = "expelled", expression = "java(user.getPassword() == null || user.getPassword().isEmpty())")
     UserDto toDto(User user);
 
 }

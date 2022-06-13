@@ -22,6 +22,9 @@ public class UserDto implements Serializable {
     @JsonView(Views.FullProfile.class)
     private String login;
 
+    @JsonView(Views.IdName.class)
+    private boolean expelled;
+
     @JsonView(Views.FullProfile.class)
     private Set<UserRoles> userRoles;
 
@@ -84,6 +87,15 @@ public class UserDto implements Serializable {
 
     public UserDto setLogin(String login) {
         this.login = login;
+        return this;
+    }
+
+    public boolean isExpelled() {
+        return expelled;
+    }
+
+    public UserDto setExpelled(boolean expelled) {
+        this.expelled = expelled;
         return this;
     }
 
