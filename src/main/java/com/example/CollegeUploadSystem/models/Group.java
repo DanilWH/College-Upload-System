@@ -17,7 +17,7 @@ public class Group implements Serializable {
 
     private ZonedDateTime creationDate;
 
-    private boolean isActive;
+    private boolean active;
 
     @OneToMany(mappedBy = "group")
     private List<User> students = new ArrayList<>();
@@ -47,11 +47,11 @@ public class Group implements Serializable {
     }
 
     public boolean isActive() {
-        return isActive;
+        return active;
     }
 
     public void setActive(boolean active) {
-        isActive = active;
+        this.active = active;
     }
 
     public List<User> getStudents() {

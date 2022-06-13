@@ -19,17 +19,7 @@ public class GroupDto {
     private ZonedDateTime creationDate;
 
     @JsonView(Views.FullProfile.class)
-    private boolean isActive;
-
-    public GroupDto() {
-    }
-
-    public GroupDto(Long id, @NotBlank(message = "Fill the field") String name, ZonedDateTime creationDate, Boolean isActive) {
-        this.id = id;
-        this.name = name;
-        this.creationDate = creationDate;
-        this.isActive = isActive;
-    }
+    private boolean active;
 
     public Long getId() {
         return id;
@@ -59,11 +49,11 @@ public class GroupDto {
     }
 
     public boolean isActive() {
-        return isActive;
+        return active;
     }
 
     public GroupDto setActive(boolean active) {
-        isActive = active;
+        this.active = active;
         return this;
     }
 }
