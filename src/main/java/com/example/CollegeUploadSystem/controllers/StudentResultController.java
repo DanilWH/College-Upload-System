@@ -84,7 +84,7 @@ public class StudentResultController {
         return this.studentResultMapper.toDto(newStudentResult);
     }
 
-    @PreAuthorize("hasAuthority('STUDENT')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'STUDENT')")
     @DeleteMapping("/student-results/{studentResultId}")
     public ResponseEntity<Void> delete(@AuthenticationPrincipal User currentUser, @PathVariable("studentResultId") Long studentResultId) {
         // find the original instance in the database.

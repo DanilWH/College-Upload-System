@@ -3,6 +3,7 @@ package com.example.CollegeUploadSystem.services;
 import com.example.CollegeUploadSystem.models.StudentResult;
 import com.example.CollegeUploadSystem.models.Task;
 import com.example.CollegeUploadSystem.models.User;
+import com.example.CollegeUploadSystem.models.UserRoles;
 import com.example.CollegeUploadSystem.repos.StudentResultRepo;
 import com.example.CollegeUploadSystem.utils.ApplicationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,7 +98,8 @@ public class StudentResultService {
 
     public void delete(User currentUser, StudentResult studentResult) {
         // a student can delete only his onw results, so we check it.
-        if (!currentUser.getId().equals(studentResult.getUser().getId())) {
+        // "if the current user is not the admin and the result does not belong to the current user".
+        if (!currentUser.getUserRoles().contains(UserRoles.ADMIN) && !currentUser.getId().equals(studentResult.getUser().getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "It is forbidden to delete someone else's result.");
         }
 
