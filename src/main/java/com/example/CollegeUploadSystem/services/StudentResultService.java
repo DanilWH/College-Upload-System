@@ -4,7 +4,6 @@ import com.example.CollegeUploadSystem.models.StudentResult;
 import com.example.CollegeUploadSystem.models.Task;
 import com.example.CollegeUploadSystem.models.User;
 import com.example.CollegeUploadSystem.repos.StudentResultRepo;
-import com.example.CollegeUploadSystem.repos.TaskRepo;
 import com.example.CollegeUploadSystem.utils.ApplicationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +18,6 @@ import java.net.MalformedURLException;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class StudentResultService {
@@ -28,13 +26,11 @@ public class StudentResultService {
     private String userDirectory;
 
     private final StudentResultRepo studentResultRepo;
-    private final TaskRepo taskRepo;
     private final ApplicationUtils applicationUtils;
 
     @Autowired
-    public StudentResultService(StudentResultRepo studentResultRepo, TaskRepo taskRepo, ApplicationUtils applicationUtils) {
+    public StudentResultService(StudentResultRepo studentResultRepo, ApplicationUtils applicationUtils) {
         this.studentResultRepo = studentResultRepo;
-        this.taskRepo = taskRepo;
         this.applicationUtils = applicationUtils;
     }
 
@@ -47,8 +43,7 @@ public class StudentResultService {
     }
 
     public List<StudentResult> getAllByGroupId(Long groupId) {
-        List<Long> taskIds = this.taskRepo.findByGroupIdOrderByCreationDateTimeDesc(groupId).stream().map(Task::getId).collect(Collectors.toList());
-        return this.studentResultRepo.findAllByTaskId(taskIds);
+        return this.studentResultRepo.findByGroupId(groupId);
     }
 
     public Resource getStudentResultFileAsResource(StudentResult studentResultFromDb) throws MalformedURLException {

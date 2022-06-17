@@ -8,5 +8,9 @@ import java.util.List;
 
 @Repository
 public interface TaskRepo extends JpaRepository<Task, Long> {
+
+    List<Task> findByGroupId(Long groupId);
+
     List<Task> findByGroupIdOrderByCreationDateTimeDesc(Long groupId);
+
 }

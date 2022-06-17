@@ -1,7 +1,9 @@
 package com.example.CollegeUploadSystem.services;
 
 import com.example.CollegeUploadSystem.models.Group;
+import com.example.CollegeUploadSystem.models.Task;
 import com.example.CollegeUploadSystem.repos.GroupRepo;
+import com.example.CollegeUploadSystem.repos.TaskRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -16,10 +18,12 @@ import java.util.stream.Collectors;
 public class GroupService {
 
     private final GroupRepo groupRepo;
+    private final TaskRepo taskRepo;
 
     @Autowired
-    public GroupService(GroupRepo groupRepo) {
+    public GroupService(GroupRepo groupRepo, TaskRepo taskRepo) {
         this.groupRepo = groupRepo;
+        this.taskRepo = taskRepo;
     }
 
     public Group findById(Long id) {
@@ -55,6 +59,15 @@ public class GroupService {
     }
 
     public void delete(Long groupId) {
+        List<Task> tasks = this.taskRepo.findByGroupId(groupId);
+        if (tasks != null && !tasks.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "There are tasks that were added to this group, thus, the group can not be deleted." +
+                    "To make that possible, delete all the tasks in the group."
+            );
+        }
+
         Group group = this.groupRepo.findById(groupId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No such group."));
         this.groupRepo.delete(group);
     }

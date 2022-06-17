@@ -4,11 +4,11 @@ import com.example.CollegeUploadSystem.dto.input.FullNameInput;
 import com.example.CollegeUploadSystem.dto.input.ProfileLoginInput;
 import com.example.CollegeUploadSystem.dto.input.ProfilePasswordInput;
 import com.example.CollegeUploadSystem.models.Group;
+import com.example.CollegeUploadSystem.models.StudentResult;
 import com.example.CollegeUploadSystem.models.User;
 import com.example.CollegeUploadSystem.models.UserRoles;
-import com.example.CollegeUploadSystem.repos.GroupRepo;
+import com.example.CollegeUploadSystem.repos.StudentResultRepo;
 import com.example.CollegeUploadSystem.repos.UserRepo;
-import com.example.CollegeUploadSystem.utils.ApplicationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,16 +29,14 @@ import java.util.Scanner;
 @Service
 public class UserService implements UserDetailsService {
     private final UserRepo userRepo;
-    private final GroupRepo groupRepo;
     private final PasswordEncoder passwordEncoder;
-    private final ApplicationUtils applicationUtils;
+    private final StudentResultRepo studentResultRepo;
 
     @Autowired
-    public UserService(UserRepo userRepo, GroupRepo groupRepo, PasswordEncoder passwordEncoder, ApplicationUtils applicationUtils) {
+    public UserService(UserRepo userRepo, PasswordEncoder passwordEncoder, StudentResultRepo studentResultRepo) {
         this.userRepo = userRepo;
-        this.groupRepo = groupRepo;
         this.passwordEncoder = passwordEncoder;
-        this.applicationUtils = applicationUtils;
+        this.studentResultRepo = studentResultRepo;
     }
 
     /*** RETRIEVE ***/
@@ -85,6 +83,7 @@ public class UserService implements UserDetailsService {
 
                 // do add a new student if the row contains the three parts of the student's name.
                 if (data.length == 3)  {
+                    // TODO: remove all the spaces.
                     User newStudent = new User();
                     newStudent.setFirstName(data[1]);
                     newStudent.setLastName(data[0]);
@@ -205,6 +204,18 @@ public class UserService implements UserDetailsService {
     public void deleteAllByGroupId(Long groupId) {
         // here, we don't need to return the 404 status code if the group not found,
         // it'll be known with the group deletion input (the 2'nd sequential input).
+
+        // prohibit the group deletion if there is an uploaded result.
+        List<StudentResult> studentsResults = this.studentResultRepo.findByGroupId(groupId);
+        if (studentsResults != null && !studentsResults.isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "The group has students who have uploaded results, thus can not be deleted.\n" +
+                    "To Make that possible, delete all the uploaded results in the group."
+            );
+        }
+
+        // delete all the users in the groups.
         this.userRepo.deleteByGroupId(groupId);
     }
 

@@ -13,6 +13,7 @@ public interface StudentResultRepo extends JpaRepository<StudentResult, Long> {
 
     StudentResult findByUserIdAndTaskId(Long userId, Long taskId);
 
-    @Query("select sr from StudentResult sr where task_id in :taskIds")
-    List<StudentResult> findAllByTaskId(@Param("taskIds") List<Long> taskIds);
+    @Query("select sr from StudentResult sr where task_id in (select t.id from Task t where group_id = :groupId)")
+    List<StudentResult> findByGroupId(@Param("groupId") Long groupId);
+
 }
