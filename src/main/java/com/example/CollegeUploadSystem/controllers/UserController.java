@@ -99,7 +99,7 @@ public class UserController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("groups/{groupId}/users/status")
-    public ResponseEntity<Void> deactivateByGroup(@PathVariable("groupId") Long groupId) {
+    public ResponseEntity<Void> deactivateAllByGroup(@PathVariable("groupId") Long groupId) {
         Group group = this.groupService.findById(groupId);
         this.userService.deactivateAllByGroup(group);
 
@@ -118,9 +118,9 @@ public class UserController {
     }
 
     @PatchMapping("/users/{userId}/login")
-    public ResponseEntity<Void> updateLogin(@PathVariable("userId") Long userId, @Valid @RequestBody ProfileLoginInput profileLoginInput) {
+    public ResponseEntity<Void> updateLogin(@AuthenticationPrincipal User currentUser, @PathVariable("userId") Long userId, @Valid @RequestBody ProfileLoginInput profileLoginInput) {
         User user = this.userService.findById(userId);
-        this.userService.updateLogin(user, profileLoginInput);
+        this.userService.updateLogin(currentUser, user, profileLoginInput);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

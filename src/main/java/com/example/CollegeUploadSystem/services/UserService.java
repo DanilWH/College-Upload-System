@@ -151,8 +151,11 @@ public class UserService implements UserDetailsService {
         this.userRepo.save(user);
     }
 
-    public void updateLogin(User user, ProfileLoginInput profileLoginInput) {
-        // TODO: ask shashin if I need to check that only the current user can change his login.
+    public void updateLogin(User currentUser, User user, ProfileLoginInput profileLoginInput) {
+        // it's not allowed to change someone else's login but the current user's one only.
+        if (!currentUser.getId().equals(user.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can't change someone else's password!");
+        }
 
         // check if the login exists in the database.
         User duplicateUser = this.userRepo.findByLogin(profileLoginInput.getLogin());
@@ -166,6 +169,7 @@ public class UserService implements UserDetailsService {
     }
 
     public void updatePassword(User currentUser, User user, ProfilePasswordInput profilePasswordInput) {
+        // only the current user can change his own password.
         if (currentUser.getId().equals(user.getId())) {
             // any user, when changing his own password, has to enter the old password.
             if (!this.passwordEncoder.matches(profilePasswordInput.getOldPassword(), user.getPassword())) {
