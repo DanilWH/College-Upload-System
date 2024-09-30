@@ -2,6 +2,8 @@ package com.example.CollegeUploadSystem.validation.validators;
 
 import com.example.CollegeUploadSystem.dto.input.ProfilePasswordInput;
 import com.example.CollegeUploadSystem.validation.constrains.PasswordsMatch;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -16,10 +18,9 @@ public class PasswordsMatchConstraintValidator implements ConstraintValidator<Pa
     public boolean isValid(Object object, ConstraintValidatorContext context) {
         ProfilePasswordInput profilePasswordInput = (ProfilePasswordInput) object;
 
-        // if the password's value is null, that means the user doesn't want to change the password
-        // when editing its profile, so we just skip the password validation if the password is null.
+        // throw the 400 Bad request error if the password is null.
         if (profilePasswordInput.getPassword() == null) {
-            return true;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The new password must not be null");
         }
 
         return profilePasswordInput.getPassword().equals(profilePasswordInput.getConfirmPassword());
