@@ -154,7 +154,7 @@ public class UserService implements UserDetailsService {
     public void updateLogin(User currentUser, User user, ProfileLoginInput profileLoginInput) {
         // it's not allowed to change someone else's login but the current user's one only.
         if (!currentUser.getId().equals(user.getId())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can't change someone else's password!");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can't change someone else's login!");
         }
 
         // check if the login exists in the database.
@@ -169,19 +169,32 @@ public class UserService implements UserDetailsService {
     }
 
     public void updatePassword(User currentUser, User user, ProfilePasswordInput profilePasswordInput) {
-        // only the current user can change his own password.
-        if (currentUser.getId().equals(user.getId())) {
-            // any user, when changing his own password, has to enter the old password.
+        // first, we throw the necessary exceptions if the current user is not the admin.
+        if (!currentUser.getUserRoles().contains(UserRoles.ADMIN)) {
+            // it is more logical to prohibit the current student from changing some other student's password.
+            // check if the student changes his own password.
+            if (!currentUser.getId().equals(user.getId())) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "A student can not change the password of anyone but its own one.");
+            }
+
+            // next check for the null value.
+            if (profilePasswordInput.getOldPassword() == null) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The old password must not be null.");
+            }
+
+            // next there is no need to check the new password and the confirm password fields for the null value
+            // since we already have the PasswordsMatchConstraint that does is. So we just go and check for the
+            // next cases.
+
+            // check if the old password entered by the current student is correct.
             if (!this.passwordEncoder.matches(profilePasswordInput.getOldPassword(), user.getPassword())) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Old password is wrong");
             }
-        } else {
-            // except this is the admin, a student can not change someone else's password, his own one only.
-            if (!currentUser.getUserRoles().contains(UserRoles.ADMIN)) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "A student can not change the password of anyone but its own one.");
-            }
         }
 
+        // the admin has the right to change not only his onw password but the other student too.
+        // also the admin can change a student's password if it was forgotten by setting the null value for the
+        // old password field.
 
         // encode the new password.
         String encryptedPassword = this.passwordEncoder.encode(profilePasswordInput.getPassword());

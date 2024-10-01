@@ -18,9 +18,14 @@ public class PasswordsMatchConstraintValidator implements ConstraintValidator<Pa
     public boolean isValid(Object object, ConstraintValidatorContext context) {
         ProfilePasswordInput profilePasswordInput = (ProfilePasswordInput) object;
 
-        // throw the 400 Bad request error if the password is null.
+        // throw the 400 Bad request error if the new password is null.
         if (profilePasswordInput.getPassword() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The new password must not be null");
+        }
+
+        // throw the 400 Bad request error if the confirm password is null.
+        if (profilePasswordInput.getConfirmPassword() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The confirmation password must not be null.");
         }
 
         return profilePasswordInput.getPassword().equals(profilePasswordInput.getConfirmPassword());
