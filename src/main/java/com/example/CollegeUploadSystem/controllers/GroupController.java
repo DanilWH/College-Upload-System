@@ -31,6 +31,13 @@ public class GroupController {
     }
 
     @JsonView(Views.IdName.class)
+    @GetMapping("/groups/{groupId}")
+    public GroupDto get(@PathVariable("groupId") Long groupId) {
+        Group group = this.groupService.findById(groupId);
+        return this.groupMapper.toDto(group);
+    }
+
+    @JsonView(Views.IdName.class)
     @GetMapping("/groups")
     public List<GroupDto> list(@RequestParam("isActive") boolean isActive) {
         // find all the needed groups and map the list of them to their DTO.

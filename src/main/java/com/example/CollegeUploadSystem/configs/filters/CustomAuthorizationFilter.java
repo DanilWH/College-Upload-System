@@ -52,6 +52,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         return new AntPathRequestMatcher("/api/auth/login").matches(request)
                 || new AntPathRequestMatcher("/api/groups", HttpMethod.GET.name(), true).matches(request)
+                || new AntPathRequestMatcher("/api/groups/*", HttpMethod.GET.name(), true).matches(request)
                 || new AntPathRequestMatcher("/api/groups/*/tasks", HttpMethod.GET.name(), true).matches(request) // permit to get all the tasks of a certain group.
                 || new AntPathRequestMatcher("/api/groups/*/users", HttpMethod.GET.name(), true).matches(request) // permit to get all the students of a certain group.
                 || new AntPathRequestMatcher("/api/tasks/*/file", HttpMethod.GET.name(), true).matches(request) // permit to download the description file of a certain task.

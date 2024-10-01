@@ -68,6 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/api/auth/login").permitAll(); // permit to sign in.
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/groups").permitAll(); // permit to get all the groups.
+        http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/groups/*").permitAll(); // permit to get a group info.
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/groups/*/tasks").permitAll(); // permit to get all the tasks of a certain group.
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/groups/*/users").permitAll(); // permit to get all the students of a certain group.
         http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/tasks/*/file").permitAll(); // permit to download the description file of a certain task.
